@@ -36,7 +36,7 @@ const pkg = require('./package.json');
 const banner = `/*! @preserve
  * ${pkg.name}
  * version: ${pkg.version}
- * https://github.com/mengshukeji/Luckysheet
+ * https://github.com/carl-jin/RichSpreadsheet
  */`;
 
 // uglify js Compression configuration https://github.com/mishoo/UglifyJS#minify-options
@@ -111,7 +111,7 @@ const paths = {
     //plugins concat
     concatPluginsCss: 'pluginsCss.css',
     concatPlugins: 'plugins.css',
-    concatCss: 'luckysheet.css',
+    concatCss: 'RichSpreadsheet.css',
     concatPluginsJs: 'plugin.js',
 
     //plugins dest
@@ -130,8 +130,8 @@ function clean() {
 }
 
 // proxy middleware
-const apiProxy = createProxyMiddleware('/luckysheet/', {
-    target: 'http://luckysheet.lashuju.com/', // set your server address
+const apiProxy = createProxyMiddleware('/RichSpreadsheet/', {
+    target: 'http://RichSpreadsheet.lashuju.com/', // set your server address
     changeOrigin: true, // for vhosted sites
     ws: true, // proxy websockets
 });
@@ -194,9 +194,9 @@ async function core_rollup() {
     });
 
     bundle.write({
-        file: 'dist/luckysheet.umd.js',
+        file: 'dist/RichSpreadsheet.umd.js',
         format: 'umd',
-        name: 'luckysheet',
+        name: 'RichSpreadsheet',
         sourcemap: true,
         inlineDynamicImports:true,
         banner: banner
@@ -204,9 +204,9 @@ async function core_rollup() {
 
     if(production){
         bundle.write({
-            file: 'dist/luckysheet.esm.js',
+            file: 'dist/RichSpreadsheet.esm.js',
             format: 'esm',
-            name: 'luckysheet',
+            name: 'RichSpreadsheet',
             sourcemap: true,
             inlineDynamicImports:true,
             banner: banner
@@ -219,14 +219,14 @@ async function core() {
 
     await require('esbuild').buildSync({
         format: 'iife',
-        globalName: 'luckysheet',    
+        globalName: 'RichSpreadsheet',
         entryPoints: ['src/index.js'],
         bundle: true,
         minify: production,
         banner: { js: banner },
         target: ['es2015'],
         sourcemap: true,
-        outfile: 'dist/luckysheet.umd.js',
+        outfile: 'dist/RichSpreadsheet.umd.js',
         logLevel: 'error',
       })
 }
