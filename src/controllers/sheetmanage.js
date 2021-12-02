@@ -34,7 +34,7 @@ import { createFilterOptions, labelFilterOptionState } from "./filter";
 import { selectHightlightShow, selectionCopyShow } from "./select";
 import Store from "../store";
 import locale from "../locale/locale";
-import { renderChartShow } from "../expendPlugins/chart/plugin";
+// import { renderChartShow } from "../expendPlugins/chart/plugin";
 import { changeSheetContainerSize, menuToolBarWidth } from "./resize";
 import { zoomNumberDomBind } from "./zoom";
 import menuButton from "./menuButton";
@@ -1597,7 +1597,7 @@ const sheetmanage = {
     $("#luckysheet-datavisual-selection-set-" + index).show();
 
     //隐藏其他sheet的图表，显示当前sheet的图表 chartMix
-    renderChartShow(index);
+    // renderChartShow(index);
 
     luckysheetFreezen.initialFreezen(index);
     _this.restoreselect();

@@ -13,7 +13,7 @@ import { formulaBarInitial } from "./controllers/formulaBar";
 import { rowColumnOperationInitial } from "./controllers/rowColumnOperation";
 import { keyboardInitial } from "./controllers/keyboard";
 import { orderByInitial } from "./controllers/orderBy";
-import { initPlugins } from "./controllers/expendPlugins";
+// import { initPlugins } from "./controllers/expendPlugins";
 import {
   getluckysheetfile,
   getluckysheet_select_save,
@@ -154,7 +154,7 @@ luckysheet.create = function (setting) {
   Store.asyncLoad.push(...luckysheetConfigsetting.plugins);
 
   // Register plugins
-  initPlugins(extendsetting.plugins, extendsetting.data);
+  // initPlugins(extendsetting.plugins, extendsetting.data);
 
   // Store formula information, including internationalization
   functionlist();
