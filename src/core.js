@@ -169,25 +169,9 @@ luckysheet.create = function (setting) {
   const loadingObj = luckysheetlodingHTML("#" + container);
   Store.loadingObj = loadingObj;
 
-  if (loadurl == "") {
-    sheetmanage.initialjfFile(menu, title);
-    // luckysheetsizeauto();
-    initialWorkBook();
-  } else {
-    $.post(loadurl, { gridKey: server.gridKey }, function (d) {
-      let data = new Function("return " + d)();
-      Store.luckysheetfile = data;
-
-      sheetmanage.initialjfFile(menu, title);
-      // luckysheetsizeauto();
-      initialWorkBook();
-
-      //需要更新数据给后台时，建立WebSocket连接
-      if (server.allowUpdate) {
-        server.openWebSocket();
-      }
-    });
-  }
+  sheetmanage.initialjfFile(menu, title);
+  // luckysheetsizeauto();
+  initialWorkBook();
 };
 
 function initialWorkBook() {
