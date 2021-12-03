@@ -796,20 +796,11 @@ const sheetmanage = {
 
     celldata.map((row, index) => {
       Object.keys(row).map((colId) => {
-        let value = row[colId] ? row[colId] : Math.random()
+        let value = row[colId] ? row[colId] : Math.random();
         cellDataArr.push({
           r: index,
           c: getColIndexById(colId),
-          v: {
-            ct: {
-              fa: "General",
-              t: "s",
-            },
-            "fc": '#000',
-            "fs": 14,
-            v: value,
-            m: value,
-          },
+          v: value,
         });
       });
     });
@@ -825,6 +816,7 @@ const sheetmanage = {
           ? file.data
           : datagridgrowth([], row, column),
       celldata = file.celldata;
+
     if (file.data && file.data.length > 0) {
       for (let i = 0; i < data.length; i++) {
         for (let j = 0; j < data[0].length; j++) {

@@ -59,9 +59,8 @@ luckysheet.create = function (setting) {
 
   let extendsetting = common_extend(defaultSetting, setting);
 
-  let loadurl = extendsetting.loadUrl,
-    menu = extendsetting.menu,
-    title = extendsetting.title;
+  let menu = extendsetting.menu;
+  let title = extendsetting.title;
 
   let container = extendsetting.container;
   Store.container = container;
