@@ -37,17 +37,23 @@ import Mandarin from "flatpickr/dist/l10n/zh.js";
 import { initListener } from "./controllers/listener";
 import { hideloading, showloading } from "./global/loading.js";
 import { luckysheetextendData } from "./global/extend.js";
+import { RichSpreadsheetParams } from "./type";
 
-let luckysheet = {};
+export type RichSpreadType = Partial<{
+  create(setting: RichSpreadsheetParams): void;
+  [name: string]: any;
+}>;
+
+let RichSpread: RichSpreadType = {};
 
 // mount api
-// luckysheet.api = api;
+// RichSpread.api = api;
 // Object.assign(luckysheet, api);
 
-luckysheet = common_extend(api, luckysheet);
+RichSpread = common_extend(api, RichSpread);
 
 //创建luckysheet表格
-luckysheet.create = function (setting) {
+RichSpread.create = function (setting: RichSpreadsheetParams) {
   method.destroy();
   // Store original parameters for api: toJson
   Store.toJsonOptions = {};
@@ -64,11 +70,13 @@ luckysheet.create = function (setting) {
 
   let container = extendsetting.container;
   Store.container = container;
+  Store.cellRenderers = extendsetting.cellRenderers;
   Store.luckysheetfile = extendsetting.data;
   Store.defaultcolumnNum = extendsetting.column;
   Store.defaultrowNum = extendsetting.row;
   Store.defaultFontSize = extendsetting.defaultFontSize;
   Store.fullscreenmode = extendsetting.fullscreenmode;
+  Store.cellSpace = extendsetting.cellSpace;
   Store.lang = extendsetting.lang; //language
   Store.allowEdit = extendsetting.allowEdit;
   Store.limitSheetNameLength = extendsetting.limitSheetNameLength;
@@ -81,7 +89,6 @@ luckysheet.create = function (setting) {
   server.title = extendsetting.title;
   server.loadSheetUrl = extendsetting.loadSheetUrl;
   server.allowUpdate = extendsetting.allowUpdate;
-
   luckysheetConfigsetting.autoFormatw = extendsetting.autoFormatw;
   luckysheetConfigsetting.accuracy = extendsetting.accuracy;
   luckysheetConfigsetting.total = extendsetting.data[0].total;
@@ -188,53 +195,53 @@ function initialWorkBook() {
 }
 
 //获取所有表格数据
-luckysheet.getluckysheetfile = getluckysheetfile;
+RichSpread.getluckysheetfile = getluckysheetfile;
 
 //获取当前表格 选区
-luckysheet.getluckysheet_select_save = getluckysheet_select_save;
+RichSpread.getluckysheet_select_save = getluckysheet_select_save;
 
 //设置当前表格 选区
-luckysheet.setluckysheet_select_save = setluckysheet_select_save;
+RichSpread.setluckysheet_select_save = setluckysheet_select_save;
 
 //获取当前表格 config配置
-luckysheet.getconfig = getconfig;
+RichSpread.getconfig = getconfig;
 
 //二维数组数据 转化成 {r, c, v}格式 一维数组 (传入参数为二维数据data)
-luckysheet.getGridData = sheetmanage.getGridData;
+RichSpread.getGridData = sheetmanage.getGridData;
 
 //生成表格所需二维数组 （传入参数为表格数据对象file）
-luckysheet.buildGridData = sheetmanage.buildGridData;
+RichSpread.buildGridData = sheetmanage.buildGridData;
 
 // Refresh the canvas display data according to scrollHeight and scrollWidth
-luckysheet.luckysheetrefreshgrid = luckysheetrefreshgrid;
+RichSpread.luckysheetrefreshgrid = luckysheetrefreshgrid;
 
 // Refresh canvas
-luckysheet.jfrefreshgrid = jfrefreshgrid;
+RichSpread.jfrefreshgrid = jfrefreshgrid;
 
 // Get the value of the cell
-luckysheet.getcellvalue = getcellvalue;
+RichSpread.getcellvalue = getcellvalue;
 
 // Set cell value
-luckysheet.setcellvalue = setcellvalue;
+RichSpread.setcellvalue = setcellvalue;
 
 // Get selection range value
-luckysheet.getdatabyselection = getdatabyselection;
+RichSpread.getdatabyselection = getdatabyselection;
 
-luckysheet.sheetmanage = sheetmanage;
+RichSpread.sheetmanage = sheetmanage;
 
 // Data of the current table
-luckysheet.flowdata = function () {
+RichSpread.flowdata = function () {
   return Store.flowdata;
 };
 
 // Set selection highlight
-luckysheet.selectHightlightShow = selectHightlightShow;
+RichSpread.selectHightlightShow = selectHightlightShow;
 
 // Reset parameters after destroying the table
-luckysheet.destroy = method.destroy;
+RichSpread.destroy = method.destroy;
 
-luckysheet.showLoadingProgress = showloading;
-luckysheet.hideLoadingProgress = hideloading;
-luckysheet.luckysheetextendData = luckysheetextendData;
+RichSpread.showLoadingProgress = showloading;
+RichSpread.hideLoadingProgress = hideloading;
+RichSpread.luckysheetextendData = luckysheetextendData;
 
-export { luckysheet };
+export { RichSpread };

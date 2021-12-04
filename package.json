@@ -8,7 +8,7 @@
     "buildPlugins": "gulp -f ./scripts/buildPlugins.js buildPlugins",
     "cpStatic": "gulp -f ./scripts/cpStatic.js cpStatic",
     "preserve": "yarn run buildPlugins && yarn run cpStatic",
-    "serve": "vite --force",
+    "serve": "vite",
     "build": "vite build",
     "package": "cross-env NODE_ENV=production gulp build",
     "dev": "cross-env NODE_ENV=development gulp dev",
@@ -38,6 +38,7 @@
     "rollup": "^2.32.1",
     "rollup-plugin-terser": "^6.1.0",
     "standard-version": "^8.0.2",
+    "throttle-debounce": "^3.0.1",
     "uuid": "^8.3.2",
     "vite": "^2.6.14",
     "vite-plugin-html": "^2.1.1"

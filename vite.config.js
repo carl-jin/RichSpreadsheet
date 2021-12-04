@@ -23,5 +23,19 @@ export default defineConfig({
           .join("\n"),
       },
     }),
+    {
+      name: 'singleHMR',
+      handleHotUpdate({ modules, file }) {
+        if (file.match(/xml$/)) return [];
+
+        // 清掉所有依赖注入
+        modules.map((m) => {
+          m.importedModules = new Set()
+          m.importers = new Set()
+        });
+
+        return modules;
+      },
+    },
   ],
 });

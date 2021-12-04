@@ -1,16 +1,22 @@
-import luckysheet from "../src/index";
+import RichSpread from "../src";
 import { cols, rows } from "./data";
+import cellRenderers from "./cellRenderers/index";
 
 function create() {
-  luckysheet.create({
+  RichSpread.create({
+    cellRenderers,
     container: "luckysheet",
     lang: "zh",
     forceCalculation: false,
     fontList: [],
-    showtoolbar:false,
-    showinfobar:false,
-    showsheetbar:false,
-    showstatisticBar:false,
+    columnHeaderHeight: 30,
+    defaultColWidth: 120, //  col 宽度
+    defaultRowHeight: 30, //  cell 高度
+    rowHeaderWidth: 40, //  左侧序号宽度
+    showtoolbar: false,
+    showinfobar: false,
+    showsheetbar: false,
+    showstatisticBar: false,
     data: [
       {
         name: "Cell",

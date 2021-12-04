@@ -2,7 +2,7 @@
  * Monitor special variables
  */
 import {createProxy} from '../utils/util';
-import Store from '../store/index';
+import Store from '../store';
 import method from '../global/method';
 import { getluckysheetfile } from '../methods/get'
 import { toJson } from '../global/api';
@@ -33,7 +33,7 @@ const initListener = function(){
     createProxy(Store, 'jfundo',(target, property, val, receiver)=>{
         redoAccessible(Store.jfundo.length);
     } );
-    
+
 
 
     createProxy(Store, 'asyncLoad', (target, property, val, receiver)=>{

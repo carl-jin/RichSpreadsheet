@@ -23,6 +23,7 @@ import method from "./method";
 import Store from "../store";
 import locale from "../locale/locale";
 import sheetmanage from "../controllers/sheetmanage";
+import { isPlainObject } from "lodash-es";
 
 function luckysheetDrawgridRowTitle(scrollHeight, drawHeight, offsetTop) {
   if (scrollHeight == null) {
@@ -300,7 +301,6 @@ function luckysheetDrawgridColumnTitle(scrollWidth, drawWidth, offsetLeft) {
   luckysheetTableContent.clip();
 
   // console.log(offsetLeft, 0, drawWidth, Store.columnHeaderHeight -1);
-
   const currentSheet = Store.luckysheetfile.find(
     (sheet) => sheet.index === Store.currentSheetIndex
   );
@@ -494,7 +494,6 @@ function luckysheetDrawMain(
 
   let sheetFile = sheetmanage.getSheetByIndex();
 
-  // console.trace();
   clearTimeout(Store.measureTextCacheTimeOut);
 
   //参数未定义处理
@@ -558,7 +557,6 @@ function luckysheetDrawMain(
 
   //表格渲染区域 起止行列下标
   let dataset_row_st, dataset_row_ed, dataset_col_st, dataset_col_ed;
-
   dataset_row_st = luckysheet_searcharray(Store.visibledatarow, scrollHeight);
   dataset_row_ed = luckysheet_searcharray(
     Store.visibledatarow,
@@ -649,6 +647,7 @@ function luckysheetDrawMain(
     luckysheetTableContent
   );
 
+  //  计算出更新的数组
   for (let r = dataset_row_st; r <= dataset_row_ed; r++) {
     let start_r;
     if (r == 0) {
@@ -691,10 +690,10 @@ function luckysheetDrawMain(
         firstcolumnlen = Store.config["columnlen"][c];
       }
 
-      if (Store.flowdata[r] != null && Store.flowdata[r][c] != null) {
+      /*if (Store.flowdata[r] != null && Store.flowdata[r][c] != null) {
         let value = Store.flowdata[r][c];
 
-        if (getObjType(value) == "object" && "mc" in value) {
+        if (isPlainObject(value) && "mc" in value) {
           borderOffset[r + "_" + c] = {
             start_r: start_r,
             start_c: start_c,
@@ -744,7 +743,7 @@ function luckysheetDrawMain(
         //     "end_r": cellsize[3],
         //     "end_c": cellsize[2]
         // }, sheetFile,luckysheetTableContent)){ continue; }
-      }
+      }*/
 
       cellupdate.push({
         r: r,
@@ -765,15 +764,18 @@ function luckysheetDrawMain(
   }
 
   //动态数组公式计算
-  let dynamicArray_compute = dynamicArrayCompute(
+  /*  let dynamicArray_compute = dynamicArrayCompute(
     Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)]["dynamicArray"]
-  );
+  );*/
+  let dynamicArray_compute = {};
 
   //交替颜色计算
-  let af_compute = alternateformat.getComputeMap();
+  // let af_compute = alternateformat.getComputeMap();
+  let af_compute = {};
 
   //条件格式计算
-  let cf_compute = conditionformat.getComputeMap();
+  // let cf_compute = conditionformat.getComputeMap();
+  let cf_compute = {};
 
   //表格渲染区域 溢出单元格配置保存
   let cellOverflowMap = getCellOverflowMap(
@@ -786,6 +788,8 @@ function luckysheetDrawMain(
 
   let mcArr = [];
 
+  //  **** 遍历生成 cell
+  console.time("render cells");
   for (let cud = 0; cud < cellupdate.length; cud++) {
     let item = cellupdate[cud];
     let r = item.r,
@@ -920,7 +924,7 @@ function luckysheetDrawMain(
     //     "end_c": end_c
     // }, sheetFile,luckysheetTableContent)
   }
-
+  console.timeEnd("render cells");
   //合并单元格再处理
   for (let m = 0; m < mcArr.length; m++) {
     let item = mcArr[m];
@@ -1667,6 +1671,7 @@ let nullCellRender = function (
   );
 };
 
+//  **** 这里是渲染 cell 的逻辑
 let cellRender = function (
   r,
   c,
@@ -1692,29 +1697,34 @@ let cellRender = function (
   let cell = Store.flowdata[r][c];
   let cellWidth = end_c - start_c - 2;
   let cellHeight = end_r - start_r - 2;
-  let space_width = 2,
-    space_height = 2; //宽高方向 间隙
+  let space_width = Store.cellSpace[1],
+    space_height = Store.cellSpace[0]; //宽高方向 间隙
 
   //水平对齐
-  let horizonAlign = menuButton.checkstatus(Store.flowdata, r, c, "ht");
+  // let horizonAlign = menuButton.checkstatus(Store.flowdata, r, c, "ht");
+  let horizonAlign = 1;
   //垂直对齐
-  let verticalAlign = menuButton.checkstatus(Store.flowdata, r, c, "vt");
+  // let verticalAlign = menuButton.checkstatus(Store.flowdata, r, c, "vt");
+  let verticalAlign = 0;
 
   //交替颜色
-  let checksAF = alternateformat.checksAF(r, c, af_compute);
+  // let checksAF = alternateformat.checksAF(r, c, af_compute);
+  let checksAF = null;
   //条件格式
-  let checksCF = conditionformat.checksCF(r, c, cf_compute);
+  // let checksCF = conditionformat.checksCF(r, c, cf_compute);
+  let checksCF = null;
 
   //单元格 背景颜色
-  let fillStyle = menuButton.checkstatus(Store.flowdata, r, c, "bg");
-  if (checksAF != null && checksAF[1] != null) {
+  // let fillStyle = menuButton.checkstatus(Store.flowdata, r, c, "bg");
+  let fillStyle = null;
+  /*  if (checksAF != null && checksAF[1] != null) {
     //若单元格有交替颜色 背景颜色
     fillStyle = checksAF[1];
-  }
-  if (checksCF != null && checksCF["cellColor"] != null) {
+  }*/
+  /*  if (checksCF != null && checksCF["cellColor"] != null) {
     //若单元格有条件格式 背景颜色
     fillStyle = checksCF["cellColor"];
-  }
+  }*/
   // luckysheetTableContent.textBaseline = 'top';
   if (fillStyle == null) {
     luckysheetTableContent.fillStyle = "#FFFFFF";
@@ -1732,7 +1742,7 @@ let cellRender = function (
   ];
 
   //单元格渲染前，考虑到合并单元格会再次渲染一遍，统一放到这里
-  if (
+  /*  if (
     !method.createHookFunction(
       "cellRenderBefore",
       Store.flowdata[r][c],
@@ -1749,16 +1759,18 @@ let cellRender = function (
     )
   ) {
     return;
-  }
+  }*/
 
-  luckysheetTableContent.fillRect(
+  /*luckysheetTableContent.fillRect(
     cellsize[0],
     cellsize[1],
     cellsize[2],
     cellsize[3]
-  );
+  );*/
 
-  let dataVerification = dataVerificationCtrl.dataVerification;
+  //  数据验证
+  let dataVerification = null;
+  /*  let dataVerification = dataVerificationCtrl.dataVerification;
 
   if (
     dataVerification != null &&
@@ -1782,10 +1794,10 @@ let cellRender = function (
     luckysheetTableContent.fillStyle = "#FC6666";
     luckysheetTableContent.fill();
     luckysheetTableContent.closePath();
-  }
+  }*/
 
   //若单元格有批注（单元格右上角红色小三角标示）
-  if (cell.ps != null) {
+  /*  if (cell.ps != null) {
     let ps_w = 8 * Store.zoomRatio,
       ps_h = 8 * Store.zoomRatio; //红色小三角宽高
 
@@ -1802,10 +1814,10 @@ let cellRender = function (
     luckysheetTableContent.fillStyle = "#FC6666";
     luckysheetTableContent.fill();
     luckysheetTableContent.closePath();
-  }
+  }*/
 
   //若单元格强制为字符串，则显示绿色小三角
-  if (cell.qp == 1 && isRealNum(cell.v)) {
+  /* if (cell.qp == 1 && isRealNum(cell.v)) {
     let ps_w = 6 * Store.zoomRatio,
       ps_h = 6 * Store.zoomRatio; //红色小三角宽高
 
@@ -1825,7 +1837,7 @@ let cellRender = function (
     luckysheetTableContent.fillStyle = "#487f1e";
     luckysheetTableContent.fill();
     luckysheetTableContent.closePath();
-  }
+  }*/
 
   //溢出单元格
   let cellOverflow_bd_r_render = true; //溢出单元格右边框是否需要绘制
@@ -1858,7 +1870,7 @@ let cellRender = function (
     }
   }
   //数据验证 复选框
-  else if (
+  /*else if (
     dataVerification != null &&
     dataVerification[r + "_" + c] != null &&
     dataVerification[r + "_" + c].type == "checkbox"
@@ -1953,9 +1965,10 @@ let cellRender = function (
     );
 
     luckysheetTableContent.restore();
-  } else {
+  }*/
+  else {
     //若单元格有条件格式数据条
-    if (
+    /*    if (
       checksCF != null &&
       checksCF["dataBar"] != null &&
       checksCF["dataBar"]["valueLen"] &&
@@ -2087,7 +2100,7 @@ let cellRender = function (
           luckysheetTableContent.closePath();
         }
       }
-    }
+    }*/
 
     let pos_x = start_c + offsetLeft;
     let pos_y = start_r + offsetTop + 1;
@@ -2097,95 +2110,46 @@ let cellRender = function (
     luckysheetTableContent.rect(pos_x, pos_y, cellWidth, cellHeight);
     luckysheetTableContent.clip();
     luckysheetTableContent.scale(Store.zoomRatio, Store.zoomRatio);
+    const type = Store.luckysheetfile[0].column[c].type;
 
-    let textInfo = getCellTextInfo(cell, luckysheetTableContent, {
-      cellWidth: cellWidth,
-      cellHeight: cellHeight,
-      space_width: space_width,
-      space_height: space_height,
-      r: r,
-      c: c,
-    });
+    if (type && Store.cellRenderers[type]) {
+      const Render = Store.cellRenderers[type];
+      Render.render({
+        rowIndex: r,
+        colIndex: c,
+        column: Store.luckysheetfile[0].column[c],
+        columns: Store.luckysheetfile[0].column,
+        cell,
+        value: Render.formatValueBeforeRender({
+          value: cell.v,
+          cellParams: Store.luckysheetfile[0].column[c].cellParams,
+        }),
+        cellWidth: cellWidth,
+        cellHeight: cellHeight,
+        spaceX: space_width,
+        spaceY: space_height,
+        ctx: luckysheetTableContent,
+        positionX: pos_x,
+        positionY: pos_y,
+      });
+    } else {
+      //  **** 获取一个 cell 的显示文本参数
+      let textInfo = getCellTextInfo(cell, luckysheetTableContent, {
+        cellWidth: cellWidth,
+        cellHeight: cellHeight,
+        space_width: space_width,
+        space_height: space_height,
+        r: r,
+        c: c,
+      });
 
-    //若单元格有条件格式图标集
-    if (
-      checksCF != null &&
-      checksCF["icons"] != null &&
-      textInfo.type == "plain"
-    ) {
-      let l = checksCF["icons"]["left"];
-      let t = checksCF["icons"]["top"];
-
-      let value = textInfo.values[0];
-      let horizonAlignPos = pos_x + value.left;
-      let verticalAlignPos = pos_y + value.top - textInfo.textHeightAll;
-
-      if (verticalAlign == "0") {
-        //居中对齐
-        verticalAlignPos = pos_y + cellHeight / 2 - textInfo.textHeightAll / 2;
-      } else if (verticalAlign == "1") {
-        //上对齐
-        verticalAlignPos = pos_y;
-      } else if (verticalAlign == "2") {
-        //下对齐
-        verticalAlignPos = verticalAlignPos - textInfo.desc;
-      }
-
-      verticalAlignPos = verticalAlignPos / Store.zoomRatio;
-      horizonAlignPos = horizonAlignPos / Store.zoomRatio;
-
-      luckysheetTableContent.drawImage(
-        luckysheet_CFiconsImg,
-        l * 42,
-        t * 32,
-        32,
-        32,
-        pos_x / Store.zoomRatio,
-        verticalAlignPos,
-        textInfo.textHeightAll / Store.zoomRatio,
-        textInfo.textHeightAll / Store.zoomRatio
-      );
-
-      if (horizonAlign != "0" && horizonAlign != "2") {
-        //左对齐时 文本渲染空出一个图标的距离
-        horizonAlignPos =
-          horizonAlignPos + textInfo.textHeightAll / Store.zoomRatio;
-      }
+      //单元格 文本颜色
+      luckysheetTableContent.fillStyle = "#000";
+      cellTextRender(textInfo, luckysheetTableContent, {
+        pos_x: pos_x,
+        pos_y: pos_y,
+      });
     }
-
-    //单元格 文本颜色
-    luckysheetTableContent.fillStyle = menuButton.checkstatus(
-      Store.flowdata,
-      r,
-      c,
-      "fc"
-    );
-
-    //若单元格有交替颜色 文本颜色
-    if (checksAF != null && checksAF[0] != null) {
-      luckysheetTableContent.fillStyle = checksAF[0];
-    }
-    //若单元格有条件格式 文本颜色
-    if (checksCF != null && checksCF["textColor"] != null) {
-      luckysheetTableContent.fillStyle = checksCF["textColor"];
-    }
-
-    //若单元格格式为自定义数字格式（[red]） 文本颜色为红色
-    if (
-      cell.ct &&
-      cell.ct.fa &&
-      cell.ct.fa.indexOf("[Red]") > -1 &&
-      cell.ct.t == "n" &&
-      cell.v < 0
-    ) {
-      luckysheetTableContent.fillStyle = "#ff0000";
-    }
-
-    cellTextRender(textInfo, luckysheetTableContent, {
-      pos_x: pos_x,
-      pos_y: pos_y,
-    });
-
     luckysheetTableContent.restore();
   }
 

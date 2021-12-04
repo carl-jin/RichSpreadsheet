@@ -13,6 +13,8 @@ export default {
   showstatisticBar: true, //是否显示底部计数栏
   pointEdit: false, //是否是编辑器插入表格模式
   pointEditUpdate: null, //编辑器表格更新函数
+  cellSpace: [2, 6], //  单元格 padding
+  cellRenderers: {}, // 单元格 对应的 column 渲染逻辑
   pointEditZoom: 1, //编辑器表格编辑时缩放比例
   // menu: "undo|redo|freezenrow|freezencolumn|download|share|chart|pivot",
   data: [

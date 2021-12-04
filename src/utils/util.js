@@ -383,7 +383,9 @@ function ArrayUnique(dataArr) {
 
 //获取字体配置
 function luckysheetfontformat(format) {
-    let fontarray = locale().fontarray;
+    return luckysheetdefaultFont()
+
+   /* let fontarray = locale().fontarray;
     if (getObjType(format) == "object") {
         let font = "";
 
@@ -451,7 +453,7 @@ function luckysheetfontformat(format) {
     }
     else {
         return luckysheetdefaultFont();
-    }
+    }*/
 }
 
 //右键菜单

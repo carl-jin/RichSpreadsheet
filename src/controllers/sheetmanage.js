@@ -796,7 +796,7 @@ const sheetmanage = {
 
     celldata.map((row, index) => {
       Object.keys(row).map((colId) => {
-        let value = row[colId] ? row[colId] : Math.random();
+        let value = row[colId] ? row[colId] : '';
         cellDataArr.push({
           r: index,
           c: getColIndexById(colId),

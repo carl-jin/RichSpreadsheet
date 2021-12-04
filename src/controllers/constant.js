@@ -1041,7 +1041,7 @@ const luckysheetdefaultstyle = {
 }
 
 const luckysheetdefaultFont = function(){
-    return  'normal normal normal '+ Store.defaultFontSize +'pt '+ locale().fontarray[0] +', "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC",  "WenQuanYi Micro Hei", sans-serif';
+    return  `normal 14px -apple-system`;
 }
 
 const luckysheet_CFiconsImg = new Image();
