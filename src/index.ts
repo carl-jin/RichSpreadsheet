@@ -7,7 +7,8 @@ import { RichSpread } from "./core";
 export type {
   CellRenderersParams,
   FormatValueBeforeRenderParams,
-  CellRenderersMouseEventParams
+  CellRenderersMouseEventParams,
+  CellRenderersMouseClickParams
 } from "./cellRenderers/cellRenderers";
 export { CellRenderers } from "./cellRenderers/cellRenderers";
 export default RichSpread;

@@ -3,6 +3,7 @@ import type {
   FormatValueBeforeRenderParams,
   CellRenderersParams,
   CellRenderersMouseEventParams,
+  CellRenderersMouseClickParams,
 } from "../../src";
 import {
   drawRect,
@@ -12,8 +13,47 @@ import {
 } from "./helper";
 
 class Select extends CellRenderers {
-  //  todo 点击事件, 点击后还能直接调用编辑接口
-  //  todo 测试 canvas 小尺寸, 因为塞入到迦南云后是小尺寸, 不是 100vw 100vh 所以需要提前测试下是否有兼容问题
+  mouseenterRender(
+    CellRenderersMouseEventParams: CellRenderersMouseEventParams
+  ) {
+    this.render(CellRenderersMouseEventParams);
+  }
+
+  mousemoveRender(
+    CellRenderersMouseEventParams: CellRenderersMouseEventParams
+  ) {
+    const { mouseEvent, ctx } = CellRenderersMouseEventParams;
+    const { mouse_x, mouse_y } = mouseEvent;
+    const { rectPath, pathTriangle } = this.render(
+      CellRenderersMouseEventParams
+    );
+
+    //  如果鼠标移入到 三角区域
+    if (ctx.isPointInPath(rectPath, mouse_x, mouse_y)) {
+      ctx.fillStyle = "#666";
+      ctx.fill(rectPath);
+      ctx.fillStyle = "#fff";
+      ctx.fill(pathTriangle);
+    }
+  }
+
+  mouseoutRender(CellRenderersMouseEventParams: CellRenderersMouseEventParams) {
+    this.render(CellRenderersMouseEventParams);
+  }
+
+  clickRender(CellRenderersMouseClickParams: CellRenderersMouseClickParams) {
+    const { mouseEvent, ctx, methods } = CellRenderersMouseClickParams;
+    const { mouse_x, mouse_y } = mouseEvent;
+    const { rectPath, pathTriangle } = this.render(
+      CellRenderersMouseClickParams
+    );
+
+    //  如果鼠标点击 三角区域
+    if (ctx.isPointInPath(rectPath, mouse_x, mouse_y)) {
+      //  todo 直接显示编辑框
+    }
+  }
+
   render({
     ctx,
     value,
@@ -56,7 +96,7 @@ class Select extends CellRenderers {
       if (left > positionX + cellWidth) return;
 
       //  画底色
-      const path = drawRectWithRadius(left, top, rectWidth, rectHeight, 6);
+      const path = drawRectWithRadius(left, top, rectWidth, rectHeight, 8);
       ctx.fillStyle = item.color;
       ctx.fill(path);
 
@@ -96,34 +136,6 @@ class Select extends CellRenderers {
       rectPath,
       pathTriangle,
     };
-  }
-
-  mouseenterRender(
-    CellRenderersMouseEventParams: CellRenderersMouseEventParams
-  ) {
-    this.render(CellRenderersMouseEventParams);
-  }
-
-  mousemoveRender(
-    CellRenderersMouseEventParams: CellRenderersMouseEventParams
-  ) {
-    const { mouseEvent, ctx } = CellRenderersMouseEventParams;
-    const { mouse_x, mouse_y } = mouseEvent;
-    const { rectPath, pathTriangle } = this.render(
-      CellRenderersMouseEventParams
-    );
-
-    //  如果鼠标移入到 三角区域
-    if (ctx.isPointInPath(rectPath, mouse_x, mouse_y)) {
-      ctx.fillStyle = "#666";
-      ctx.fill(rectPath);
-      ctx.fillStyle = "#fff";
-      ctx.fill(pathTriangle);
-    }
-  }
-
-  mouseoutRender(CellRenderersMouseEventParams: CellRenderersMouseEventParams) {
-    this.render(CellRenderersMouseEventParams);
   }
 
   formatValueBeforeRender({
