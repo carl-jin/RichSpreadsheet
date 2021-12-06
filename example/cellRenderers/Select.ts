@@ -50,6 +50,7 @@ class Select extends CellRenderers {
 
     //  如果鼠标点击 三角区域
     if (ctx.isPointInPath(rectPath, mouse_x, mouse_y)) {
+      console.log('点击')
       //  todo 直接显示编辑框
     }
   }
@@ -74,14 +75,7 @@ class Select extends CellRenderers {
     const tLeft = positionX + cellWidth - tWidth - spaceX;
     const tTop = Math.ceil(positionY + (cellHeight - tHeight) / 2) - 1;
 
-    ctx.save();
     ctx.font = "14px -apple-system";
-
-    //  裁切下
-    ctx.beginPath();
-    ctx.rect(positionX, positionY, cellWidth - tWidth * 2 - 2, cellHeight);
-    ctx.clip();
-
     value.map((item, index) => {
       const { width: textWidth, height: textHeight } = getTextDimension(
         ctx,
@@ -113,9 +107,6 @@ class Select extends CellRenderers {
       ctx.closePath();
       offsetX += rectWidth + 8;
     });
-
-    //  取消裁切
-    ctx.restore();
 
     //  画长方形
     const rectPath = drawRect(

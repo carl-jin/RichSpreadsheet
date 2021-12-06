@@ -8,12 +8,9 @@
 //  如果有, 就触发 mousemoveRender
 //  如果鼠标移入到其他的 cell 了, 就触发 mouseoutRender
 
-import { getSheetIndex } from "../../methods/get";
-import luckysheetConfigsetting from "../luckysheetConfigsetting";
-import Store from "../../store";
 import { throttle } from "throttle-debounce";
 import { getMouseRelateCell } from "../handler";
-import { createColumnCellRendererParamsViaMouseDetail } from "./helper";
+import { createColumnCellRendererParamsViaMouseDetail,devicePixelRatioHacks } from "./helper";
 
 /**
  * 重新渲染一个单元格
@@ -24,7 +21,14 @@ import { createColumnCellRendererParamsViaMouseDetail } from "./helper";
 const reRenderCell = (mouseDetail, eventName) => {
   const [Render, params] =
     createColumnCellRendererParamsViaMouseDetail(mouseDetail);
-  params && Render[eventName](params);
+
+  if(!params) return
+
+  //  这里需要兼容下不同设备的 devicePixelRatio 的大小， 具体请看 devicePixelRatioHacks 具体实现
+  const [wrappedParams,setDevicePixelRatio,restoreDevicePixelRatio] = devicePixelRatioHacks(params)
+  setDevicePixelRatio()
+  Render[eventName](wrappedParams);
+  restoreDevicePixelRatio()
 };
 
 //  **** 处理 canvas mousemove 事件, 这里同时也响应了单元格的 hover 事件

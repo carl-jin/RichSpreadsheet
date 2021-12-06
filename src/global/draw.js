@@ -1556,6 +1556,9 @@ let cellRender = function (
         positionX: pos_x,
         positionY: pos_y,
       });
+      luckysheetTableContent.closePath();
+      luckysheetTableContent.restore();
+      luckysheetTableContent.save();
     } else {
       //  **** 获取一个 cell 的显示文本参数
       let textInfo = getCellTextInfo(cell, luckysheetTableContent, {

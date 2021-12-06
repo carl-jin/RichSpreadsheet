@@ -94,3 +94,45 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
     return [false, false];
   }
 }
+
+/**
+ * 苹果笔记本 （2倍屏幕，而不是普通的一倍屏幕）会使用 x 2 倍的 canvas 大小
+ * 这样能保证 canvas 显示更加清晰
+ * 因此需要对应的缩放逻辑
+ */
+export function devicePixelRatioHacks(params){
+  const rete = Store.devicePixelRatio
+  const {ctx,positionX,positionY,cellHeight,cellWidth,mouseEvent} = params
+  const {mouse_x,mouse_y} = mouseEvent
+  params = Object.assign({},params,{
+    cellWidth:cellWidth,
+    cellHeight:cellHeight,
+    positionX:positionX,
+    positionY:positionY,
+    mouseEvent:{
+      mouse_x:mouse_x * rete, //  这里目前只需要兼容鼠标位置
+      mouse_y:mouse_y * rete
+    }
+  })
+
+  const setDevicePixelRatio = ()=>{
+    ctx.save();
+    ctx.scale(Store.devicePixelRatio, Store.devicePixelRatio);
+    ctx.beginPath();
+    ctx.rect(positionX, positionY , cellWidth, cellHeight);
+    ctx.clip();
+  }
+
+  const restoreDevicePixelRatio = ()=>{
+    ctx.closePath();
+    ctx.restore();
+    ctx.save();
+    ctx.restore();
+  }
+
+  return [
+    params,
+    setDevicePixelRatio,
+    restoreDevicePixelRatio
+  ]
+}
