@@ -658,6 +658,7 @@ export default function luckysheetHandler() {
           }, 1);
           return;
         } else {
+          //  editor **** cell editor 取消编辑
           formula.updatecell(
             Store.luckysheetCellUpdate[0],
             Store.luckysheetCellUpdate[1]
@@ -1651,13 +1652,6 @@ export default function luckysheetHandler() {
 
         showrightclickmenu($("#luckysheet-rightclick-menu"), x, y);
       }
-
-      // 备注：在mousedown中发送光标信息会漏处理部分(选区)范围
-      /*  server.saveParam(
-        "mv",
-        Store.currentSheetIndex,
-        Store.luckysheet_select_save
-      );*/
     })
     .dblclick(function (event) {
       if ($(event.target).hasClass("luckysheet-mousedown-cancel")) {
@@ -1695,74 +1689,6 @@ export default function luckysheetHandler() {
         row_index = margeset.row[2];
         col_index = margeset.column[2];
       }
-
-      /*if (pivotTable.isPivotRange(row_index, col_index)) {
-        //数据透视表没有 任何数据
-        if (
-          (pivotTable.filter == null || pivotTable.filter.length == 0) &&
-          (pivotTable.row == null || pivotTable.row.length == 0) &&
-          (pivotTable.column == null || pivotTable.column.length == 0) &&
-          (pivotTable.values == null || pivotTable.values.length == 0)
-        ) {
-          return;
-        }
-
-        //数据透视表没有 数值数据
-        if (pivotTable.values == null || pivotTable.values.length == 0) {
-          return;
-        }
-
-        //点击位置不是 数值数据 所在区域
-        if (row_index == 0 || col_index == 0) {
-          return;
-        }
-
-        if (pivotTable.column != null && pivotTable.column.length > 0) {
-          if (
-            pivotTable.values.length >= 2 &&
-            pivotTable.showType == "column"
-          ) {
-            if (
-              row_index <= pivotTable.column.length ||
-              col_index >=
-                pivotTable.pivotDatas[0].length - pivotTable.values.length
-            ) {
-              return;
-            }
-          } else {
-            if (
-              row_index <= pivotTable.column.length - 1 ||
-              col_index >= pivotTable.pivotDatas[0].length - 1
-            ) {
-              return;
-            }
-          }
-        }
-
-        if (pivotTable.row != null && pivotTable.row.length > 0) {
-          if (pivotTable.values.length >= 2 && pivotTable.showType == "row") {
-            if (
-              col_index <= pivotTable.row.length ||
-              row_index >=
-                pivotTable.pivotDatas.length - pivotTable.values.length
-            ) {
-              return;
-            }
-          } else {
-            if (
-              col_index <= pivotTable.row.length - 1 ||
-              row_index >= pivotTable.pivotDatas.length - 1
-            ) {
-              return;
-            }
-          }
-        }
-
-        sheetmanage.addNewSheet(event);
-
-        pivotTable.drillDown(row_index, col_index);
-        return;
-      }*/
 
       if (
         $("#luckysheet-search-formula-parm").is(":visible") ||

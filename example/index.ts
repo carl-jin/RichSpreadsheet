@@ -1,10 +1,12 @@
 import RichSpread from "../src";
 import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
+import cellEditors from './cellEditors'
 
 function create() {
   RichSpread.create({
     cellRenderers,
+    cellEditors,
     container: "luckysheet",
     lang: "zh",
     forceCalculation: false,
@@ -17,6 +19,9 @@ function create() {
     showinfobar: false,
     showsheetbar: false,
     showstatisticBar: false,
+    onReadonlyCellTryToEdit(){
+      console.log('该字段无法编辑')
+    },
     data: [
       {
         name: "Cell",

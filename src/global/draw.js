@@ -1534,19 +1534,20 @@ let cellRender = function (
     luckysheetTableContent.rect(pos_x, pos_y, cellWidth, cellHeight);
     luckysheetTableContent.clip();
     luckysheetTableContent.scale(Store.zoomRatio, Store.zoomRatio);
-    const type = Store.luckysheetfile[0].column[c].type;
+    const currentSheet = Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)]
+    const type = currentSheet.column[c].type;
 
     if (type && Store.cellRenderers[type]) {
       const Render = Store.cellRenderers[type];
       Render.render({
         rowIndex: r,
         colIndex: c,
-        column: Store.luckysheetfile[0].column[c],
-        columns: Store.luckysheetfile[0].column,
+        column: currentSheet.column[c],
+        columns: currentSheet.column,
         cell,
         value: Render.formatValueBeforeRender({
           value: cell.v,
-          cellParams: Store.luckysheetfile[0].column[c].cellParams,
+          cellParams: currentSheet.column[c].cellParams,
         }),
         cellWidth: cellWidth,
         cellHeight: cellHeight,

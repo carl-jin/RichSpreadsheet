@@ -2,37 +2,6 @@ import Store from "../../../store";
 import { getSheetIndex } from "../../../methods/get";
 import luckysheetConfigsetting from "../../luckysheetConfigsetting";
 
-export interface RenderMethods {
-  //  显示一个 dom
-  showDom(
-    position: "top" | "right" | "bottom" | "left",
-    DOM: HTMLDivElement
-  ): {
-    close(): void;
-  };
-
-  //  直接进入编辑
-  edit(): void;
-}
-
-//  给 render 提供一些方法
-function getCanvasMethods(): RenderMethods {
-  //  在 cell 周围显示一个 dom
-  function showDom(position, DOM) {
-    return {
-      close() {},
-    };
-  }
-
-  //  cell 进入编辑
-  function edit() {}
-
-  return {
-    showDom,
-    edit,
-  };
-}
-
 /**
  * 统一生成处理 render 事件的参数
  * @param mouseDetail
@@ -87,7 +56,6 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
           scrollTop -
           cellHeight +
           luckysheetConfigsetting.defaultRowHeight,
-        methods: getCanvasMethods(),
       },
     ];
   } else {

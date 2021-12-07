@@ -42,7 +42,7 @@ class Select extends CellRenderers {
   }
 
   clickRender(CellRenderersMouseClickParams: CellRenderersMouseClickParams) {
-    const { mouseEvent, ctx, methods } = CellRenderersMouseClickParams;
+    const { mouseEvent, ctx } = CellRenderersMouseClickParams;
     const { mouse_x, mouse_y } = mouseEvent;
     const { rectPath, pathTriangle } = this.render(
       CellRenderersMouseClickParams
@@ -50,7 +50,7 @@ class Select extends CellRenderers {
 
     //  如果鼠标点击 三角区域
     if (ctx.isPointInPath(rectPath, mouse_x, mouse_y)) {
-      console.log('点击')
+      console.log("点击");
       //  todo 直接显示编辑框
     }
   }

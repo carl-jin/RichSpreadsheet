@@ -1,8 +1,13 @@
-import { CellRenderers } from "./cellRenderers/cellRenderers";
+import { CellRenderers } from "./customCell/cellRenderers";
+import { CellEditors } from "./customCell/cellEditors";
 
 export type RichSpreadsheetParams = Partial<{
   cellRenderers: {
-   [key:string] : CellRenderers;
+    [key: string]: CellRenderers;
   };
+  cellEditors: {
+    [key: string]: CellEditors;
+  };
+  onReadonlyCellTryToEdit(): void;
   [key: string]: any;
 }>;

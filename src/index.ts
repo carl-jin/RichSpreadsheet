@@ -8,8 +8,13 @@ export type {
   CellRenderersParams,
   FormatValueBeforeRenderParams,
   CellRenderersMouseEventParams,
-  CellRenderersMouseClickParams
-} from "./cellRenderers/cellRenderers";
-export { CellRenderers } from "./cellRenderers/cellRenderers";
+  CellRenderersMouseClickParams,
+} from "./customCell/cellRenderers";
+export type {
+  EditParams,
+  FormatValueBeforeEditParams,
+} from "./customCell/cellEditors";
+export { CellRenderers } from "./customCell/cellRenderers";
+export { CellEditors } from "./customCell/cellEditors";
 export default RichSpread;
 export * from "./type";

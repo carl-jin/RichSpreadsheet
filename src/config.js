@@ -15,7 +15,9 @@ export default {
   pointEditUpdate: null, //编辑器表格更新函数
   cellSpace: [2, 6], //  单元格 padding
   cellRenderers: {}, // 单元格 对应的 column 渲染逻辑
+  cellEditors: {}, // 单元格 对应的 column 编辑框 渲染逻辑
   pointEditZoom: 1, //编辑器表格编辑时缩放比例
+  onReadonlyCellTryToEdit:$.noop,
   // menu: "undo|redo|freezenrow|freezencolumn|download|share|chart|pivot",
   data: [
     {

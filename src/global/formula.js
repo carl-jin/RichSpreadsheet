@@ -361,14 +361,16 @@ const luckysheetformula = {
   oldvalue: null,
   dontupdate: function () {
     let _this = this;
-    Store.luckysheetCellUpdate.length = 0; //clear array
+    console.log(Store.luckysheetCellUpdate)
     $("#luckysheet-functionbox-cell, #luckysheet-rich-text-editor").html(
       _this.oldvalue
     );
     _this.cancelNormalSelected();
-    if (_this.rangetosheet != Store.currentSheetIndex) {
+    Store.luckysheetCellUpdate.length = 0; //clear array
+    return
+  /*  if (_this.rangetosheet != Store.currentSheetIndex) {
       sheetmanage.changeSheetExec(_this.rangetosheet);
-    }
+    }*/
   },
   xssDeal: function (str) {
     if (typeof str !== "string") return str;
@@ -1488,7 +1490,16 @@ const luckysheetformula = {
     }
 
     // API, we get value from user
-    value = value || $input.text();
+    //  editor  **** 取消编辑时在这里赋值
+    const currentSheet =
+      Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
+    const type = currentSheet.column[c].type;
+    if (type && Store.cellEditors[type]) {
+      const Editor = Store.cellEditors[type];
+      value = value ?? Editor.getFinalValue();
+    } else {
+      value = value || $input.text();
+    }
 
     // Hook function
     if (
@@ -1756,7 +1767,6 @@ const luckysheetformula = {
         isRunExecFunction = false;
       }
     }
-
     // value maybe an object
     setcellvalue(r, c, d, value);
     _this.cancelNormalSelected();
@@ -1883,6 +1893,19 @@ const luckysheetformula = {
     }
   },
   cancelNormalSelected: function () {
+    const c = Store.luckysheetCellUpdate[1];
+    const currentSheet =
+      Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
+    const type = currentSheet.column[c].type;
+
+    //  editor **** cell before destroy
+    if (type && Store.cellEditors[type]) {
+      const Editor = Store.cellEditors[type];
+      Editor.beforeDestroy(
+        document.querySelector(".cell-editor-custom"),
+        document.querySelector("#luckysheet-input-box")
+      );
+    }
     let _this = this;
 
     _this.canceFunctionrangeSelected();
@@ -1892,6 +1915,7 @@ const luckysheetformula = {
     ).remove();
     $("#luckysheet-input-box").removeAttr("style");
     $("#luckysheet-input-box-index").hide();
+    $(".cell-editor-custom").remove();
     $(
       "#luckysheet-wa-functionbox-cancel, #luckysheet-wa-functionbox-confirm"
     ).removeClass("luckysheet-wa-calculate-active");
@@ -1899,6 +1923,11 @@ const luckysheetformula = {
     _this.rangestart = false;
     _this.rangedrag_column_start = false;
     _this.rangedrag_row_start = false;
+
+    if (type && Store.cellEditors[type]) {
+      const Editor = Store.cellEditors[type];
+      Editor.afterDestroy();
+    }
   },
   canceFunctionrangeSelected: function () {
     $("#luckysheet-formula-functionrange-select").hide();

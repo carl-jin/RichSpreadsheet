@@ -1,6 +1,4 @@
-import { RenderMethods } from "../controllers/hooks/helper";
-
-type column = {
+export type column = {
   id: string;
   headerName: string;
   cellParams: {
@@ -8,7 +6,7 @@ type column = {
   };
 };
 
-type cell = {
+export type cell = {
   v: string;
 };
 
@@ -26,7 +24,6 @@ export type CellRenderersParams = {
   ctx: CanvasRenderingContext2D;
   positionX: number;
   positionY: number;
-  methods: RenderMethods;
 };
 
 export type FormatValueBeforeRenderParams = {
@@ -41,14 +38,13 @@ export type CellRenderersMouseEventParams = CellRenderersParams & {
     mouse_x: number;
     mouse_y: number;
   };
-  methods: RenderMethods;
 };
 
 export type CellRenderersMouseClickParams = CellRenderersMouseEventParams & {
   selectSaveDetail: any;
 };
 
-export abstract class CellRenderers {
+abstract class CellRenderers {
   //  cell 渲染方法
   abstract render(CellRenderersParams: CellRenderersParams): void;
 
@@ -76,4 +72,20 @@ export abstract class CellRenderers {
   abstract formatValueBeforeRender(
     FormatValueBeforeRenderParams: FormatValueBeforeRenderParams
   ): any;
+
+  /**
+   * 在 render 时候显示一串额外的 dom
+   */
+  public showDom(){
+    //  todo 如何关闭? 什么时候关闭?
+  }
+
+  public startEdit(){
+    //  todo 调用 下面这个 dblclick , 然后模拟下event 事件, 让他能够通过 event 找到对应的 mouse 事件
+    // C:\Users\tomgr\Desktop\RichSpreadsheet\src\controllers\handler.js
+  }
+}
+
+export{
+  CellRenderers
 }
