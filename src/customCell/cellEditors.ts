@@ -1,24 +1,6 @@
-import type { column, cell } from "./cellRenderers";
-import Store from "../store";
-import formula from "../global/formula";
-
-export type EditParams = {
-  rowIndex: number;
-  colIndex: number;
-  column: column;
-  columns: column[];
-  cell: cell;
-  value: any;
-};
-
-export type FormatValueBeforeEditParams = {
-  value: string;
-  cellParams: {
-    [key: string]: any;
-  };
-};
-
-export abstract class CellEditors {
+import type { EditParams, FormatValueBeforeEditParams } from "./types";
+import { CustomBase } from "./customBase";
+export abstract class CellEditors extends CustomBase {
   //  编辑完成后需要存入到 cell 中的值
   abstract getFinalValue(): any;
 
@@ -35,23 +17,4 @@ export abstract class CellEditors {
   abstract formatValueBeforeEdit(
     FormatValueBeforeEditParams: FormatValueBeforeEditParams
   ): any;
-
-  /**
-   * 关闭编辑, 更新值
-   */
-  public finishEdit() {
-    if (Store.luckysheetCellUpdate.length > 0) {
-      const [r, c] = Store.luckysheetCellUpdate;
-      formula.updatecell(r, c);
-    } else {
-      console.log("无法找到当前 row_index 和 col_index", Store);
-    }
-  }
-
-  /**
-   * 停止编辑, 不会更新值
-   */
-  public stopEdit() {
-    formula.dontupdate()
-  }
 }

@@ -19,13 +19,6 @@ export function luckysheetupdateCell(
   cover,
   isnotfocus
 ) {
-  console.log({
-    row_index1,
-    col_index1,
-    d,
-    cover,
-    isnotfocus
-  })
   const currentSheet =
     Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
   const column = currentSheet.column[col_index1];

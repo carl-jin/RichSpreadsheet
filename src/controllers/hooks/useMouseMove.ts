@@ -10,7 +10,11 @@
 
 import { throttle } from "throttle-debounce";
 import { getMouseRelateCell } from "../handler";
-import { createColumnCellRendererParamsViaMouseDetail,devicePixelRatioHacks } from "./helper";
+import {
+  createColumnCellRendererParamsViaMouseDetail,
+  devicePixelRatioHacks,
+} from "./helper";
+import { useShowCellExtractDomOnMouseEnter } from "./useShowCellExtractDomOnMouseEnter";
 
 /**
  * 重新渲染一个单元格
@@ -22,13 +26,14 @@ const reRenderCell = (mouseDetail, eventName) => {
   const [Render, params] =
     createColumnCellRendererParamsViaMouseDetail(mouseDetail);
 
-  if(!params) return
+  if (!params) return;
 
   //  这里需要兼容下不同设备的 devicePixelRatio 的大小， 具体请看 devicePixelRatioHacks 具体实现
-  const [wrappedParams,setDevicePixelRatio,restoreDevicePixelRatio] = devicePixelRatioHacks(params)
-  setDevicePixelRatio()
+  const [wrappedParams, setDevicePixelRatio, restoreDevicePixelRatio] =
+    devicePixelRatioHacks(params);
+  setDevicePixelRatio();
   Render[eventName](wrappedParams);
-  restoreDevicePixelRatio()
+  restoreDevicePixelRatio();
 };
 
 //  **** 处理 canvas mousemove 事件, 这里同时也响应了单元格的 hover 事件
@@ -36,6 +41,9 @@ let currentEnterCellMouseDetail = {}; //  储存当前移入 cell 的信息, 鼠
 export const canvasMousemove = throttle(50, false, (event) => {
   const mouseDetail = getMouseRelateCell(event);
   const isHasPreCell = Object.keys(currentEnterCellMouseDetail).length > 0;
+
+  //  处理鼠标移入单元格后
+  useShowCellExtractDomOnMouseEnter(mouseDetail, event);
 
   if (!mouseDetail) {
     //  如果之前记录的有 cell 信息, 这里触发下 mouseout 事件

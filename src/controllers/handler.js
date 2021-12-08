@@ -1733,6 +1733,8 @@ export default function luckysheetHandler() {
 
   //表格mousemove
   $(document).on("mousemove.luckysheetEvent", function (event) {
+    // luckysheetPostil.overshow(event); //有批注显示
+    // hyperlinkCtrl.overshow(event); //链接提示显示
     window.cancelAnimationFrame(Store.jfautoscrollTimeout);
     //  表格 cell 鼠标事件集
     canvasMousemove(event);

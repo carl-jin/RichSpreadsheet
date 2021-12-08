@@ -9,11 +9,9 @@ export type {
   FormatValueBeforeRenderParams,
   CellRenderersMouseEventParams,
   CellRenderersMouseClickParams,
-} from "./customCell/cellRenderers";
-export type {
   EditParams,
   FormatValueBeforeEditParams,
-} from "./customCell/cellEditors";
+} from "./customCell/types";
 export { CellRenderers } from "./customCell/cellRenderers";
 export { CellEditors } from "./customCell/cellEditors";
 export default RichSpread;

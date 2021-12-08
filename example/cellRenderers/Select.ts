@@ -13,48 +13,6 @@ import {
 } from "./helper";
 
 class Select extends CellRenderers {
-  mouseenterRender(
-    CellRenderersMouseEventParams: CellRenderersMouseEventParams
-  ) {
-    this.render(CellRenderersMouseEventParams);
-  }
-
-  mousemoveRender(
-    CellRenderersMouseEventParams: CellRenderersMouseEventParams
-  ) {
-    const { mouseEvent, ctx } = CellRenderersMouseEventParams;
-    const { mouse_x, mouse_y } = mouseEvent;
-    const { rectPath, pathTriangle } = this.render(
-      CellRenderersMouseEventParams
-    );
-
-    //  如果鼠标移入到 三角区域
-    if (ctx.isPointInPath(rectPath, mouse_x, mouse_y)) {
-      ctx.fillStyle = "#666";
-      ctx.fill(rectPath);
-      ctx.fillStyle = "#fff";
-      ctx.fill(pathTriangle);
-    }
-  }
-
-  mouseoutRender(CellRenderersMouseEventParams: CellRenderersMouseEventParams) {
-    this.render(CellRenderersMouseEventParams);
-  }
-
-  clickRender(CellRenderersMouseClickParams: CellRenderersMouseClickParams) {
-    const { mouseEvent, ctx } = CellRenderersMouseClickParams;
-    const { mouse_x, mouse_y } = mouseEvent;
-    const { rectPath, pathTriangle } = this.render(
-      CellRenderersMouseClickParams
-    );
-
-    //  如果鼠标点击 三角区域
-    if (ctx.isPointInPath(rectPath, mouse_x, mouse_y)) {
-      console.log("点击");
-      //  todo 直接显示编辑框
-    }
-  }
-
   render({
     ctx,
     value,
@@ -129,6 +87,48 @@ class Select extends CellRenderers {
     };
   }
 
+  mouseenterRender(
+    CellRenderersMouseEventParams: CellRenderersMouseEventParams
+  ) {
+    this.render(CellRenderersMouseEventParams);
+  }
+
+  mousemoveRender(
+    CellRenderersMouseEventParams: CellRenderersMouseEventParams
+  ) {
+    const { mouseEvent, ctx } = CellRenderersMouseEventParams;
+    const { mouse_x, mouse_y } = mouseEvent;
+    const { rectPath, pathTriangle } = this.render(
+      CellRenderersMouseEventParams
+    );
+
+    //  如果鼠标移入到 三角区域
+    if (ctx.isPointInPath(rectPath, mouse_x, mouse_y)) {
+      ctx.fillStyle = "#666";
+      ctx.fill(rectPath);
+      ctx.fillStyle = "#fff";
+      ctx.fill(pathTriangle);
+    }
+  }
+
+  mouseoutRender(CellRenderersMouseEventParams: CellRenderersMouseEventParams) {
+    this.render(CellRenderersMouseEventParams);
+  }
+
+  clickRender(CellRenderersMouseClickParams: CellRenderersMouseClickParams) {
+    const { mouseEvent, ctx, rowIndex, colIndex } =
+      CellRenderersMouseClickParams;
+    const { mouse_x, mouse_y } = mouseEvent;
+    const { rectPath, pathTriangle } = this.render(
+      CellRenderersMouseClickParams
+    );
+
+    //  如果鼠标点击 三角区域
+    if (ctx.isPointInPath(rectPath, mouse_x, mouse_y)) {
+      this.startEdit(CellRenderersMouseClickParams);
+    }
+  }
+
   formatValueBeforeRender({
     value,
     cellParams,
@@ -144,6 +144,13 @@ class Select extends CellRenderers {
       return [];
     }
   }
+
+  showExtractDomOnMouseEnter(
+    CellRenderersParams: CellRenderersParams
+  ): false | HTMLElement {
+    return false;
+  }
+
 
   private transformKeyArrToTitleArr(arr: string[], cellParams) {
     let selectOptions = cellParams.options.options;
