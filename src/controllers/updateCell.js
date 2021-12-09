@@ -203,6 +203,8 @@ export function luckysheetupdateCell(
     Dom.classList.add("cell-editor-custom");
     $("#luckysheet-input-box").css("padding", "0");
     $("#luckysheet-rich-text-editor").hide().after(Dom);
+
+    Editor.afterMounted(Dom);
   } else {
     $("#luckysheet-rich-text-editor").html(value).show();
   }

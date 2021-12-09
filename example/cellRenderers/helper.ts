@@ -1,3 +1,46 @@
+import domtoimage from "dom-to-image";
+
+/**
+ * 绘制 html 代码
+ * @param html
+ * @param cssObj
+ */
+export function drawHTMLtoImg(
+  html: string,
+  cssObj: {
+    [key: string]: any;
+  }
+) {
+  return new Promise((res) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    div.style.cssText = Object.keys(cssObj)
+      .map((key) => {
+        return `${key}:${cssObj[key]}`;
+      })
+      .join(";");
+    const box = document.createElement("section");
+    box.style.cssText = `position:absolute;left:0;top:0;opacity:0`;
+    box.append(div);
+    document.body.append(box);
+    domtoimage
+      .toPng(div)
+      .then((dataurl) => {
+        let img = new Image();
+        img.onload = () => {
+          res(img);
+        };
+
+        img.src = dataurl;
+
+        box.remove();
+      })
+      .catch((error) => {
+        console.error("无法转化");
+      });
+  });
+}
+
 /**
  * 长方形
  * @param x

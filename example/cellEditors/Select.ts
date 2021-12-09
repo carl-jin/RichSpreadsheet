@@ -39,4 +39,7 @@ export class Select extends CellEditors {
   afterDestroy() {
     console.log("after x销毁");
   }
+
+  afterMounted(DOM: HTMLElement): void {
+  }
 }

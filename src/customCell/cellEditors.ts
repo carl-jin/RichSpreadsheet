@@ -17,4 +17,7 @@ export abstract class CellEditors extends CustomBase {
   abstract formatValueBeforeEdit(
     FormatValueBeforeEditParams: FormatValueBeforeEditParams
   ): any;
+
+  //  当 dom 塞入后触发
+  abstract afterMounted(DOM: HTMLElement): void;
 }
