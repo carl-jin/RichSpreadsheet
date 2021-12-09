@@ -1197,7 +1197,7 @@ export default function luckysheetHandler() {
         selectHightlightShow();
 
         //  处理单元格点击渲染
-        canvasMouseClick(event)
+        canvasMouseClick(event);
 
         if (
           luckysheetFreezen.freezenhorizontaldata != null ||
@@ -3622,9 +3622,46 @@ export default function luckysheetHandler() {
               width = imgItem.default.width - offsetLeft;
             }
 
-            offsetTop = imgItem.crop.offsetTop;
+    //菜单栏 插入图片按钮
+    $("#luckysheet-insertImg-btn-title").click(function () {
+        // *如果禁止前台编辑，则中止下一步操作
+        if (!checkIsAllowEdit()) {
+            tooltip.info("", locale().pivotTable.errorNotAllowEdit);
+            return
+        }
+        if(!checkProtectionAuthorityNormal(Store.currentSheetIndex, "editObjects")){
+            return;
+        }
+        $("#luckysheet-imgUpload").click();    
+    });
+    $("#luckysheetInsertImage").click(function () {
+        if(!checkProtectionAuthorityNormal(Store.currentSheetIndex, "editObjects")){
+            return;
+        }
+        $("#luckysheet-imgUpload").click();
+        $("#luckysheet-rightclick-menu").hide();
+    })
+    $("#luckysheet-imgUpload").click(function (e) {
+        e.stopPropagation();
+    });
+    $("#luckysheet-imgUpload").on("change", function(e){
+        if(!checkProtectionAuthorityNormal(Store.currentSheetIndex, "editObjects",false)){
+            return;
+        }
+        let file = e.currentTarget.files[0];
+        imageCtrl.insertImg(file);
+    });
 
-            height = imgItem.crop.height + topchange;
+    //菜单栏 插入链接按钮
+    $("#luckysheet-insertLink-btn-title").click(function () {
+        // *如果禁止前台编辑，则中止下一步操作
+        if (!checkIsAllowEdit()) {
+            tooltip.info("", locale().pivotTable.errorNotAllowEdit);
+            return
+        }
+        if(!checkProtectionNotEnable(Store.currentSheetIndex)){
+            return;
+        }
 
             if (height < 1) {
               height = 1;
