@@ -3,7 +3,7 @@ import {
   CellRenderersMouseClickParams,
   FormatValueBeforeRenderParams,
   CellRenderersMouseEventParams,
-  CellRenderersParams,
+  CellRenderersParams, ExtractDomConfig,
 } from "../../src";
 import { getTextDimension } from "./helper";
 
@@ -45,7 +45,7 @@ export class Hyperlink extends CellRenderers {
 
   showExtractDomOnMouseEnter(
     CellRenderersParams: CellRenderersParams
-  ): false | HTMLElement {
+  ): ExtractDomConfig {
     const { value } = CellRenderersParams;
     const { title, url } = value;
     if (!title || !url) return false;

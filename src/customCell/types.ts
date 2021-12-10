@@ -59,3 +59,12 @@ export type FormatValueBeforeEditParams = {
     [key: string]: any;
   };
 };
+
+type PositionStr = "left" | "right" | "bottom" | "top";
+
+export type ExtractDomConfig =
+  | Partial<{
+      [key in PositionStr]: HTMLElement | false;
+    }>
+  | HTMLElement
+  | false;

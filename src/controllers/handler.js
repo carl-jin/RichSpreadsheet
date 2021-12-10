@@ -73,6 +73,7 @@ import locale from "../locale/locale";
 import Store from "../store";
 import { canvasMousemove } from "./hooks/useMouseMove";
 import { canvasMouseClick } from "./hooks/useMouseClick";
+import {removeCellExtractDom} from "./hooks/useShowCellExtractDomOnMouseEnter";
 // import { createLuckyChart, hideAllNeedRangeShow } from '../expendPlugins/chart/plugin'
 
 export const getMouseRelateCell = (event) => {
@@ -143,6 +144,9 @@ export default function luckysheetHandler() {
 
   //    表格鼠标滚动
   $("#luckysheet-grid-window-1").mousewheel(function (event, delta) {
+    //  删除掉 cell 额外的dom
+    removeCellExtractDom()
+
     let scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft(),
       scrollTop = $("#luckysheet-scrollbar-y").scrollTop();
     let visibledatacolumn_c = Store.visibledatacolumn,
@@ -287,6 +291,9 @@ export default function luckysheetHandler() {
 
       //有批注在编辑时
       luckysheetPostil.removeActivePs();
+
+      //  删除掉 cell 额外的dom
+      removeCellExtractDom()
 
       //图片 active/cropping
       /*  if (
@@ -3632,7 +3639,7 @@ export default function luckysheetHandler() {
         if(!checkProtectionAuthorityNormal(Store.currentSheetIndex, "editObjects")){
             return;
         }
-        $("#luckysheet-imgUpload").click();    
+        $("#luckysheet-imgUpload").click();
     });
     $("#luckysheetInsertImage").click(function () {
         if(!checkProtectionAuthorityNormal(Store.currentSheetIndex, "editObjects")){
@@ -5258,6 +5265,9 @@ export default function luckysheetHandler() {
     .on("mousedown.luckysheetEvent", function (event) {
       //有批注在编辑时
       luckysheetPostil.removeActivePs();
+
+      //  删除掉 cell 额外的dom
+      removeCellExtractDom(event)
 
       hideMenuByCancel(event);
 

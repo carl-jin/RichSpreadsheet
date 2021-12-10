@@ -4,6 +4,7 @@ import {
   FormatValueBeforeRenderParams,
   CellRenderersMouseEventParams,
   CellRenderersParams,
+  ExtractDomConfig,
 } from "../../src";
 import { drawHTMLtoImg, getTextDimension } from "./helper";
 
@@ -84,8 +85,38 @@ export class RichText extends CellRenderers {
 
   showExtractDomOnMouseEnter(
     CellRenderersParams: CellRenderersParams
-  ): HTMLElement | false {
+  ): ExtractDomConfig {
     const { value } = CellRenderersParams;
+
+    return {
+      bottom: this.getATagsExtractDom(value),
+      right: this.getFullContentExtractDom(value),
+    };
+  }
+
+  private getFullContentExtractDom(value: string): HTMLElement {
+    const div = document.createElement("div");
+    div.style.cssText = `
+      padding: 6px 6px;
+      max-width: 340px;
+      min-width: 120px;
+      min-height: 80px;
+      max-height: 180px;
+      white-space: normal;
+      overflow: auto;
+      overflow-x: hidden;
+    `;
+
+    div.innerHTML = value;
+
+    $(div).find("p").css({
+      "padding-bottom": "12px",
+    });
+
+    return div;
+  }
+
+  private getATagsExtractDom(value: string): false | HTMLElement {
     let html = `<div style="padding: 6px 12px">`;
 
     const div = document.createElement("div");

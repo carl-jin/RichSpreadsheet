@@ -1,5 +1,4 @@
 import { createColumnCellRendererParamsViaMouseDetail } from "./helper";
-import Store from "../../store";
 
 enum ClassName {
   NAME = "rich-spreadsheet-cell-extract-dom",
@@ -8,14 +7,86 @@ enum ClassName {
 let timerRemove = null;
 let timerShow = null;
 
+function RenderDom(
+  position: "left" | "right" | "top" | "bottom",
+  DOM: HTMLElement,
+  params
+) {
+  //  渲染 DOM
+  const { rowIndex, colIndex, cellWidth } = params;
+
+  let el = document.createElement("section");
+  el.classList.add(ClassName.NAME);
+  el.dataset.row = rowIndex;
+  el.dataset.col = colIndex;
+
+  const $el = $(el);
+  $el.append(DOM);
+
+  let top = 0;
+  let left = 0;
+
+  //  判断不同位置
+  if (position === "bottom") {
+    left = params.positionX;
+    top = params.positionY + params.cellHeight;
+  }
+  if (position === "right") {
+    left = params.positionX + cellWidth;
+    top = params.positionY;
+  }
+
+  $el.css({
+    position: "absolute",
+    background: "#f0fdfb",
+    "box-shadow":
+      "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
+    "border-radius": "4px",
+    border: "1px solid #ccc",
+    "z-index": 99999,
+    "font-size": "14px",
+    "user-select": "auto",
+    left: 0,
+    top: 0,
+    opacity: 0,
+  });
+
+  $el.appendTo($("#luckysheet"));
+
+  //  边缘检测, 这里要放在 $el 插入 dom 后才能获取到实际的 size
+  const { width: elWidth, height: elHeight } = $el
+    .get(0)
+    .getBoundingClientRect();
+  const { width: boxWidth, height: boxHeight } = $("#luckysheet")
+    .get(0)
+    .getBoundingClientRect();
+
+  //  右侧溢出
+  if (left + elWidth + 20 > boxWidth) {
+    left = params.positionX - elWidth;
+  }
+
+  //  底部溢出
+  if (top + elHeight + 20 > boxHeight) {
+    top = params.positionY - elHeight;
+  }
+
+  $(el).css({
+    left,
+    top,
+  });
+
+  $el.animate({ opacity: 1 }, { duration: 200 });
+}
+
 /**
  * 判断当前的 dom 是否处于 hover 状态
  */
 function isHover(event) {
   let el = document.elementFromPoint(event.pageX, event.pageY);
   if (
-    (el && el.closest(`.${ClassName.NAME}`)) ||
-    el.classList.contains(ClassName.NAME)
+    el?.closest(`.${ClassName.NAME}`) ||
+    el?.classList.contains(ClassName.NAME)
   ) {
     return true;
   }
@@ -38,29 +109,37 @@ function removeDom(event, force = false) {
   }, 300);
 }
 
+export function removeCellExtractDom(event = null) {
+  if (event) {
+    removeDom(event);
+  } else {
+    removeDom(null, true);
+  }
+}
+
 export function useShowCellExtractDomOnMouseEnter(mouseDetail, event) {
-  //  如果不是在表格上的 mousemove 事件,直接关闭
-  if (!event.target || !event.target.closest("#luckysheet-cell-main")) {
-    removeDom(event);
-    return;
-  }
-
-  //  如果找不到 dom
-  if (!mouseDetail) {
-    removeDom(event);
-    return;
-  }
-
-  const [Render, params] =
-    createColumnCellRendererParamsViaMouseDetail(mouseDetail);
-
-  if (!params) {
-    removeDom(event);
-    return;
-  }
-
   window.clearTimeout(timerShow);
   timerShow = setTimeout(() => {
+    //  如果不是在表格上的 mousemove 事件,直接关闭
+    if (!event.target || !event.target.closest("#luckysheet-cell-main")) {
+      removeDom(event);
+      return;
+    }
+
+    //  如果找不到 dom
+    if (!mouseDetail) {
+      removeDom(event);
+      return;
+    }
+
+    const [Render, params] =
+      createColumnCellRendererParamsViaMouseDetail(mouseDetail);
+
+    if (!params) {
+      removeDom(event);
+      return;
+    }
+
     //  判断当前的 rich-spreadsheet-cell-extract-dom 是否存在
     const $existDom = $(`.${ClassName.NAME}`);
     if ($existDom.length > 0) {
@@ -80,40 +159,16 @@ export function useShowCellExtractDomOnMouseEnter(mouseDetail, event) {
     }
 
     const DOM = Render.showExtractDomOnMouseEnter(params);
-    if (!DOM) return;
+    if (DOM === false) return;
 
-    //  渲染 DOM
-    const $main = $("#luckysheet-cell-main");
-    const { rowIndex, colIndex } = params;
-
-    let el = document.createElement("section");
-    let scrollLeft = $main.scrollLeft();
-    let scrollTop = $main.scrollTop();
-    el.classList.add(ClassName.NAME);
-    el.dataset.row = rowIndex;
-    el.dataset.col = colIndex;
-
-    const $el = $(el);
-    $el.append(DOM);
-
-    $el.css({
-      position: "absolute",
-      background: "#fff",
-      padding: "8px 4px",
-      "box-shadow": "0 1px 3px 1px rgba(60, 64 ,67 ,.4)",
-      "border-radius": "8px",
-      "z-index": 999,
-      "font-size": "14px",
-      left: params.positionX - Store.rowHeaderWidth + scrollLeft,
-      top:
-        params.positionY -
-        Store.columnHeaderHeight +
-        params.cellHeight +
-        scrollTop,
-      opacity: 0,
-    });
-
-    $el.appendTo($main);
-    $el.animate({ opacity: 1 }, { duration: 200 });
-  }, 400);
+    if (DOM instanceof HTMLElement) {
+      //  如果返回的是 DOM 默认渲染到底部
+      RenderDom("bottom", DOM, params);
+    } else {
+      //  如果返回的是多个 DOM
+      Object.keys(DOM).map((key) => {
+        RenderDom(key, DOM[key], params);
+      });
+    }
+  }, 200);
 }

@@ -1,4 +1,4 @@
-import { CellRenderers } from "../../src";
+import {CellRenderers, ExtractDomConfig} from "../../src";
 import type {
   FormatValueBeforeRenderParams,
   CellRenderersParams,
@@ -147,7 +147,7 @@ class Select extends CellRenderers {
 
   showExtractDomOnMouseEnter(
     CellRenderersParams: CellRenderersParams
-  ): false | HTMLElement {
+  ): ExtractDomConfig {
     return false;
   }
 

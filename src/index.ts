@@ -11,6 +11,7 @@ export type {
   CellRenderersMouseClickParams,
   EditParams,
   FormatValueBeforeEditParams,
+  ExtractDomConfig,
 } from "./customCell/types";
 export { CellRenderers } from "./customCell/cellRenderers";
 export { CellEditors } from "./customCell/cellEditors";

@@ -3,6 +3,7 @@ import type {
   CellRenderersMouseEventParams,
   CellRenderersMouseClickParams,
   FormatValueBeforeRenderParams,
+  ExtractDomConfig,
 } from "./types";
 import { CustomBase } from "./customBase";
 
@@ -33,7 +34,7 @@ abstract class CellRenderers extends CustomBase {
   //  鼠标移入单元格时, 显示额外的 dom节点
   abstract showExtractDomOnMouseEnter(
     CellRenderersParams: CellRenderersParams
-  ): HTMLElement | false;
+  ): ExtractDomConfig;
 
   //  在进入渲染 Render 前, 提前处理 value 值
   abstract formatValueBeforeRender(

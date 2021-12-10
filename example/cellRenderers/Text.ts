@@ -4,6 +4,7 @@ import {
   FormatValueBeforeRenderParams,
   CellRenderersMouseEventParams,
   CellRenderersParams,
+  ExtractDomConfig,
 } from "../../src";
 import { getTextDimension } from "./helper";
 
@@ -64,7 +65,27 @@ export class Text extends CellRenderers {
 
   showExtractDomOnMouseEnter(
     CellRenderersParams: CellRenderersParams
-  ): HTMLElement | false {
-    return false;
+  ): ExtractDomConfig {
+    return {
+      right:this.getFullContentExtractDom(CellRenderersParams.value)
+    };
+  }
+
+  private getFullContentExtractDom(value: string): HTMLElement {
+    const div = document.createElement("div");
+    div.style.cssText = `
+      padding: 6px 6px;
+      max-width: 340px;
+      min-width: 120px;
+      min-height: 20px;
+      max-height: 180px;
+      white-space: normal;
+      overflow: auto;
+      overflow-x: hidden;
+    `;
+
+    div.innerHTML = value;
+
+    return div;
   }
 }
