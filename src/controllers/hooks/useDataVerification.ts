@@ -67,8 +67,16 @@ export function removeDataVerificationTooltip() {
   removeDom();
 }
 
+export function detectIsPassDataVerification(row, col) {
+  return !window.richSpreadSheetDataVerificationCache[`${row}_${col}`];
+}
+
 export function useDataVerificationBuildCache() {
-  let file:FileData = Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
+  let file: FileData =
+    Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
+
+  //  清空
+  window.richSpreadSheetDataVerificationCache = {};
 
   //  构建验证缓存, 避免每次 render 时候都重新执行 正则验证
   for (let row = 0; row < file.data.length; row++) {

@@ -119,8 +119,8 @@ function jfrefreshgrid(data, range, allParam, isRunExecFunction = true, isRefres
     //Store.flowdata
     Store.flowdata = data;
     // editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
-    useDataVerificationBuildCache()
     file.data = Store.flowdata;
+    useDataVerificationBuildCache()
 
     // 必须要处理，可能之前的config为空，则也需要清空
     if(cfg != null){

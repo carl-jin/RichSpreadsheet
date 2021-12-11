@@ -1,5 +1,6 @@
 import { CellRenderers } from "./customCell/cellRenderers";
 import { CellEditors } from "./customCell/cellEditors";
+import { cell } from "./customCell/types";
 
 export type RichSpreadsheetParams = Partial<{
   cellRenderers: {
@@ -9,6 +10,13 @@ export type RichSpreadsheetParams = Partial<{
     [key: string]: CellEditors;
   };
   onReadonlyCellTryToEdit(): void;
-  onCellUpdate(): void;
+  onCellUpdate(params: {
+    colIndex: number;
+    rowIndex: number;
+    oldCell: cell;
+    newCell: cell;
+    value: string;
+    isRefresh: boolean;
+  }): void;
   [key: string]: any;
 }>;

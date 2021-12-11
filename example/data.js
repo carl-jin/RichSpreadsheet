@@ -10,7 +10,7 @@ const data = {
       permission: 0,
       dataVerification: [
         {
-          pattern: "\d+",
+          pattern: "\\d+",
           errorMessage: "必须为数字",
         },
         {
@@ -330,7 +330,7 @@ const data = {
       minWidth: 70,
       dataVerification: [
         {
-          pattern: "\d+",
+          pattern: "\\d+",
           errorMessage: "必须为数字",
         },
         {

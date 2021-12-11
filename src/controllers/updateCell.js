@@ -10,6 +10,7 @@ import cleargridelement from "../global/cleargridelement";
 import { isInlineStringCell } from "./inlineString";
 import Store from "../store";
 import { getSheetIndex } from "../methods/get";
+import { removeDataVerificationTooltip } from "./hooks/useDataVerification";
 
 //  editor **** editor cell 编辑
 export function luckysheetupdateCell(
@@ -22,6 +23,7 @@ export function luckysheetupdateCell(
   const currentSheet =
     Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
   const column = currentSheet.column[col_index1];
+  removeDataVerificationTooltip();
 
   //  readonly 状态下禁止修改
   if (column.readonly === true) {
