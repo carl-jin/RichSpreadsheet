@@ -1405,7 +1405,6 @@ const luckysheetformula = {
   },
   //  **** cell update todo 更新 cell 的值
   updatecell: function (r, c, value, isRefresh = true) {
-    //  todo 研究这里的 cell 值
     let _this = this;
 
     let $input = $("#luckysheet-rich-text-editor");

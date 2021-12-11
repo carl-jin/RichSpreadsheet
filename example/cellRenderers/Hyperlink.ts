@@ -3,7 +3,8 @@ import {
   CellRenderersMouseClickParams,
   FormatValueBeforeRenderParams,
   CellRenderersMouseEventParams,
-  CellRenderersParams, ExtractDomConfig,
+  CellRenderersParams,
+  ExtractDomConfig,
 } from "../../src";
 import { getTextDimension } from "../../src";
 
@@ -198,9 +199,6 @@ export class Hyperlink extends CellRenderers {
       isHorizontal = false;
     }
 
-    //  清理下单元格
-    this.clearCell(CellRenderersParams)
-
     //  处理下居中定位
     const x = isHorizontal
       ? positionX
@@ -209,7 +207,12 @@ export class Hyperlink extends CellRenderers {
       ? positionY + (cellHeight - imagePaintHeight) / 2
       : positionY;
 
+    this.setDevicePixelRatio(CellRenderersParams);
+    this.clearCell(CellRenderersParams);
+    this.startCellClip(CellRenderersParams);
     ctx.drawImage(img, x, y, imagePaintWidth, imagePaintHeight);
+    this.closeCellClip(CellRenderersParams);
+    this.closeDevicePixelRatio(CellRenderersParams);
   }
 
   private getLink(link: string) {

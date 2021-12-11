@@ -1,4 +1,5 @@
 import domtoimage from "dom-to-image";
+import Store from "../../store";
 
 /**
  * 绘制 html 代码
@@ -8,6 +9,8 @@ import domtoimage from "dom-to-image";
 export function drawHTMLtoImg(
   html: string,
   cssObj: {
+    width: string;
+    height: string;
     [key: string]: any;
   }
 ) {
@@ -23,8 +26,29 @@ export function drawHTMLtoImg(
     box.style.cssText = `position:absolute;left:0;top:0;opacity:0`;
     box.append(div);
     document.body.append(box);
+
+    //  设置图片缩放
+    const scale = Store.devicePixelRatio;
+    let options = {};
+
+    if (scale !== 1) {
+      const imageWidth = parseInt(cssObj.width);
+      const imageHeight = parseInt(cssObj.height);
+      options = {
+        width: imageWidth * scale,
+        height: imageHeight * scale,
+        style: {
+          transform: "scale(" + scale + ")",
+          transformOrigin: "top left",
+          overflow: "hidden",
+          width: `${imageWidth}px`,
+          height: `${imageHeight}px`,
+        },
+      };
+    }
+
     domtoimage
-      .toPng(div)
+      .toPng(div, options)
       .then((dataurl) => {
         let img = new Image();
         img.onload = () => {

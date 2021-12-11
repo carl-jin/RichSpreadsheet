@@ -12,16 +12,27 @@ export class RichText extends CellRenderers {
   private richTextCache = [];
 
   render(CellRenderersParams: CellRenderersParams): void {
-    const { value, cellHeight, cellWidth, ctx, positionX, positionY, spaceX } =
-      CellRenderersParams;
+    const {
+      value,
+      cellHeight,
+      cellWidth,
+      ctx,
+      positionX,
+      positionY,
+      spaceX,
+      spaceY,
+    } = CellRenderersParams;
 
     //  清理下单元格
     this.clearCell(CellRenderersParams);
 
     //  判断是否有缓存
     let cache = this.richTextCache.find((item) => {
-      return item.content === value + `${cellWidth}_`;
+      return item.content === value + `${cellWidth}_${cellHeight}`;
     });
+
+    if (value.trim().length === 0) return;
+
     if (cache) {
       this.renderRichText(cache.img, CellRenderersParams);
     } else {
@@ -37,10 +48,11 @@ export class RichText extends CellRenderers {
 
       drawHTMLtoImg(value, {
         width: `${cellWidth - spaceX * 2}px`,
+        height: `${cellHeight}px`,
         "font-size": "14px",
       }).then((img: HTMLImageElement) => {
         this.richTextCache.push({
-          content: value + `${cellWidth}_`,
+          content: value + `${cellWidth}_${cellHeight}`,
           img: img,
         });
         this.renderRichText(img, CellRenderersParams);
@@ -54,11 +66,19 @@ export class RichText extends CellRenderers {
   ) {
     const { ctx, positionX, positionY, spaceX } = CellRenderersParams;
     const { width: imageWidth, height: imageHeight } = img;
-    this.clearCell(CellRenderersParams);
 
+    this.setDevicePixelRatio(CellRenderersParams);
+    this.clearCell(CellRenderersParams);
     this.startCellClip(CellRenderersParams);
-    ctx.drawImage(img, positionX + spaceX, positionY, imageWidth, imageHeight);
+    ctx.drawImage(
+      img,
+      positionX + spaceX,
+      positionY,
+      imageWidth / this.getDevicePixelRatio(),
+      imageHeight / this.getDevicePixelRatio()
+    );
     this.closeCellClip(CellRenderersParams);
+    this.closeDevicePixelRatio(CellRenderersParams);
   }
 
   formatValueBeforeRender(
@@ -94,7 +114,7 @@ export class RichText extends CellRenderers {
     };
   }
 
-  private getFullContentExtractDom(value: string): HTMLElement {
+  private getFullContentExtractDom(value: string): HTMLElement | false {
     const div = document.createElement("div");
     div.style.cssText = `
       padding: 6px 6px;
@@ -113,7 +133,9 @@ export class RichText extends CellRenderers {
       "padding-bottom": "12px",
     });
 
-    return div;
+    let isNeedToShow = value.trim().length > 10;
+
+    return isNeedToShow ? div : false;
   }
 
   private getATagsExtractDom(value: string): false | HTMLElement {

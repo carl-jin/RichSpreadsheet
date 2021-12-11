@@ -2,6 +2,7 @@ import Store from "../store";
 import { getSheetIndex } from "../methods/get";
 import formula from "../global/formula";
 import type { CellRenderersParams } from "./types";
+import { decomposeMatrix2DW3 } from "./helper/tools";
 
 export class CustomBase {
   /**
@@ -85,5 +86,33 @@ export class CustomBase {
       CellRenderersParams;
     ctx.closePath();
     ctx.restore();
+  }
+
+  /**
+   * 设置 devicePixelRatio 因为部分控件（如富文本，图片）是延迟渲染
+   * 这时 restore 已经执行过了，所以需要单独设置下
+   * @param CellRenderersParams
+   * @protected
+   */
+  protected setDevicePixelRatio(CellRenderersParams: CellRenderersParams) {
+    const { ctx } = CellRenderersParams;
+    const { scaleX, scaleY } = decomposeMatrix2DW3(ctx.getTransform());
+
+    ctx.save();
+    if (
+      scaleY !== Store.devicePixelRatio &&
+      scaleX !== Store.devicePixelRatio
+    ) {
+      ctx.scale(Store.devicePixelRatio, Store.devicePixelRatio);
+    }
+  }
+
+  protected closeDevicePixelRatio(CellRenderersParams: CellRenderersParams) {
+    const { ctx } = CellRenderersParams;
+    ctx.restore();
+  }
+
+  protected getDevicePixelRatio() {
+    return Store.devicePixelRatio;
   }
 }
