@@ -64,6 +64,7 @@ import Store from "../store";
 import locale from "../locale/locale";
 import json from "./json";
 import method from "./method";
+import { useDataVerificationBuildCache } from "../controllers/hooks/useDataVerification";
 
 const luckysheetformula = {
   error: {
@@ -361,14 +362,14 @@ const luckysheetformula = {
   oldvalue: null,
   dontupdate: function () {
     let _this = this;
-    console.log(Store.luckysheetCellUpdate)
+    console.log(Store.luckysheetCellUpdate);
     $("#luckysheet-functionbox-cell, #luckysheet-rich-text-editor").html(
       _this.oldvalue
     );
     _this.cancelNormalSelected();
     Store.luckysheetCellUpdate.length = 0; //clear array
-    return
-  /*  if (_this.rangetosheet != Store.currentSheetIndex) {
+    return;
+    /*  if (_this.rangetosheet != Store.currentSheetIndex) {
       sheetmanage.changeSheetExec(_this.rangetosheet);
     }*/
   },
@@ -1402,7 +1403,9 @@ const luckysheetformula = {
         opacity: "0.13",
       });
   },
+  //  **** cell update todo 更新 cell 的值
   updatecell: function (r, c, value, isRefresh = true) {
+    //  todo 研究这里的 cell 值
     let _this = this;
 
     let $input = $("#luckysheet-rich-text-editor");
@@ -6617,7 +6620,8 @@ const luckysheetformula = {
         });
       }
 
-      editor.webWorkerFlowDataCache(Store.flowdata); //worker存数据
+      // editor.webWorkerFlowDataCache(Store.flowdata); //worker存数据
+      useDataVerificationBuildCache();
       _this.groupValuesRefreshData = [];
     }
   },

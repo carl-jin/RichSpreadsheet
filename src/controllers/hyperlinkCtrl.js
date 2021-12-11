@@ -14,6 +14,7 @@ import menuButton from "./menuButton";
 import { getSheetIndex } from "../methods/get";
 import locale from "../locale/locale";
 import Store from "../store";
+import {useDataVerificationBuildCache} from "./hooks/useDataVerification";
 
 const hyperlinkCtrl = {
   item: {
@@ -410,7 +411,8 @@ const hyperlinkCtrl = {
       currentHyperlink;
 
     Store.flowdata = d;
-    editor.webWorkerFlowDataCache(Store.flowdata); //worker存数据
+    // editor.webWorkerFlowDataCache(Store.flowdata); //worker存数据
+    useDataVerificationBuildCache()
     Store.luckysheetfile[getSheetIndex(sheetIndex)].data = Store.flowdata;
 
     //共享编辑模式

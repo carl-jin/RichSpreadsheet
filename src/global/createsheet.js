@@ -5,6 +5,7 @@ import formula from './formula';
 import { luckysheetrefreshgrid } from './refresh';
 import sheetmanage from '../controllers/sheetmanage';
 import Store from '../store';
+import {useDataVerificationBuildCache} from "../controllers/hooks/useDataVerification";
 
 export default function luckysheetcreatesheet(colwidth, rowheight, data, cfg, active) {
     if(active == null){
@@ -40,7 +41,8 @@ export default function luckysheetcreatesheet(colwidth, rowheight, data, cfg, ac
         Store.flowdata = data;
     }
 
-    editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+    // editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+    useDataVerificationBuildCache()
 
     rhchInit(rowheight, colwidth);
 

@@ -9,5 +9,6 @@ export type RichSpreadsheetParams = Partial<{
     [key: string]: CellEditors;
   };
   onReadonlyCellTryToEdit(): void;
+  onCellUpdate(): void;
   [key: string]: any;
 }>;

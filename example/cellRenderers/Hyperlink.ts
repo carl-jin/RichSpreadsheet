@@ -5,7 +5,7 @@ import {
   CellRenderersMouseEventParams,
   CellRenderersParams, ExtractDomConfig,
 } from "../../src";
-import { getTextDimension } from "./helper";
+import { getTextDimension } from "../../src";
 
 export class Hyperlink extends CellRenderers {
   private imagesCache = [];

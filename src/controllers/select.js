@@ -165,9 +165,9 @@ function selectHightlightShow(isRestore = false) {
                     [c1, c2]
                 );
                 //左上角选择区域框
-                formula.fucntionboxshow(rf, cf);
+                // formula.fucntionboxshow(rf, cf);
                 //focus单元格数据验证
-                dataVerificationCtrl.cellFocus(rf, cf);
+                // dataVerificationCtrl.cellFocus(rf, cf);
             }
         }
 
@@ -181,7 +181,7 @@ function selectHightlightShow(isRestore = false) {
         if (Store.luckysheet_select_save.length == 1 && Store.luckysheet_select_save[0].row[0] == Store.luckysheet_select_save[0].row[1] && Store.luckysheet_select_save[0].column[0] == Store.luckysheet_select_save[0].column[1]) {
             dynamicArrayHightShow(Store.luckysheet_select_save[0].row[0], Store.luckysheet_select_save[0].column[0]);
         }
-    
+
         /* 刷新当前状态栏 */
         refreshMenuButtonFocus();
     }
@@ -193,7 +193,7 @@ function selectHightlightShow(isRestore = false) {
         if(Store.luckysheet_select_save_previous == null |Store.luckysheet_select_save_previous !== luckysheet_select_save_previous){
             method.createHookFunction('rangeSelect', Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)], Store.luckysheet_select_save);
         }
-        
+
         Store.luckysheet_select_save_previous = luckysheet_select_save_previous;
 }
 

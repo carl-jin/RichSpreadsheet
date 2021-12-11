@@ -15,6 +15,7 @@ import {
   devicePixelRatioHacks,
 } from "./helper";
 import { useShowCellExtractDomOnMouseEnter } from "./useShowCellExtractDomOnMouseEnter";
+import { DataVerificationRenderRedTriangleIfDataVerificationFailed } from "./useDataVerification";
 
 /**
  * 重新渲染一个单元格
@@ -33,6 +34,7 @@ const reRenderCell = (mouseDetail, eventName) => {
     devicePixelRatioHacks(params);
   setDevicePixelRatio();
   Render[eventName](wrappedParams);
+  DataVerificationRenderRedTriangleIfDataVerificationFailed(wrappedParams);
   restoreDevicePixelRatio();
 };
 

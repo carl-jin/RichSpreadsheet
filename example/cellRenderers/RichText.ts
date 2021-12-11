@@ -6,7 +6,7 @@ import {
   CellRenderersParams,
   ExtractDomConfig,
 } from "../../src";
-import { drawHTMLtoImg, getTextDimension } from "./helper";
+import { drawHTMLtoImg, getTextDimension } from "../../src";
 
 export class RichText extends CellRenderers {
   private richTextCache = [];

@@ -1,17 +1,6 @@
 const data = {
   cols: [
     {
-      headerName: "#",
-      field: "#",
-      pinned: "left",
-      width: 80,
-      minWidth: 20,
-      readonly: false,
-      type: "index",
-      resizable: true,
-      id: "#",
-    },
-    {
       id: "306806b4-4eee-426c-8e16-72fc2eddf4ef",
       type: "text",
       title: true,
@@ -19,6 +8,16 @@ const data = {
       order: 3,
       required: 0,
       permission: 0,
+      dataVerification: [
+        {
+          pattern: "\d+",
+          errorMessage: "必须为数字",
+        },
+        {
+          pattern: "^ZF",
+          errorMessage: "必须以 ZF 开头",
+        },
+      ],
       input: ["string"],
       output: "string",
       properties: [
@@ -329,6 +328,16 @@ const data = {
       headerName: "任务来源",
       width: 170,
       minWidth: 70,
+      dataVerification: [
+        {
+          pattern: "\d+",
+          errorMessage: "必须为数字",
+        },
+        {
+          pattern: "^ZF",
+          errorMessage: "必须以 ZF 开头",
+        },
+      ],
       cellParams: {
         width: "1",
         placeholder: "",

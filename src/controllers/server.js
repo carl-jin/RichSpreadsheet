@@ -21,6 +21,7 @@ import json from '../global/json';
 import luckysheetConfigsetting from './luckysheetConfigsetting';
 import {customImageUpdate} from './imageUpdateCtrl';
 import method from '../global/method';
+import {useDataVerificationBuildCache} from "./hooks/useDataVerification";
 
 const server = {
     gridKey: null,
@@ -401,8 +402,8 @@ const server = {
 
 	        if(index == Store.currentSheetIndex){//更新数据为当前表格数据
 				Store.flowdata = file.data;
-				editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
-
+				// editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+						useDataVerificationBuildCache()
 	            //如果更新的单元格有批注
 	            if(value != null && value.ps != null){
 	                luckysheetPostil.buildPs(r, c, value.ps);
@@ -437,8 +438,8 @@ const server = {
 
 	        if(index == Store.currentSheetIndex){//更新数据为当前表格数据
 				Store.flowdata = file.data;
-				editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
-
+				// editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+						useDataVerificationBuildCache()
 	            //如果更新的单元格有批注
 	            for(let r = r1; r <= r2; r++){
 	                for(let c = c1; c <= c2; c++){
@@ -687,8 +688,8 @@ const server = {
 
 	        if(index == Store.currentSheetIndex){
 				Store.flowdata = data;
-				editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
-
+				// editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+						useDataVerificationBuildCache()
 	            Store.config["merge"] = mc;
 	            Store.config["borderInfo"] = borderInfo;
 
@@ -768,8 +769,8 @@ const server = {
 
 	        if(index == Store.currentSheetIndex){
 				Store.flowdata = data;
-				editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
-
+				// editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+						useDataVerificationBuildCache()
 	            Store.config["merge"] = mc;
 	            Store.config["borderInfo"] = borderInfo;
 

@@ -41,6 +41,7 @@ import {checkProtectionLockedRangeList, checkProtectionAllSelected,checkProtecti
 import Store from '../store';
 import luckysheetConfigsetting from './luckysheetConfigsetting';
 import {removeCellExtractDom} from "./hooks/useShowCellExtractDomOnMouseEnter";
+import {removeDataVerificationTooltip} from "./hooks/useDataVerification";
 
 export function rowColumnOperationInitial(){
 
@@ -54,7 +55,8 @@ export function rowColumnOperationInitial(){
 
         //  删除掉 cell 额外的dom
         removeCellExtractDom()
-
+        //  删除数据验证 dom
+        removeDataVerificationTooltip()
         //图片 active/cropping
         if($("#luckysheet-modal-dialog-activeImage").is(":visible") || $("#luckysheet-modal-dialog-cropping").is(":visible")){
             imageCtrl.cancelActiveImgItem();
@@ -487,7 +489,8 @@ export function rowColumnOperationInitial(){
 
         //  删除掉 cell 额外的dom
         removeCellExtractDom()
-
+        //  删除数据验证 dom
+        removeDataVerificationTooltip()
         //图片 active/cropping
         if($("#luckysheet-modal-dialog-activeImage").is(":visible") || $("#luckysheet-modal-dialog-cropping").is(":visible")){
             imageCtrl.cancelActiveImgItem();
@@ -928,7 +931,8 @@ export function rowColumnOperationInitial(){
 
         //  删除掉 cell 额外的dom
         removeCellExtractDom()
-
+        //  删除数据验证 dom
+        removeDataVerificationTooltip()
         //图片 active/cropping
         if($("#luckysheet-modal-dialog-activeImage").is(":visible") || $("#luckysheet-modal-dialog-cropping").is(":visible")){
             imageCtrl.cancelActiveImgItem();
@@ -979,7 +983,8 @@ export function rowColumnOperationInitial(){
 
         //  删除掉 cell 额外的dom
         removeCellExtractDom()
-
+        //  删除数据验证 dom
+        removeDataVerificationTooltip()
         //图片 active/cropping
         if($("#luckysheet-modal-dialog-activeImage").is(":visible") || $("#luckysheet-modal-dialog-cropping").is(":visible")){
             imageCtrl.cancelActiveImgItem();

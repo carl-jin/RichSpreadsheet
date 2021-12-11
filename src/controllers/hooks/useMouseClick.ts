@@ -1,20 +1,29 @@
+//  鼠标点击时重新绘制单元格
 import Store from "../../store";
 import { getMouseRelateCell } from "../handler";
-import { createColumnCellRendererParamsViaMouseDetail,devicePixelRatioHacks } from "./helper";
+import {
+  createColumnCellRendererParamsViaMouseDetail,
+  devicePixelRatioHacks,
+} from "./helper";
+import { DataVerificationRenderRedTriangleIfDataVerificationFailed } from "./useDataVerification";
 
 const reRenderCell = (mouseDetail, selectSaveDetail) => {
   const [Render, params] =
     createColumnCellRendererParamsViaMouseDetail(mouseDetail);
 
-  if(!params) return
+  if (!params) return;
 
   //  这里需要兼容下不同设备的 devicePixelRatio 的大小， 具体请看 devicePixelRatioHacks 具体实现
-  const [wrappedParams,setDevicePixelRatio,restoreDevicePixelRatio] = devicePixelRatioHacks(Object.assign(params, {
-    selectSaveDetail,
-  }))
-  setDevicePixelRatio()
+  const [wrappedParams, setDevicePixelRatio, restoreDevicePixelRatio] =
+    devicePixelRatioHacks(
+      Object.assign(params, {
+        selectSaveDetail,
+      })
+    );
+  setDevicePixelRatio();
   Render["clickRender"](wrappedParams);
-  restoreDevicePixelRatio()
+  DataVerificationRenderRedTriangleIfDataVerificationFailed(wrappedParams);
+  restoreDevicePixelRatio();
 };
 
 const canvasMouseClick = (event) => {

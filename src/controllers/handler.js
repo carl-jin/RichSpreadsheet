@@ -73,7 +73,8 @@ import locale from "../locale/locale";
 import Store from "../store";
 import { canvasMousemove } from "./hooks/useMouseMove";
 import { canvasMouseClick } from "./hooks/useMouseClick";
-import {removeCellExtractDom} from "./hooks/useShowCellExtractDomOnMouseEnter";
+import { removeCellExtractDom } from "./hooks/useShowCellExtractDomOnMouseEnter";
+import {removeDataVerificationTooltip, useDataVerification} from "./hooks/useDataVerification";
 // import { createLuckyChart, hideAllNeedRangeShow } from '../expendPlugins/chart/plugin'
 
 export const getMouseRelateCell = (event) => {
@@ -145,7 +146,9 @@ export default function luckysheetHandler() {
   //    表格鼠标滚动
   $("#luckysheet-grid-window-1").mousewheel(function (event, delta) {
     //  删除掉 cell 额外的dom
-    removeCellExtractDom()
+    removeCellExtractDom();
+    //  删除数据验证 dom
+    removeDataVerificationTooltip()
 
     let scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft(),
       scrollTop = $("#luckysheet-scrollbar-y").scrollTop();
@@ -290,10 +293,10 @@ export default function luckysheetHandler() {
       ).css("cursor", "default");
 
       //有批注在编辑时
-      luckysheetPostil.removeActivePs();
+      // luckysheetPostil.removeActivePs();
 
       //  删除掉 cell 额外的dom
-      removeCellExtractDom()
+      removeCellExtractDom();
 
       //图片 active/cropping
       /*  if (
@@ -363,6 +366,7 @@ export default function luckysheetHandler() {
 
       //数据验证 单元格聚焦
       // dataVerificationCtrl.cellFocus(row_index, col_index, true);
+      useDataVerification(row_index, col_index);
 
       //若点击单元格部分不在视图内
       if (col_pre < $("#luckysheet-cell-main").scrollLeft()) {
@@ -5264,10 +5268,10 @@ export default function luckysheetHandler() {
     })
     .on("mousedown.luckysheetEvent", function (event) {
       //有批注在编辑时
-      luckysheetPostil.removeActivePs();
+      // luckysheetPostil.removeActivePs();
 
       //  删除掉 cell 额外的dom
-      removeCellExtractDom(event)
+      removeCellExtractDom(event);
 
       hideMenuByCancel(event);
 

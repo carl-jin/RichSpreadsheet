@@ -6,7 +6,7 @@ import {
   CellRenderersParams,
   ExtractDomConfig,
 } from "../../src";
-import { getTextDimension } from "./helper";
+import { getTextDimension } from "../../src";
 
 export class Text extends CellRenderers {
   render(CellRenderersParams: CellRenderersParams): void {
@@ -67,7 +67,7 @@ export class Text extends CellRenderers {
     CellRenderersParams: CellRenderersParams
   ): ExtractDomConfig {
     return {
-      right:this.getFullContentExtractDom(CellRenderersParams.value)
+      right: this.getFullContentExtractDom(CellRenderersParams.value),
     };
   }
 

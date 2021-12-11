@@ -19,6 +19,7 @@ import { selectHightlightShow, selectionCopyShow, collaborativeEditBox } from '.
 import { createFilterOptions } from '../controllers/filter';
 import { getSheetIndex } from '../methods/get';
 import Store from '../store';
+import {useDataVerificationBuildCache} from "../controllers/hooks/useDataVerification";
 
 let refreshCanvasTimeOut = null;
 
@@ -117,7 +118,8 @@ function jfrefreshgrid(data, range, allParam, isRunExecFunction = true, isRefres
 
     //Store.flowdata
     Store.flowdata = data;
-    editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+    // editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+    useDataVerificationBuildCache()
     file.data = Store.flowdata;
 
     // 必须要处理，可能之前的config为空，则也需要清空
@@ -354,8 +356,8 @@ function jfrefreshrange(data, range, cdformat) {
 
     //flowdata
     Store.flowdata = data;
-    editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
-
+    // editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+    useDataVerificationBuildCache()
     Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)].data = Store.flowdata;
 
     //条件格式
@@ -515,7 +517,8 @@ function jfrefreshgrid_adRC(data, cfg, ctrlType, ctrlValue, calc, filterObj, cf,
 
     //Store.flowdata
     Store.flowdata = data;
-    editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+    // editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+    useDataVerificationBuildCache()
     file.data = data;
 
     //config
@@ -711,7 +714,8 @@ function jfrefreshgrid_deleteCell(data, cfg, ctrl, calc, filterObj, cf, dataVeri
 
     //Store.flowdata
     Store.flowdata = data;
-    editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+    // editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+    useDataVerificationBuildCache()
     file.data = data;
 
     //共享编辑模式
@@ -909,7 +913,8 @@ function jfrefreshgrid_pastcut(source, target, RowlChange){
         Store.flowdata = target["curData"];
         Store.luckysheetfile[getSheetIndex(source["sheetIndex"])]["data"] = source["curData"];
     }
-    editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+    // editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
+    useDataVerificationBuildCache()
     Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)].data = Store.flowdata;
 
     //luckysheet_select_save

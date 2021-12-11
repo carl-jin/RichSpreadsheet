@@ -636,7 +636,7 @@ export function frozenFirstRow(order) {
                 top
             ];
         }
-        
+
         luckysheetFreezen.saveFreezen(freezenhorizontaldata, top, null, null);
 
         if (luckysheetFreezen.freezenverticaldata != null) {

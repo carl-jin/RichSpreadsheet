@@ -1,4 +1,4 @@
-import {CellRenderers, ExtractDomConfig} from "../../src";
+import { CellRenderers, ExtractDomConfig } from "../../src";
 import type {
   FormatValueBeforeRenderParams,
   CellRenderersParams,
@@ -10,19 +10,20 @@ import {
   drawRectWithRadius,
   drawTriangle,
   getTextDimension,
-} from "./helper";
+} from "../../src";
 
 class Select extends CellRenderers {
-  render({
-    ctx,
-    value,
-    positionX,
-    positionY,
-    spaceX,
-    spaceY,
-    cellHeight,
-    cellWidth,
-  }: CellRenderersParams) {
+  render(CellRenderersParams: CellRenderersParams) {
+    const {
+      ctx,
+      value,
+      positionX,
+      positionY,
+      spaceX,
+      spaceY,
+      cellHeight,
+      cellWidth,
+    } = CellRenderersParams;
     const paddingY = 4;
     const paddingX = 12;
     let offsetX = 0;
@@ -32,6 +33,11 @@ class Select extends CellRenderers {
     const tHeight = 6;
     const tLeft = positionX + cellWidth - tWidth - spaceX;
     const tTop = Math.ceil(positionY + (cellHeight - tHeight) / 2) - 1;
+
+    //  清理下单元格
+    this.clearCell(CellRenderersParams);
+    //  设置裁剪区域
+    this.startCellClip(CellRenderersParams);
 
     ctx.font = "14px -apple-system";
     value.map((item, index) => {
@@ -80,6 +86,9 @@ class Select extends CellRenderers {
     const pathTriangle = drawTriangle(tLeft, tTop, tWidth, tHeight, "bottom");
     ctx.fillStyle = "#666";
     ctx.fill(pathTriangle);
+
+    //  关闭裁剪区域
+    this.closeCellClip(CellRenderersParams);
 
     return {
       rectPath,
@@ -150,7 +159,6 @@ class Select extends CellRenderers {
   ): ExtractDomConfig {
     return false;
   }
-
 
   private transformKeyArrToTitleArr(arr: string[], cellParams) {
     let selectOptions = cellParams.options.options;

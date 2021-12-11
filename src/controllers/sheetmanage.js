@@ -39,6 +39,7 @@ import { changeSheetContainerSize, menuToolBarWidth } from "./resize";
 import { zoomNumberDomBind } from "./zoom";
 import menuButton from "./menuButton";
 import method from "../global/method";
+import {useDataVerificationBuildCache} from "./hooks/useDataVerification";
 
 const sheetmanage = {
   generateRandomSheetIndex: function (prefix) {
@@ -1243,7 +1244,6 @@ const sheetmanage = {
     let file = Store.luckysheetfile[index];
 
     Store.flowdata = file["data"];
-    editor.webWorkerFlowDataCache(Store.flowdata); //worker存数据
 
     // formula.execFunctionGroupData = null;
     formula.execFunctionGlobalData = null;
@@ -1270,21 +1270,23 @@ const sheetmanage = {
     }
 
     //批注
-    luckysheetPostil.buildAllPs(Store.flowdata);
+    // luckysheetPostil.buildAllPs(Store.flowdata);
 
     //图片
-    imageCtrl.currentImgId = null;
-    imageCtrl.images = file.images;
-    imageCtrl.allImagesShow();
-    imageCtrl.init();
+    // imageCtrl.currentImgId = null;
+    // imageCtrl.images = file.images;
+    // imageCtrl.allImagesShow();
+    // imageCtrl.init();
 
     //数据验证
-    dataVerificationCtrl.dataVerification = file.dataVerification;
-    dataVerificationCtrl.init();
+    //  **** 数据验证
+    useDataVerificationBuildCache()
+    // dataVerificationCtrl.dataVerification = file.dataVerification;
+    // dataVerificationCtrl.init();
 
     //链接
-    hyperlinkCtrl.hyperlink = file.hyperlink;
-    hyperlinkCtrl.init();
+    // hyperlinkCtrl.hyperlink = file.hyperlink;
+    // hyperlinkCtrl.init();
 
     createFilterOptions(file["filter_select"], file["filter"]);
   },

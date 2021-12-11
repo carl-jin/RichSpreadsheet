@@ -1,3 +1,12 @@
+//  鼠标移入单元格时, 显示额外的 dom 节点
+//  逻辑
+//  当用户鼠标在表格上移动时候, 找到对应的 单元格
+//  通过单元格的 row_index 和 col_index 找到对应的 Render
+//  判断 Render.showExtractDomOnMouseEnter 是否有返回 DOM
+//  如果有返回的话进行显示
+//  页面滚动或者点击等等事件触发时候, 删除对应 dom
+//  全局搜索 removeCellExtractDom 方法
+
 import { createColumnCellRendererParamsViaMouseDetail } from "./helper";
 
 enum ClassName {
@@ -43,7 +52,7 @@ function RenderDom(
       "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
     "border-radius": "4px",
     border: "1px solid #ccc",
-    "z-index": 99999,
+    "z-index": 3,
     "font-size": "14px",
     "user-select": "auto",
     left: 0,
@@ -76,7 +85,7 @@ function RenderDom(
     top,
   });
 
-  $el.animate({ opacity: 1 }, { duration: 200 });
+  $el.css('opacity',1);
 }
 
 /**
@@ -94,6 +103,7 @@ function isHover(event) {
 
 function removeDom(event, force = false) {
   window.clearTimeout(timerRemove);
+  window.clearTimeout(timerShow);
 
   if (force) {
     $(`.${ClassName.NAME}`).remove();
@@ -170,5 +180,5 @@ export function useShowCellExtractDomOnMouseEnter(mouseDetail, event) {
         RenderDom(key, DOM[key], params);
       });
     }
-  }, 200);
+  }, 400);
 }

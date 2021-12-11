@@ -4,6 +4,10 @@ export type column = {
   cellParams: {
     [key: string]: any;
   };
+  dataVerification: Array<{
+    pattern: string;
+    errorMessage: string;
+  }>;
 };
 
 export type cell = {

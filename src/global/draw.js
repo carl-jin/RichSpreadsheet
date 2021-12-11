@@ -24,6 +24,7 @@ import Store from "../store";
 import locale from "../locale/locale";
 import sheetmanage from "../controllers/sheetmanage";
 import { isPlainObject } from "lodash-es";
+import { DataVerificationRenderRedTriangleIfDataVerificationFailed } from "../controllers/hooks/useDataVerification";
 
 function luckysheetDrawgridRowTitle(scrollHeight, drawHeight, offsetTop) {
   if (scrollHeight == null) {
@@ -1522,8 +1523,7 @@ let cellRender = function (
     } else {
       cellOverflow_bd_r_render = false;
     }
-  }
-  else {
+  } else {
     //若单元格有条件格式数据条
 
     let pos_x = start_c + offsetLeft;
@@ -1534,12 +1534,13 @@ let cellRender = function (
     luckysheetTableContent.rect(pos_x, pos_y, cellWidth, cellHeight);
     luckysheetTableContent.clip();
     luckysheetTableContent.scale(Store.zoomRatio, Store.zoomRatio);
-    const currentSheet = Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)]
+    const currentSheet =
+      Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
     const type = currentSheet.column[c].type;
 
     if (type && Store.cellRenderers[type]) {
       const Render = Store.cellRenderers[type];
-      Render.render({
+      const params = {
         rowIndex: r,
         colIndex: c,
         column: currentSheet.column[c],
@@ -1556,7 +1557,9 @@ let cellRender = function (
         ctx: luckysheetTableContent,
         positionX: pos_x,
         positionY: pos_y,
-      });
+      };
+      Render.render(params);
+      DataVerificationRenderRedTriangleIfDataVerificationFailed(params);
       luckysheetTableContent.closePath();
       luckysheetTableContent.restore();
       luckysheetTableContent.save();

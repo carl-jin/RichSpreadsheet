@@ -17,3 +17,4 @@ export { CellRenderers } from "./customCell/cellRenderers";
 export { CellEditors } from "./customCell/cellEditors";
 export default RichSpread;
 export * from "./type";
+export * from "./customCell/helper/drawHelper";
