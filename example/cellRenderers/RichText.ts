@@ -87,6 +87,10 @@ export class RichText extends CellRenderers {
     return FormatValueBeforeRenderParams.value;
   }
 
+  parseFromClipboard(value: any, cellParams: any): string {
+    return value
+  }
+
   clickRender(
     CellRenderersMouseClickParams: CellRenderersMouseClickParams
   ): void {}

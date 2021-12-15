@@ -366,7 +366,6 @@ const luckysheetformula = {
   oldvalue: null,
   dontupdate: function () {
     let _this = this;
-    console.log(Store.luckysheetCellUpdate);
     $("#luckysheet-functionbox-cell, #luckysheet-rich-text-editor").html(
       _this.oldvalue
     );

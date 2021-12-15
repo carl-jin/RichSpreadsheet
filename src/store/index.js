@@ -1,3 +1,6 @@
+
+//  这个文件不能改成 ts, 改成 ts 后, 每次引用都是一个新的 store
+
 const Store = {
   container: null,
   loadingObj: {},

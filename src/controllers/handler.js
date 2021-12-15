@@ -5389,7 +5389,9 @@ export default function luckysheetHandler() {
     }
   );
 
-  //粘贴事件处理
+  //  粘贴再 keyboard.js 处理了,
+  //  原因是 shift + ctrl + v 并不会触发这个 paste 事件
+/*  //粘贴事件处理
   $(document).on("paste.luckysheetEvent", function (e) {
     if (isEditMode()) {
       //此模式下禁用粘贴
@@ -5397,6 +5399,7 @@ export default function luckysheetHandler() {
     }
 
     if (selection.isPasteAction) {
+      console.log(222)
       $("#luckysheet-rich-text-editor").blur();
       selection.isPasteAction = false;
 
@@ -5830,7 +5833,7 @@ export default function luckysheetHandler() {
       // 插入
       document.execCommand("insertText", false, text);
     }
-  });
+  });*/
 
   //回到顶部
   $("#luckysheet-bottom-bottom-top")

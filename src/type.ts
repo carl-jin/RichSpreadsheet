@@ -1,6 +1,7 @@
 import { CellRenderers } from "./customCell/cellRenderers";
 import { CellEditors } from "./customCell/cellEditors";
 import { cell } from "./customCell/types";
+import { GsClipboardOptions } from "gs-clipboard";
 
 export type RichSpreadsheetParams = Partial<{
   cellRenderers: {
@@ -9,6 +10,7 @@ export type RichSpreadsheetParams = Partial<{
   cellEditors: {
     [key: string]: CellEditors;
   };
+  GSClipboardOptions: GsClipboardOptions;
   onReadonlyCellTryToEdit(): void;
   onCellUpdate(params: {
     colIndex: number;

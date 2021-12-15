@@ -154,6 +154,10 @@ class Select extends CellRenderers {
     }
   }
 
+  parseFromClipboard(value: any, cellParams: any): string {
+    return value
+  }
+
   showExtractDomOnMouseEnter(
     CellRenderersParams: CellRenderersParams
   ): ExtractDomConfig {

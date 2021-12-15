@@ -63,6 +63,10 @@ export class Text extends CellRenderers {
     return FormatValueBeforeRenderParams.value;
   }
 
+  parseFromClipboard(value: any, cellParams: any): string {
+    return value
+  }
+
   showExtractDomOnMouseEnter(
     CellRenderersParams: CellRenderersParams
   ): ExtractDomConfig {

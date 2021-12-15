@@ -40,6 +40,9 @@ abstract class CellRenderers extends CustomBase {
   abstract formatValueBeforeRender(
     FormatValueBeforeRenderParams: FormatValueBeforeRenderParams
   ): any;
+
+  //  在 paste 执行插入之前, 将数据进行格式化
+  abstract parseFromClipboard(value: any, cellParams: any): string;
 }
 
 export { CellRenderers };

@@ -36,6 +36,7 @@ import { initListener } from "./controllers/listener";
 import { hideloading, showloading } from "./global/loading.js";
 import { luckysheetextendData } from "./global/extend.js";
 import { RichSpreadsheetParams } from "./type";
+import { useGsClipboard } from "./controllers/hooks/useGsClipboard";
 
 export type RichSpreadType = Partial<{
   create(setting: RichSpreadsheetParams): void;
@@ -70,6 +71,7 @@ RichSpread.create = function (setting: RichSpreadsheetParams) {
   Store.container = container;
   Store.cellRenderers = extendsetting.cellRenderers;
   Store.cellEditors = extendsetting.cellEditors;
+  Store.GSClipboardOptions = extendsetting.GSClipboardOptions;
   Store.luckysheetfile = extendsetting.data;
   Store.defaultcolumnNum = extendsetting.column;
   Store.defaultrowNum = extendsetting.row;
@@ -85,7 +87,6 @@ RichSpread.create = function (setting: RichSpreadsheetParams) {
   //  事件
   Store.onReadonlyCellTryToEdit = extendsetting.onReadonlyCellTryToEdit;
   Store.onCellUpdate = extendsetting.onCellUpdate;
-
 
   server.gridKey = extendsetting.gridKey;
   server.loadUrl = extendsetting.loadUrl;
@@ -194,9 +195,10 @@ function initialWorkBook() {
   rowColumnOperationInitial(); //row and coloumn operate initialization
   keyboardInitial(); //Keyboard operate initialization
   orderByInitial(); //menu bar orderby function initialization
-  zoomInitial(); //zoom method initialization
+  // zoomInitial(); //zoom method initialization
   printInitial(); //print initialization
   initListener();
+  useGsClipboard();
 }
 
 //获取所有表格数据

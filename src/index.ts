@@ -15,6 +15,9 @@ export type {
 } from "./customCell/types";
 export { CellRenderers } from "./customCell/cellRenderers";
 export { CellEditors } from "./customCell/cellEditors";
-export default RichSpread;
+export type { Handler as GSClipboardHandler } from "gs-clipboard";
 export * from "./type";
 export * from "./customCell/helper/drawHelper";
+
+
+export default RichSpread;

@@ -2,11 +2,15 @@ import RichSpread from "../src";
 import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
 import cellEditors from "./cellEditors";
+import GsClipboardHandler from './GSClipboard/handler/index'
 
 function create() {
   RichSpread.create({
     cellRenderers,
     cellEditors,
+    GSClipboardOptions:{
+      handlers:GsClipboardHandler,
+    },
     container: "luckysheet",
     lang: "zh",
     forceCalculation: false,

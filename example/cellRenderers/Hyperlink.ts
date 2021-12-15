@@ -44,6 +44,10 @@ export class Hyperlink extends CellRenderers {
     return formattedValue;
   }
 
+  parseFromClipboard(value: any, cellParams: any): string {
+    return JSON.stringify(value)
+  }
+
   showExtractDomOnMouseEnter(
     CellRenderersParams: CellRenderersParams
   ): ExtractDomConfig {

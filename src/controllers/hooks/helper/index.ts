@@ -103,3 +103,38 @@ export function devicePixelRatioHacks(params) {
 
   return [params, setDevicePixelRatio, restoreDevicePixelRatio];
 }
+
+
+/**
+ * transform coords to two dimensional array
+ * @param coords
+ */
+export function coordsTo2dArray<T>(coords: Array<Coordinate & T>): (T & any)[][] {
+  const maxPosition = coords.reduce(
+    (reduceData, { x, y }) => {
+      reduceData.max_x = Math.max(reduceData.max_x, x);
+      reduceData.min_x = Math.min(reduceData.min_x, x);
+      reduceData.max_y = Math.max(reduceData.max_y, y);
+      reduceData.min_y = Math.min(reduceData.min_y, y);
+      return reduceData;
+    },
+    { max_x: 0, max_y: 0, min_x: 99999, min_y: 99999 }
+  );
+
+  const _x = maxPosition.max_x - maxPosition.min_x;
+  const _y = maxPosition.max_y - maxPosition.min_y;
+
+  const output = new Array(_y + 1).fill('').map((empty, y) => {
+    return new Array(_x + 1).fill('').map((_empty, x) => {
+      const current_x = x + maxPosition.min_x;
+      const current_y = y + maxPosition.min_y;
+      const target = coords.find((item) => {
+        return item.x === current_x && item.y === current_y ? item : false;
+      });
+
+      return target ?? { x: current_x, y: current_y };
+    });
+  });
+
+  return output;
+}
