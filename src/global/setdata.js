@@ -6,7 +6,7 @@ import luckysheetConfigsetting from "../controllers/luckysheetConfigsetting";
 import Store from "../store";
 
 //Set cell value
-function setcellvalue(r, c, d, v) {
+function setcellvalue(r, c, d, v, extractProps) {
   if (d == null) {
     d = Store.flowdata;
   }
@@ -17,9 +17,9 @@ function setcellvalue(r, c, d, v) {
   d[r][c] = {
     ct: { fa: "@", t: "s" },
     v: v,
-    m: v,
+    ...extractProps,
   };
-/*
+  /*
   return;
 
   let vupdate;

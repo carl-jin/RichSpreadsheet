@@ -16,11 +16,15 @@ export default {
   cellSpace: [2, 6], //  单元格 padding
   cellRenderers: {}, // 单元格 对应的 column 渲染逻辑
   cellEditors: {}, // 单元格 对应的 column 编辑框 渲染逻辑
-  GSClipboardOptions: { //  https://github.com/carl-jin/gs-clipboard 配置
+  GSClipboardOptions: {
+    //  https://github.com/carl-jin/gs-clipboard 配置
     handlers: [],
     unknownHtmlParser: [],
     tableParsers: [],
   }, // 单元格 对应的 column 编辑框 渲染逻辑
+  ContextMenu() {
+    return [];
+  },
   pointEditZoom: 1, //编辑器表格编辑时缩放比例
 
   //  事件触发

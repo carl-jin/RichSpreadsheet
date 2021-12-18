@@ -1,0 +1,74 @@
+#luckysheet-rightclick-menu.luckysheet-rightgclick-menu {
+  background: #333;
+  border-radius: 3px;
+  color: #fff;
+  min-width: 180px;
+  overflow: visible !important;
+  padding: 0;
+  box-shadow: none;
+  border: none;
+
+  .context-menu-item {
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover:not(.disabled) {
+      background: #444;
+    }
+
+    .item-name {
+      margin-left: 0.5em;
+    }
+
+    &.disabled {
+      color: #999;
+      cursor: not-allowed;
+    }
+
+    &:first-of-type {
+      border-radius: 3px 3px 0 0;
+    }
+    &:last-of-type {
+      border-radius: 0px 0px 3px 3px;
+    }
+  }
+
+  .has-children {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    .context-menu-children {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      background: #333;
+      border-radius: 3px;
+      transform: translateX(100%);
+      min-width: 180px;
+    }
+
+    &:hover {
+      .context-menu-children {
+        display: block;
+      }
+    }
+  }
+
+  .luckysheet-submenu-arrow {
+    right: 0;
+    color: #fff;
+    opacity: 1;
+    margin-right: 8px;
+  }
+
+  .separator {
+    padding: 0;
+    height: 1px;
+    background: #444;
+  }
+}

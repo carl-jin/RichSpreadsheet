@@ -1,6 +1,49 @@
 import Store from "../../../store";
 import { getSheetIndex } from "../../../methods/get";
 import luckysheetConfigsetting from "../../luckysheetConfigsetting";
+import { column } from "../../../customCell/types";
+
+export function deepClone(data){
+  return JSON.parse(JSON.stringify(data))
+}
+
+/**
+ * 从 Store.luckysheet_select_save.column 获取当前的所有 columns
+ */
+export function getColumnsFromSelectedSave(): column[] {
+  if (Store.luckysheet_select_save.length === 0) return [];
+  const currentSheet =
+    Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
+  let columns = [];
+  Store.luckysheet_select_save.map((selection) => {
+    const { column: columnsSelection } = selection;
+    const [start, end] = columnsSelection;
+
+    for (let i = start; i <= end; i++) {
+      currentSheet.column[i] && columns.push(currentSheet.column[i]);
+    }
+  });
+
+  return columns;
+}
+
+/**
+ * 从 Store.luckysheet_select_save.row 获取当前的所有 row
+ */
+export function getRowsFromSelectedSave(): column[] {
+  if (Store.luckysheet_select_save.length === 0) return [];
+  let rows = [];
+  Store.luckysheet_select_save.map((selection) => {
+    const { row: rowsSelection } = selection;
+    const [start, end] = rowsSelection;
+
+    for (let i = start; i <= end; i++) {
+      Store.flowdata[i] && rows.push(Store.flowdata[i]);
+    }
+  });
+
+  return rows;
+}
 
 /**
  * 统一生成处理 render 事件的参数
@@ -104,12 +147,13 @@ export function devicePixelRatioHacks(params) {
   return [params, setDevicePixelRatio, restoreDevicePixelRatio];
 }
 
-
 /**
  * transform coords to two dimensional array
  * @param coords
  */
-export function coordsTo2dArray<T>(coords: Array<Coordinate & T>): (T & any)[][] {
+export function coordsTo2dArray<T>(
+  coords: Array<{ x: number; y: number } & T>
+): (T & any)[][] {
   const maxPosition = coords.reduce(
     (reduceData, { x, y }) => {
       reduceData.max_x = Math.max(reduceData.max_x, x);
@@ -124,8 +168,8 @@ export function coordsTo2dArray<T>(coords: Array<Coordinate & T>): (T & any)[][]
   const _x = maxPosition.max_x - maxPosition.min_x;
   const _y = maxPosition.max_y - maxPosition.min_y;
 
-  const output = new Array(_y + 1).fill('').map((empty, y) => {
-    return new Array(_x + 1).fill('').map((_empty, x) => {
+  const output = new Array(_y + 1).fill("").map((empty, y) => {
+    return new Array(_x + 1).fill("").map((_empty, x) => {
       const current_x = x + maxPosition.min_x;
       const current_y = y + maxPosition.min_y;
       const target = coords.find((item) => {

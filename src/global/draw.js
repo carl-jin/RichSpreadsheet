@@ -119,14 +119,14 @@ function luckysheetDrawgridRowTitle(scrollHeight, drawHeight, offsetTop) {
       Store.config["rowhidden"][r] != null
     ) {
     } else {
-      luckysheetTableContent.fillStyle = "#ffffff";
+      luckysheetTableContent.fillStyle = "#f3f3f3";
       luckysheetTableContent.fillRect(
         0,
         start_r + offsetTop + firstOffset,
         Store.rowHeaderWidth - 1,
         end_r - start_r + 1 + lastOffset - firstOffset
       );
-      luckysheetTableContent.fillStyle = "#000000";
+      luckysheetTableContent.fillStyle = "#333";
 
       //行标题栏序列号
       luckysheetTableContent.save(); //save scale before draw text
@@ -346,14 +346,14 @@ function luckysheetDrawgridColumnTitle(scrollWidth, drawWidth, offsetLeft) {
       Store.config["colhidden"][c] != null
     ) {
     } else {
-      luckysheetTableContent.fillStyle = "#ffffff";
+      luckysheetTableContent.fillStyle = "#f5f5f5";
       luckysheetTableContent.fillRect(
         start_c + offsetLeft - 1,
         0,
         end_c - start_c,
         Store.columnHeaderHeight - 1
       );
-      luckysheetTableContent.fillStyle = "#000000";
+      luckysheetTableContent.fillStyle = "#333";
 
       //列标题栏序列号
       luckysheetTableContent.save(); //save scale before draw text
@@ -363,13 +363,14 @@ function luckysheetDrawgridColumnTitle(scrollWidth, drawWidth, offsetLeft) {
       //luckysheetTableContent.measureText(abc);
 
       let horizonAlignPos = Math.round(
-        start_c + (end_c - start_c) / 2 + offsetLeft - textMetrics.width / 2
+        // start_c + (end_c - start_c) / 2 + offsetLeft - textMetrics.width / 2
+        start_c + Store.rowHeaderWidth + offsetLeft - 40
       );
       let verticalAlignPos = Math.round(Store.columnHeaderHeight / 2);
       luckysheetTableContent.fillText(
         abc,
-        horizonAlignPos / Store.zoomRatio,
-        verticalAlignPos / Store.zoomRatio
+        horizonAlignPos / Store.zoomRatio + 6,
+        verticalAlignPos / Store.zoomRatio + 2
       );
       luckysheetTableContent.restore(); //restore scale after draw text
     }

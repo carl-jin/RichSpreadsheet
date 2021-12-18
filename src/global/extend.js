@@ -22,8 +22,7 @@ import {useDataVerificationBuildCache} from "../controllers/hooks/useDataVerific
  * @returns
  */
 function luckysheetextendtable(type, index, value, direction, sheetIndex) {
-    sheetIndex = sheetIndex || Store.currentSheetIndex;
-
+    sheetIndex = sheetIndex || Store.currentSheetIndex
     if(type=='row' && !checkProtectionAuthorityNormal(sheetIndex, "insertRows")){
         return;
     }
@@ -749,6 +748,7 @@ function luckysheetextendtable(type, index, value, direction, sheetIndex) {
             }
         }
 
+        //  将这个 row 塞入到 data 里面
         if(direction == "lefttop"){
             if(index == 0){
                 new Function("d","return " + 'd.unshift(' + arr.join(",") + ')')(d);

@@ -39,7 +39,7 @@ import { changeSheetContainerSize, menuToolBarWidth } from "./resize";
 import { zoomNumberDomBind } from "./zoom";
 import menuButton from "./menuButton";
 import method from "../global/method";
-import {useDataVerificationBuildCache} from "./hooks/useDataVerification";
+import { useDataVerificationBuildCache } from "./hooks/useDataVerification";
 
 const sheetmanage = {
   generateRandomSheetIndex: function (prefix) {
@@ -797,7 +797,7 @@ const sheetmanage = {
 
     celldata.map((row, index) => {
       Object.keys(row).map((colId) => {
-        let value = row[colId] ? row[colId] : '';
+        let value = row[colId] ? row[colId] : "";
         cellDataArr.push({
           r: index,
           c: getColIndexById(colId),
@@ -825,10 +825,10 @@ const sheetmanage = {
         }
       }
     } else {
-      celldata = this.transformGridDataToCellData(column, celldata);
-      if (celldata && celldata.length > 0) {
-        for (let i = 0; i < celldata.length; i++) {
-          let item = celldata[i];
+      let formatCellData = this.transformGridDataToCellData(column, celldata);
+      if (formatCellData && formatCellData.length > 0) {
+        for (let i = 0; i < formatCellData.length; i++) {
+          let item = formatCellData[i];
           let r = item.r;
           let c = item.c;
           let v = item.v;
@@ -839,7 +839,10 @@ const sheetmanage = {
           if (c >= data[0].length) {
             data = datagridgrowth(data, 0, c - data[0].length + 1);
           }
-          setcellvalue(r, c, data, v);
+          setcellvalue(r, c, data, v, {
+            columnId: column[c] ? column[c].id ?? column[c].fieldId : '',
+            rowId:celldata[r] ? celldata[r].id : ''
+          });
         }
       }
     }
@@ -1280,7 +1283,7 @@ const sheetmanage = {
 
     //数据验证
     //  **** 数据验证
-    useDataVerificationBuildCache()
+    useDataVerificationBuildCache();
     // dataVerificationCtrl.dataVerification = file.dataVerification;
     // dataVerificationCtrl.init();
 

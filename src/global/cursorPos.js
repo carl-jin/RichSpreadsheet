@@ -2,7 +2,7 @@ import Store from '../store';
 
 function luckysheetRangeLast(obj) {
     let range;
-    
+
     if(document.createRange){ //chrome, firefox, opera, safari, ie9+
         if(obj.innerHTML != obj.innerText || obj.innerHTML == ""){
             obj.focus(); //解决ff不获取焦点无法定位问题
@@ -20,7 +20,7 @@ function luckysheetRangeLast(obj) {
 
             let selection = window.getSelection();
             selection.removeAllRanges();
-            selection.addRange(range);    
+            selection.addRange(range);
         }
     }
     else if(document.selection){ //ie8 and lower
@@ -33,7 +33,7 @@ function luckysheetRangeLast(obj) {
 
 function getCursortPosition(textDom){
     let cursorPos = 0;
-    
+
     if(document.selection){
         textDom.focus();
         let selectRange = document.selection.createRange();
@@ -52,6 +52,10 @@ function hideMenuByCancel(event){
     // Right-click the menu in the title bar, and click on the elements whose class is luckysheet-cols-rows-shift-left and luckysheet-cols-rows-shift-right will trigger the hiding of the menu bar. It should be prohibited. Exclude these two elements. There may be more Other elements will also jump here for more testing
 
     if(event.target.classList && (event.target.classList.contains('luckysheet-cols-rows-shift-left') || event.target.classList.contains('luckysheet-cols-rows-shift-right'))){
+        return;
+    }
+
+    if(event.target.closest('.context-menu-box')){
         return;
     }
 
@@ -80,7 +84,7 @@ function selectTextDom(ele){
         let range = document.body.createTextRange();
         range.moveToElementText(ele);
         range.select();
-    } 
+    }
 }
 
 function selectTextContent(ele){
@@ -98,7 +102,7 @@ function selectTextContent(ele){
         let range = document.body.createTextRange();
         range.moveToElementText(ele);
         range.select();
-    } 
+    }
 }
 
 function selectTextContentCross(sEle, eEle){

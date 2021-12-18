@@ -10,7 +10,7 @@ import {
     luckysheetDrawgridColumnTitle
 } from './draw';
 import luckysheetFreezen from '../controllers/freezen';
-import server from '../controllers/server';
+// import server from '../controllers/server';
 import sheetmanage from '../controllers/sheetmanage';
 import luckysheetPostil from '../controllers/postil';
 import dataVerificationCtrl from '../controllers/dataVerificationCtrl';
@@ -127,7 +127,7 @@ function jfrefreshgrid(data, range, allParam, isRunExecFunction = true, isRefres
         Store.config = cfg;
         file.config = Store.config;
 
-        server.saveParam("all", Store.currentSheetIndex, cfg, { "k": "config" });
+        // server.saveParam("all", Store.currentSheetIndex, cfg, { "k": "config" });
 
         if(RowlChange != null){
             jfrefreshgrid_rhcw(Store.flowdata.length, Store.flowdata[0].length);
@@ -138,21 +138,21 @@ function jfrefreshgrid(data, range, allParam, isRunExecFunction = true, isRefres
     if(cdformat != null && cdformat.length !== 0){
         file["luckysheet_conditionformat_save"] = cdformat;
 
-        server.saveParam("all", Store.currentSheetIndex, cdformat, { "k": "luckysheet_conditionformat_save" });
+        // server.saveParam("all", Store.currentSheetIndex, cdformat, { "k": "luckysheet_conditionformat_save" });
     }
 
     //data Verification, null or empty object are not processed
     if(dataVerification != null && Object.keys(dataVerification).length !== 0){
         dataVerificationCtrl.dataVerification = dataVerification;
         file["dataVerification"] = dataVerification;
-        server.saveParam("all", Store.currentSheetIndex, dataVerification, { "k": "dataVerification" });
+        // server.saveParam("all", Store.currentSheetIndex, dataVerification, { "k": "dataVerification" });
     }
 
     //动态数组
     if(dynamicArray != null){
         file["dynamicArray"] = dynamicArray;
 
-        server.saveParam("all", Store.currentSheetIndex, dynamicArray, { "k": "dynamicArray" });
+        // server.saveParam("all", Store.currentSheetIndex, dynamicArray, { "k": "dynamicArray" });
     }
 
     //更新数据的范围
@@ -169,10 +169,10 @@ function jfrefreshgrid(data, range, allParam, isRunExecFunction = true, isRefres
             let sparklines = new Function("return " +fp)();
             Store.flowdata[r1][c1].spl = sparklines;
         }
-
+/*
         if(server.allowUpdate){ //共享编辑模式
             server.historyParam(Store.flowdata, Store.currentSheetIndex, range[s]);
-        }
+        }*/
         // 刷新图表
         if(typeof(Store.chartparam.jfrefreshchartall)=="function"){
             Store.chartparam.jfrefreshchartall(Store.flowdata,range[s].row[0],range[s].row[1],range[s].column[0],range[s].column[1]);
@@ -214,7 +214,7 @@ function jfrefreshgridall(colwidth, rowheight, data, cfg, range, ctrlType, ctrlV
             setfield = {};
         }
 
-        server.saveParam("cg", Store.currentSheetIndex, setfield, { "k": "rowlen" });
+        // server.saveParam("cg", Store.currentSheetIndex, setfield, { "k": "rowlen" });
     }
     else if (ctrlType == "resizeC") {
         redo["type"] = "resize";
@@ -233,7 +233,7 @@ function jfrefreshgridall(colwidth, rowheight, data, cfg, range, ctrlType, ctrlV
             setfield = {};
         }
 
-        server.saveParam("cg", Store.currentSheetIndex, setfield, { "k": "columnlen" });
+        // server.saveParam("cg", Store.currentSheetIndex, setfield, { "k": "columnlen" });
     }
     else if (ctrlType.indexOf("extend")>-1) {
         redo["type"] = "extend";
@@ -246,7 +246,7 @@ function jfrefreshgridall(colwidth, rowheight, data, cfg, range, ctrlType, ctrlV
         redo["ctrlType"] = ctrlType;
         redo["ctrlValue"] = ctrlValue;
 
-        server.saveParam("arc", Store.currentSheetIndex, {"index": ctrlValue.index, "len": ctrlValue.len, "direction": ctrlValue.direction, "mc": cfg.merge }, { "rc": ctrlValue.type });
+        // server.saveParam("arc", Store.currentSheetIndex, {"index": ctrlValue.index, "len": ctrlValue.len, "direction": ctrlValue.direction, "mc": cfg.merge }, { "rc": ctrlValue.type });
     }
     else if (ctrlType.indexOf("dele")>-1) {
         redo["type"] = "dele";
@@ -259,7 +259,7 @@ function jfrefreshgridall(colwidth, rowheight, data, cfg, range, ctrlType, ctrlV
         redo["ctrlType"] = ctrlType;
         redo["ctrlValue"] = ctrlValue;
 
-        server.saveParam("drc", Store.currentSheetIndex, {"index": ctrlValue.index, "len":ctrlValue.len, "mc": cfg.merge, "borderInfo": cfg.borderInfo }, { "rc": ctrlValue.type});
+        // server.saveParam("drc", Store.currentSheetIndex, {"index": ctrlValue.index, "len":ctrlValue.len, "mc": cfg.merge, "borderInfo": cfg.borderInfo }, { "rc": ctrlValue.type});
     }
     else {
         redo["type"] = "datachangeAll";
@@ -273,7 +273,7 @@ function jfrefreshgridall(colwidth, rowheight, data, cfg, range, ctrlType, ctrlV
         isRunExecFunction = true;
 
         for(let s = 0; s < range.length; s++){
-            server.historyParam(data, Store.currentSheetIndex, range[s]);
+            // server.historyParam(data, Store.currentSheetIndex, range[s]);
         }
     }
 
@@ -299,14 +299,14 @@ function jfrefreshgridall(colwidth, rowheight, data, cfg, range, ctrlType, ctrlV
         Store.config = cfg;
         Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)].config = Store.config;
 
-        server.saveParam("all", Store.currentSheetIndex, cfg, { "k": "config" });
+        // server.saveParam("all", Store.currentSheetIndex, cfg, { "k": "config" });
     }
 
     //条件格式
     if(cdformat != null){
         Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)]["luckysheet_conditionformat_save"] = cdformat;
 
-        server.saveParam("all", Store.currentSheetIndex, cdformat, { "k": "luckysheet_conditionformat_save" });
+        // server.saveParam("all", Store.currentSheetIndex, cdformat, { "k": "luckysheet_conditionformat_save" });
     }
 
     //选区
@@ -374,9 +374,9 @@ function jfrefreshrange(data, range, cdformat) {
     }, 1);
 
     //发送给后台
-    for(let s = 0; s < range.length; s++){
+/*    for(let s = 0; s < range.length; s++){
         server.historyParam(Store.flowdata, Store.currentSheetIndex, range[s]);
-    }
+    }*/
 }
 
 //删除、增加行列 刷新表格
@@ -509,12 +509,12 @@ function jfrefreshgrid_adRC(data, cfg, ctrlType, ctrlValue, calc, filterObj, cf,
             }
         }
 
-        server.saveParam("arc", Store.currentSheetIndex, {"index": index, "len": len, "direction": direction, "data": addData }, { "rc": rc });
+        // server.saveParam("arc", Store.currentSheetIndex, {"index": index, "len": len, "direction": direction, "data": addData }, { "rc": rc });
     }
     else if(ctrlType == "delRC"){
-        server.saveParam("drc", Store.currentSheetIndex, {"index": index, "len": len }, { "rc": rc });
+        // server.saveParam("drc", Store.currentSheetIndex, {"index": index, "len": len }, { "rc": rc });
     }
-
+    console.log(data)
     //Store.flowdata
     Store.flowdata = data;
     // editor.webWorkerFlowDataCache(Store.flowdata);//worker存数据
@@ -524,14 +524,14 @@ function jfrefreshgrid_adRC(data, cfg, ctrlType, ctrlValue, calc, filterObj, cf,
     //config
     Store.config = cfg;
     file.config = Store.config;
-    server.saveParam("all", Store.currentSheetIndex, cfg, { "k": "config" });
+    // server.saveParam("all", Store.currentSheetIndex, cfg, { "k": "config" });
 
     //mcData
     for(let i = 0; i < mcData.length; i++){
         let mcData_r = mcData[i].r,
             mcData_c = mcData[i].c;
 
-        server.saveParam("v", Store.currentSheetIndex, Store.flowdata[mcData_r][mcData_c], { "r": mcData_r, "c": mcData_c });
+        // server.saveParam("v", Store.currentSheetIndex, Store.flowdata[mcData_r][mcData_c], { "r": mcData_r, "c": mcData_c });
     }
 
     //公式链中公式范围改变对应单元格值的改变
@@ -556,12 +556,12 @@ function jfrefreshgrid_adRC(data, cfg, ctrlType, ctrlValue, calc, filterObj, cf,
 
     //calc函数链
     file.calcChain = calc;
-    server.saveParam("all", Store.currentSheetIndex, calc, { "k": "calcChain" });
+    // server.saveParam("all", Store.currentSheetIndex, calc, { "k": "calcChain" });
     for(let i = 0; i < funcData.length; i++){
         let funcData_r = funcData[i].r,
             funcData_c = funcData[i].c;
 
-        server.saveParam("v", Store.currentSheetIndex, Store.flowdata[funcData_r][funcData_c], { "r": funcData_r, "c": funcData_c });
+        // server.saveParam("v", Store.currentSheetIndex, Store.flowdata[funcData_r][funcData_c], { "r": funcData_r, "c": funcData_c });
     }
 
     //筛选配置
@@ -574,16 +574,16 @@ function jfrefreshgrid_adRC(data, cfg, ctrlType, ctrlValue, calc, filterObj, cf,
         file.filter = null;
     }
     createFilterOptions(file.filter_select, file.filter);
-    server.saveParam("all", Store.currentSheetIndex, file.filter_select, { "k": "filter_select" });
-    server.saveParam("all", Store.currentSheetIndex, file.filter, { "k": "filter" });
+    // server.saveParam("all", Store.currentSheetIndex, file.filter_select, { "k": "filter_select" });
+    // server.saveParam("all", Store.currentSheetIndex, file.filter, { "k": "filter" });
 
     //条件格式配置
     file.luckysheet_conditionformat_save = cf;
-    server.saveParam("all", Store.currentSheetIndex, file.luckysheet_conditionformat_save, { "k": "luckysheet_conditionformat_save" });
+    // server.saveParam("all", Store.currentSheetIndex, file.luckysheet_conditionformat_save, { "k": "luckysheet_conditionformat_save" });
 
     //交替颜色配置
     file.luckysheet_alternateformat_save = af;
-    server.saveParam("all", Store.currentSheetIndex, file.luckysheet_alternateformat_save, { "k": "luckysheet_alternateformat_save" });
+    // server.saveParam("all", Store.currentSheetIndex, file.luckysheet_alternateformat_save, { "k": "luckysheet_alternateformat_save" });
 
     //冻结配置
     if(freezen != null){
@@ -598,12 +598,12 @@ function jfrefreshgrid_adRC(data, cfg, ctrlType, ctrlValue, calc, filterObj, cf,
     //数据验证
     dataVerificationCtrl.dataVerification = dataVerification;
     file.dataVerification = dataVerification;
-    server.saveParam("all", Store.currentSheetIndex, file.dataVerification, { "k": "dataVerification" });
+    // server.saveParam("all", Store.currentSheetIndex, file.dataVerification, { "k": "dataVerification" });
 
     //超链接
     hyperlinkCtrl.hyperlink = hyperlink;
     file.hyperlink = hyperlink;
-    server.saveParam("all", Store.currentSheetIndex, file.hyperlink, { "k": "hyperlink" });
+    // server.saveParam("all", Store.currentSheetIndex, file.hyperlink, { "k": "hyperlink" });
 
     //行高、列宽刷新
     jfrefreshgrid_rhcw(Store.flowdata.length, Store.flowdata[0].length);
@@ -718,7 +718,7 @@ function jfrefreshgrid_deleteCell(data, cfg, ctrl, calc, filterObj, cf, dataVeri
     useDataVerificationBuildCache()
     file.data = data;
 
-    //共享编辑模式
+ /*   //共享编辑模式
     if(server.allowUpdate){
         let type = ctrl.type,
             str = ctrl.str,
@@ -740,20 +740,20 @@ function jfrefreshgrid_deleteCell(data, cfg, ctrl, calc, filterObj, cf, dataVeri
             };
         }
 
-        server.historyParam(Store.flowdata, Store.currentSheetIndex, range);
-    }
+        // server.historyParam(Store.flowdata, Store.currentSheetIndex, range);
+    }*/
 
     //config
     Store.config = cfg;
     file.config = Store.config;
-    server.saveParam("all", Store.currentSheetIndex, cfg, { "k": "config" });
+    // server.saveParam("all", Store.currentSheetIndex, cfg, { "k": "config" });
 
     //mcData
     for(let i = 0; i < mcData.length; i++){
         let mcData_r = mcData[i].r,
             mcData_c = mcData[i].c;
 
-        server.saveParam("v", Store.currentSheetIndex, Store.flowdata[mcData_r][mcData_c], { "r": mcData_r, "c": mcData_c });
+        // server.saveParam("v", Store.currentSheetIndex, Store.flowdata[mcData_r][mcData_c], { "r": mcData_r, "c": mcData_c });
     }
 
     //公式链中公式范围改变对应单元格值的改变
@@ -775,12 +775,12 @@ function jfrefreshgrid_deleteCell(data, cfg, ctrl, calc, filterObj, cf, dataVeri
 
     //calc函数链
     file.calcChain = calc;
-    server.saveParam("all", Store.currentSheetIndex, calc, { "k": "calcChain" });
+    // server.saveParam("all", Store.currentSheetIndex, calc, { "k": "calcChain" });
     for(let i = 0; i < funcData.length; i++){
         let funcData_r = funcData[i].r,
             funcData_c = funcData[i].c;
 
-        server.saveParam("v", Store.currentSheetIndex, Store.flowdata[funcData_r][funcData_c], { "r": funcData_r, "c": funcData_c });
+        // server.saveParam("v", Store.currentSheetIndex, Store.flowdata[funcData_r][funcData_c], { "r": funcData_r, "c": funcData_c });
     }
 
     //筛选配置
@@ -793,22 +793,22 @@ function jfrefreshgrid_deleteCell(data, cfg, ctrl, calc, filterObj, cf, dataVeri
         file.filter = null;
     }
     createFilterOptions(file.filter_select, file.filter);
-    server.saveParam("all", Store.currentSheetIndex, file.filter_select, { "k": "filter_select" });
-    server.saveParam("all", Store.currentSheetIndex, file.filter, { "k": "filter" });
+    // server.saveParam("all", Store.currentSheetIndex, file.filter_select, { "k": "filter_select" });
+    // server.saveParam("all", Store.currentSheetIndex, file.filter, { "k": "filter" });
 
     //条件格式配置
     file.luckysheet_conditionformat_save = cf;
-    server.saveParam("all", Store.currentSheetIndex, file.luckysheet_conditionformat_save, { "k": "luckysheet_conditionformat_save" });
+    // server.saveParam("all", Store.currentSheetIndex, file.luckysheet_conditionformat_save, { "k": "luckysheet_conditionformat_save" });
 
     //数据验证
     dataVerificationCtrl.dataVerification = dataVerification;
     file.dataVerification = dataVerification;
-    server.saveParam("all", Store.currentSheetIndex, file.dataVerification, { "k": "dataVerification" });
+    // server.saveParam("all", Store.currentSheetIndex, file.dataVerification, { "k": "dataVerification" });
 
     //超链接
     hyperlinkCtrl.hyperlink = hyperlink;
     file.hyperlink = hyperlink;
-    server.saveParam("all", Store.currentSheetIndex, file.hyperlink, { "k": "hyperlink" });
+    // server.saveParam("all", Store.currentSheetIndex, file.hyperlink, { "k": "hyperlink" });
 
     refreshCanvasTimeOut = setTimeout(function () {
         luckysheetrefreshgrid();
@@ -963,24 +963,24 @@ function jfrefreshgrid_pastcut(source, target, RowlChange){
 
     //saveparam
     //来源表
-    server.saveParam("all", source["sheetIndex"], source["curConfig"], { "k": "config" });
+    // server.saveParam("all", source["sheetIndex"], source["curConfig"], { "k": "config" });
     //目的表
-    server.saveParam("all", target["sheetIndex"], target["curConfig"], { "k": "config" });
+    // server.saveParam("all", target["sheetIndex"], target["curConfig"], { "k": "config" });
 
     //来源表
-    server.historyParam(source["curData"], source["sheetIndex"], {"row": source["range"]["row"], "column": source["range"]["column"]});
+    // server.historyParam(source["curData"], source["sheetIndex"], {"row": source["range"]["row"], "column": source["range"]["column"]});
     //目的表
-    server.historyParam(target["curData"], target["sheetIndex"], {"row": target["range"]["row"], "column": target["range"]["column"]});
+    // server.historyParam(target["curData"], target["sheetIndex"], {"row": target["range"]["row"], "column": target["range"]["column"]});
 
     //来源表
-    server.saveParam("all", source["sheetIndex"], source["curCdformat"], { "k": "luckysheet_conditionformat_save" });
+    // server.saveParam("all", source["sheetIndex"], source["curCdformat"], { "k": "luckysheet_conditionformat_save" });
     //目的表
-    server.saveParam("all", target["sheetIndex"], target["curCdformat"], { "k": "luckysheet_conditionformat_save" });
+    // server.saveParam("all", target["sheetIndex"], target["curCdformat"], { "k": "luckysheet_conditionformat_save" });
 
     //来源表
-    server.saveParam("all", source["sheetIndex"], source["curDataVerification"], { "k": "dataVerification" });
+    // server.saveParam("all", source["sheetIndex"], source["curDataVerification"], { "k": "dataVerification" });
     //目的表
-    server.saveParam("all", target["sheetIndex"], target["curDataVerification"], { "k": "dataVerification" });
+    // server.saveParam("all", target["sheetIndex"], target["curDataVerification"], { "k": "dataVerification" });
 }
 
 //行高、列宽改变 刷新表格
@@ -1013,7 +1013,7 @@ function jfrefreshgrid_rhcw(rowheight, colwidth, isRefreshCanvas=true){
                 let sparklines = new Function("return " + fp)();
                 Store.flowdata[r][c].spl = sparklines;
 
-                server.saveParam("v", Store.currentSheetIndex, Store.flowdata[r][c], { "r": r, "c": c });
+                // server.saveParam("v", Store.currentSheetIndex, Store.flowdata[r][c], { "r": r, "c": c });
             }
         }
 
