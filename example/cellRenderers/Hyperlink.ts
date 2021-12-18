@@ -36,7 +36,12 @@ export class Hyperlink extends CellRenderers {
   ): void {}
 
   formatValueBeforeRender({ value }: FormatValueBeforeRenderParams): any {
-    let formattedValue = typeof value === "string" ? JSON.parse(value) : value;
+    let formattedValue =
+      typeof value === "string"
+        ? value.length === 0
+          ? { title: "", url: "" }
+          : JSON.parse(value)
+        : value;
     formattedValue.url = this.getLink(formattedValue.url);
     formattedValue.isImage = this.isImage(formattedValue.url);
     formattedValue.url = this.getGoogleLink(formattedValue.url);
@@ -45,7 +50,7 @@ export class Hyperlink extends CellRenderers {
   }
 
   parseFromClipboard(value: any, cellParams: any): string {
-    return JSON.stringify(value)
+    return JSON.stringify(value);
   }
 
   showExtractDomOnMouseEnter(

@@ -2,9 +2,10 @@ import Store from "../../../store";
 import { getSheetIndex } from "../../../methods/get";
 import luckysheetConfigsetting from "../../luckysheetConfigsetting";
 import { column } from "../../../customCell/types";
+import { getCellData } from "../../../global/apiHelper";
 
-export function deepClone(data){
-  return JSON.parse(JSON.stringify(data))
+export function deepClone(data) {
+  return JSON.parse(JSON.stringify(data));
 }
 
 /**
@@ -28,17 +29,40 @@ export function getColumnsFromSelectedSave(): column[] {
 }
 
 /**
- * 从 Store.luckysheet_select_save.row 获取当前的所有 row
+ * Store.luckysheet_select_save.row 获取当前选中的 cellData 的 rowId
  */
-export function getRowsFromSelectedSave(): column[] {
+export function getRowsIdFromSelectedSave(): string[] {
   if (Store.luckysheet_select_save.length === 0) return [];
   let rows = [];
+  const cellData = getCellData();
   Store.luckysheet_select_save.map((selection) => {
     const { row: rowsSelection } = selection;
     const [start, end] = rowsSelection;
 
     for (let i = start; i <= end; i++) {
-      Store.flowdata[i] && rows.push(Store.flowdata[i]);
+      if (cellData[i]) {
+        rows.push(cellData[i].id ?? cellData[i].field);
+      }
+    }
+  });
+
+  return Array.from(new Set(rows));
+}
+
+/**
+ * 通过 ids 获取当前的所有 cell data 中的 rom
+ */
+export function getCellDataRowsByIds(ids): any[] {
+  if (ids.length === 0) return [];
+  let rows = [];
+  const cellData = getCellData();
+
+  ids.map((id) => {
+    const current = cellData.find(
+      (item) => item.id === id || item.field === id
+    );
+    if (current) {
+      rows.push(current);
     }
   });
 

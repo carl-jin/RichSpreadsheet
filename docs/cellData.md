@@ -63,9 +63,3 @@ insertRowOrColumnCellDataSync("row", 0, [
 ### cell 值发时改变
 
 ### Store.flowdata 被重新赋值
-
-//  todo 完成这个 apiCellSync.js
-//  todo 在cell更新时候,同步更新cellData
-//  todo 在flowdat 被重新赋值时候, 通过 cellData 获取正确的值
-//  todo contenxt menu params 里面的 row 可以为 cellData 对应的 row id 了
-

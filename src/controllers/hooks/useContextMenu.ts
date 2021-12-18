@@ -1,6 +1,10 @@
 import Store from "../../store";
 import { getSheetIndex } from "../../methods/get";
-import { getColumnsFromSelectedSave, getRowsFromSelectedSave } from "./helper";
+import {
+  getColumnsFromSelectedSave,
+  getCellDataRowsByIds,
+  getRowsIdFromSelectedSave,
+} from "./helper";
 import { ContentMenuItem } from "../../type";
 import { luckysheetContainerFocus } from "../../utils/util";
 import { cell, column } from "../../customCell/types";
@@ -9,7 +13,8 @@ export type ContextMenuType = "cell" | "column" | "row";
 
 export type ContextMenuParams = {
   columns: column[];
-  rows: cell[][];
+  rows: any[];
+  rowIds: string[];
   data: cell[][];
   selection: any[];
   store: any;
@@ -22,7 +27,8 @@ export type ContextMenuParams = {
 function renderContextMenu(type: ContextMenuType) {
   if (Store.luckysheet_select_save.length === 0) return;
   const columns = getColumnsFromSelectedSave();
-  const rows = getRowsFromSelectedSave();
+  const rowIds = getRowsIdFromSelectedSave();
+  const rows = getCellDataRowsByIds(rowIds);
   const $menu = $("#luckysheet-rightclick-menu");
   let currentSheet =
     Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
@@ -31,6 +37,7 @@ function renderContextMenu(type: ContextMenuType) {
     {
       columns,
       rows,
+      rowIds,
       data: Store.flowdata,
       selection: Store.luckysheet_select_save,
       store: Store,

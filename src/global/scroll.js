@@ -7,7 +7,7 @@ import method from '../global/method'
 let scrollRequestAnimationFrameIni = true,scrollRequestAnimationFrame = false, scrollTimeOutCancel=null;
 
 function execScroll(){
-    let scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft(), 
+    let scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft(),
         scrollTop = $("#luckysheet-scrollbar-y").scrollTop();
     luckysheetrefreshgrid(scrollLeft, scrollTop);
     scrollRequestAnimationFrame = window.requestAnimationFrame(execScroll);
@@ -16,7 +16,7 @@ function execScroll(){
 //全局滚动事件
 export default function luckysheetscrollevent(isadjust) {
     let $t = $("#luckysheet-cell-main");
-    let scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft(), 
+    let scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft(),
         scrollTop = $("#luckysheet-scrollbar-y").scrollTop(),
         canvasHeight = $("#luckysheetTableContent").height(); // canvas高度
 
@@ -84,12 +84,12 @@ export default function luckysheetscrollevent(isadjust) {
 
     $("#luckysheet-cols-h-c").scrollLeft(scrollLeft);//列标题
     $("#luckysheet-rows-h").scrollTop(scrollTop);//行标题
-    
+
     $t.scrollLeft(scrollLeft).scrollTop(scrollTop);
 
     $("#luckysheet-input-box-index").css({
-        "left": $("#luckysheet-input-box").css("left"), 
-        "top": (parseInt($("#luckysheet-input-box").css("top")) - 20) + "px", 
+        "left": $("#luckysheet-input-box").css("left"),
+        "top": (parseInt($("#luckysheet-input-box").css("top")) - 20) + "px",
         "z-index": $("#luckysheet-input-box").css("z-index")
     }).show();
 
@@ -99,7 +99,7 @@ export default function luckysheetscrollevent(isadjust) {
     // }
 
     luckysheetrefreshgrid(scrollLeft, scrollTop);
-    
+
 
     $("#luckysheet-bottom-controll-row").css("left", scrollLeft);
 

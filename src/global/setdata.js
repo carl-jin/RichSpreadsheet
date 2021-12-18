@@ -4,9 +4,10 @@ import { genarate, update } from "./format";
 import server from "../controllers/server";
 import luckysheetConfigsetting from "../controllers/luckysheetConfigsetting";
 import Store from "../store";
+import { updateSpecificCellData } from "./apiHelper";
 
 //Set cell value
-function setcellvalue(r, c, d, v, extractProps) {
+function setcellvalue(r, c, d, v) {
   if (d == null) {
     d = Store.flowdata;
   }
@@ -14,11 +15,17 @@ function setcellvalue(r, c, d, v, extractProps) {
   // let cell = $.extend(true, {}, d[r][c]);
   // let cell = d[r][c];
 
-  d[r][c] = {
-    ct: { fa: "@", t: "s" },
-    v: v,
-    ...extractProps,
-  };
+  updateSpecificCellData(r, c, v);
+
+  if (d[r][c]) {
+    d[r][c].v = v;
+  } else {
+    d[r][c] = {
+      ct: { fa: "@", t: "s" },
+      v: v,
+    };
+  }
+
   /*
   return;
 

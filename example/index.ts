@@ -1,10 +1,18 @@
-import RichSpread from "../src";
+import RichSpread, {
+  insertRowOrColumnCellSync,
+  insertRowBottomOrColumnRightCellSync,
+  deleteRowOrColumnCellSync,
+  getCurrentSheet,
+  setFrozen,
+  cancelFrozenHacks,
+} from "../src";
 import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
 import cellEditors from "./cellEditors";
 import GsClipboardHandler from "./GSClipboard/handler/index";
+import { deepClone } from "../src/controllers/hooks/helper";
 
-const { frozenColumnRange, cancelFrozen, insertRowOrColumn } = RichSpread;
+const { cancelFrozen, setBothFrozen } = RichSpread;
 
 function create() {
   RichSpread.create({
@@ -15,44 +23,107 @@ function create() {
     },
     ContextMenu(params, type) {
       //  找到最后一个 column
-      const lastColumn = params.columns[params.columns.length - 1];
-      const lastColumnIndex = params.currentSheet.column.indexOf(lastColumn);
+      const lastColumnIndex =
+        params.selection[params.selection.length - 1].column[1];
+      const lastRowIndex = params.selection[params.selection.length - 1].row[1];
 
-      console.log(params)
+      console.log(params);
+
       if (type === "cell") {
+        return [
+          {
+            name: "复制",
+            action() {},
+          },
+          {
+            name: "编辑",
+            action() {},
+          },
+        ];
+      }
+
+      if (type === "row") {
         return [
           {
             name: `向上插入 ${params.rows.length} 行`,
             action() {
               const lastStartRow =
                 params.selection[params.selection.length - 1].row[0];
-              insertRowOrColumn("row", lastStartRow, {
-                number: params.rows.length,
+
+              let newArr = [];
+              params.rows.map((row, index) => {
+                newArr.push({
+                  id: Math.ceil(Math.random() * 999999),
+                });
               });
+
+              insertRowOrColumnCellSync("row", lastStartRow, newArr);
             },
           },
           {
-            name: "向下插入一行",
+            name: `向下插入 ${params.rows.length} 行`,
             action() {
-              console.log("向下插入一行");
+              const lastStartRow =
+                params.selection[params.selection.length - 1].row[1];
+
+              let newArr = [];
+              params.rows.map((row, index) => {
+                newArr.push({
+                  id: Math.ceil(Math.random() * 999999),
+                });
+              });
+
+              insertRowBottomOrColumnRightCellSync("row", lastStartRow, newArr);
             },
+          },
+          {
+            separator: true,
           },
           {
             name: "编辑当前行",
-            action() {
-              console.log("编辑当前行");
-            },
+            action() {},
           },
           {
             name: "复制当前行",
             action() {
-              console.log("复制当前行");
+              const lastStartRow =
+                params.selection[params.selection.length - 1].row[1];
+
+              let newArr = [];
+              params.rows.map((row, index) => {
+                const newItem = deepClone(row);
+                newItem.id = Math.ceil(Math.random() * 9999);
+                newArr.push(newItem);
+              });
+
+              insertRowBottomOrColumnRightCellSync("row", lastStartRow, newArr);
             },
           },
           {
-            name: "删除当前行",
+            name: `删除所选的 ${params.rows.length} 行`,
             action() {
+              const [startIndex, endIndex] =
+                params.selection[params.selection.length - 1].row;
+              deleteRowOrColumnCellSync("row", startIndex, endIndex);
               console.log("删除当前行");
+            },
+          },
+          {
+            separator: true,
+          },
+          {
+            name: `冻结到第${lastRowIndex + 1}行`,
+            action() {
+              setFrozen({
+                row: lastRowIndex,
+              });
+            },
+          },
+          {
+            name: "取消行冻结",
+            disabled: true,
+            action() {
+              cancelFrozenHacks("row");
             },
           },
         ];
@@ -61,19 +132,21 @@ function create() {
       if (type === "column") {
         return [
           {
-            name: `冻结到第${lastColumnIndex + 1}列 (${lastColumn.headerName})`,
+            name: `冻结到第${lastColumnIndex + 1}列 (${
+              params.currentSheet.column[lastColumnIndex].headerName
+            })`,
             icon: "luckysheet-iconfont-quanjiabiankuang",
             action() {
-              frozenColumnRange({
-                column_focus: lastColumnIndex,
+              setFrozen({
+                col: lastColumnIndex,
               });
             },
           },
           {
-            name: "取消冻结列",
+            name: "取消列冻结",
             disabled: true,
             action() {
-              cancelFrozen();
+              cancelFrozenHacks("column");
             },
           },
           {

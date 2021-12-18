@@ -40,6 +40,7 @@ import { zoomNumberDomBind } from "./zoom";
 import menuButton from "./menuButton";
 import method from "../global/method";
 import { useDataVerificationBuildCache } from "./hooks/useDataVerification";
+import { syncWidthCellData } from "../global/apiHelper";
 
 const sheetmanage = {
   generateRandomSheetIndex: function (prefix) {
@@ -797,10 +798,15 @@ const sheetmanage = {
 
     celldata.map((row, index) => {
       Object.keys(row).map((colId) => {
+        //  如果 colId 为 -1
+        //  比如是 id 字段，则跳过
+        const colIdIndex = getColIndexById(colId);
+        if (colIdIndex === -1) return;
+
         let value = row[colId] ? row[colId] : "";
         cellDataArr.push({
           r: index,
-          c: getColIndexById(colId),
+          c: colIdIndex,
           v: value,
         });
       });
@@ -839,10 +845,7 @@ const sheetmanage = {
           if (c >= data[0].length) {
             data = datagridgrowth(data, 0, c - data[0].length + 1);
           }
-          setcellvalue(r, c, data, v, {
-            columnId: column[c] ? column[c].id ?? column[c].fieldId : '',
-            rowId:celldata[r] ? celldata[r].id : ''
-          });
+          setcellvalue(r, c, data, v);
         }
       }
     }
@@ -850,7 +853,7 @@ const sheetmanage = {
     //亿万格式+精确度 恢复全局初始化
     luckysheetConfigsetting.autoFormatw = false;
     luckysheetConfigsetting.accuracy = undefined;
-    return data;
+    return syncWidthCellData(data);
   },
   cutGridData: function (d) {
     let rowindex = 0;
