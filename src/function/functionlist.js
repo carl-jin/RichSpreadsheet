@@ -1,4 +1,4 @@
-import functionImplementation from './functionImplementation';
+// import functionImplementation from './functionImplementation';
 import Store from '../store'
 import locale from '../locale/locale';
 //{"0":"数学","1":"统计","2":"查找","3":"Luckysheet内置","4":"数据挖掘","5":"数据源","6":"日期","7":"过滤器","8":"财务","9":"工程计算","10":"逻辑","11":"运算符","12":"文本","13":"转换工具","14":"数组"}
@@ -9,10 +9,10 @@ const functionlist = function(){
     let functionListOrigin = _locale.functionlist;
 
     // add new property f
-    for (let i = 0; i < functionListOrigin.length; i++) {
+/*    for (let i = 0; i < functionListOrigin.length; i++) {
         let func = functionListOrigin[i];
         func.f = functionImplementation[func.n];
-    }
+    }*/
 
     Store.functionlist = functionListOrigin;
 

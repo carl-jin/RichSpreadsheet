@@ -6,7 +6,10 @@ import {
   setBothFrozen,
   cancelFrozen,
 } from "./api";
-import { deepClone } from "../controllers/hooks/helper";
+import {
+  deepClone,
+  getRowsIdFromSelectedSave,
+} from "../controllers/hooks/helper";
 
 /**
  * 将 cell 的值与 cellData 同步
@@ -114,6 +117,13 @@ export function cancelFrozenHacks(cancelType: "row" | "column") {
 
   // @ts-ignore
   cancelFrozen();
+}
+
+/**
+ * 获取当前选中的 row ids
+ */
+export function getSelectedRowIds() {
+  return getRowsIdFromSelectedSave();
 }
 
 /**

@@ -1,10 +1,12 @@
-import RichSpread, {
+import {
+  RichSpread,
   insertRowOrColumnCellSync,
   insertRowBottomOrColumnRightCellSync,
   deleteRowOrColumnCellSync,
   getCurrentSheet,
   setFrozen,
   cancelFrozenHacks,
+  getSelectedRowIds,
 } from "../src";
 import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
@@ -204,3 +206,8 @@ function create() {
 }
 
 create();
+
+//  获取 rows id
+document.querySelector("#rowIds").addEventListener("click", () => {
+  console.log(getSelectedRowIds());
+});

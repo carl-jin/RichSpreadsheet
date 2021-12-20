@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "noEmitOnError": true,
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "module": "ESNext",
+    "strict": false,
+    "target": "es2018",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "jsx": "preserve",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
+    "allowJs": false,
+    "moduleResolution": "node",
+    "baseUrl": "."
+  },
+  "include": [
+    "src",
+  ],
+}

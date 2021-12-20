@@ -42,6 +42,7 @@ export class CustomBase {
 
     let event = $.Event("dblclick");
     let { left, top } = $("#" + Store.container).offset();
+    //  @ts-ignore
     event.target = $(".luckysheet-cell-sheettable").get(0);
     event.pageX = columnX + left + Store.rowHeaderWidth;
     event.pageY = rowY + top + Store.columnHeaderHeight;

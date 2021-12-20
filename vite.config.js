@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import { injectHtml } from "vite-plugin-html";
-
-console.log(import.meta.env);
+import { visualizer } from "rollup-plugin-visualizer";
+import path from "path";
 
 export default defineConfig(({ mode }) => {
   const isProd = mode === "production";
@@ -12,8 +12,17 @@ export default defineConfig(({ mode }) => {
         "@": "./src",
       },
     },
+    output: {
+      exports: "named",
+    },
     build: {
       emptyOutDir: false,
+      lib: {
+        entry: path.resolve(__dirname, "src/index.ts"),
+        name: "RichSpreadsheet",
+        fileName: (format) => `RichSpreadsheet.${format}.js`,
+      },
+      minify: false,
     },
     plugins: [
       injectHtml({
@@ -49,6 +58,9 @@ export default defineConfig(({ mode }) => {
           return modules;
         },
       },
+      visualizer({
+        open: false,
+      }),
     ],
   };
 });

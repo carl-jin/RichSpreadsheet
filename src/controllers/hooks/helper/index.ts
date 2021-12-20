@@ -99,7 +99,7 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
     const cellHeight = row - row_pre;
     const scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft();
     const scrollTop = $("#luckysheet-scrollbar-y").scrollTop();
-
+    const luckysheet = document.getElementById("luckysheetTableContent") as HTMLCanvasElement
     return [
       Render,
       {
@@ -117,7 +117,7 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
         cellHeight: cellHeight - 1,
         spaceX: Store.cellSpace[1],
         spaceY: Store.cellSpace[0],
-        ctx: document.getElementById("luckysheetTableContent").getContext("2d"),
+        ctx: luckysheet.getContext("2d"),
         positionX:
           col - scrollLeft - cellWidth + luckysheetConfigsetting.rowHeaderWidth,
         positionY:

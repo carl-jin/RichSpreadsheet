@@ -17,7 +17,7 @@ let timerRemove = null;
 let timerShow = null;
 
 function RenderDom(
-  position: "left" | "right" | "top" | "bottom",
+  position: "left" | "right" | "top" | "bottom" | string,
   DOM: HTMLElement,
   params
 ) {

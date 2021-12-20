@@ -39,7 +39,10 @@ const reRenderCell = (mouseDetail, eventName) => {
 };
 
 //  **** 处理 canvas mousemove 事件, 这里同时也响应了单元格的 hover 事件
-let currentEnterCellMouseDetail = {}; //  储存当前移入 cell 的信息, 鼠标离开时, 也会需要这个值去触发 mouseout
+let currentEnterCellMouseDetail = {
+  row_index: undefined,
+  col_index: undefined,
+}; //  储存当前移入 cell 的信息, 鼠标离开时, 也会需要这个值去触发 mouseout
 export const canvasMousemove = throttle(50, false, (event) => {
   const mouseDetail = getMouseRelateCell(event);
   const isHasPreCell = Object.keys(currentEnterCellMouseDetail).length > 0;
@@ -51,7 +54,10 @@ export const canvasMousemove = throttle(50, false, (event) => {
     //  如果之前记录的有 cell 信息, 这里触发下 mouseout 事件
     if (isHasPreCell) {
       reRenderCell(currentEnterCellMouseDetail, "mouseoutRender");
-      currentEnterCellMouseDetail = {};
+      currentEnterCellMouseDetail = {
+        row_index: undefined,
+        col_index: undefined,
+      };
     }
 
     return;
@@ -66,7 +72,10 @@ export const canvasMousemove = throttle(50, false, (event) => {
       currentEnterCellMouseDetail.col_index !== mouseDetail.col_index)
   ) {
     reRenderCell(currentEnterCellMouseDetail, "mouseoutRender");
-    currentEnterCellMouseDetail = {};
+    currentEnterCellMouseDetail = {
+      row_index: undefined,
+      col_index: undefined,
+    };
   }
 
   //  mousemove 事件

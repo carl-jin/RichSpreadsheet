@@ -1,5 +1,3 @@
-import "./assets/iconfont/iconfont.css";
-import "./assets/font-awesome/font-awesome.css";
 import "./css/index.less";
 import "./utils/math";
 import "./less/index.less";
@@ -20,5 +18,4 @@ export * from "./type";
 export * from "./customCell/helper/drawHelper";
 export * from "./global/apiCellSync";
 export * from "./global/apiHelper";
-
-export default RichSpread;
+export { RichSpread };
