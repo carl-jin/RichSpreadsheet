@@ -21,7 +21,6 @@ const paths = {
     "../src/plugins/js/jquery-ui.min.js",
     "../src/plugins/js/jquery.mousewheel.min.js",
     // 'src/plugins/js/numeral.min.js',
-    "../src/plugins/js/html2canvas.min.js",
     "../src/plugins/js/localforage.min.js",
     "../src/plugins/js/lodash.min.js",
     "../src/plugins/js/jstat.min.js",

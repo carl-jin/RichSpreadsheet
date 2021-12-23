@@ -1135,6 +1135,7 @@ const server = {
     imageRequestLock: false,
     imageRequestTimeout: null,
     imageRequest: function(){
+    	return
         let _this = this;
 
         html2canvas($("#" + container).find(".luckysheet-grid-window").get(0), {
