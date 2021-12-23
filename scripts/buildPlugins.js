@@ -6,8 +6,9 @@ const { src, dest, series, parallel } = require("gulp");
 const concat = require("gulp-concat");
 const cleanCSS = require("gulp-clean-css");
 const uglify = require("gulp-uglify");
+const replace = require("gulp-replace");
 
-console.log('开始打包 plugins ')
+console.log("开始打包 plugins ");
 
 const paths = {
   //plugins src
@@ -48,10 +49,14 @@ function pluginsCss() {
 }
 
 function pluginsJs() {
-  return src(paths.pluginsJs)
-    .pipe(concat(paths.concatPluginsJs))
-    .pipe(uglify())
-    .pipe(dest(paths.destPluginsJs));
+  return (
+    src(paths.pluginsJs)
+      .pipe(concat(paths.concatPluginsJs))
+      //  这里部分合并的插件, 还是用的 require(jquery) 这里替换下
+      .pipe(replace('require("jquery")', "window.jQuery"))
+      .pipe(uglify())
+      .pipe(dest(paths.destPluginsJs))
+  );
 }
 
 function clean() {
