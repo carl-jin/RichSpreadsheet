@@ -23,6 +23,9 @@ export default defineConfig(({ mode }) => {
         fileName: (format) => `RichSpreadsheet.${format}.js`,
       },
       minify: false,
+      commonjsOptions: {
+        transformMixedEsModules: true,
+      },
     },
     plugins: [
       injectHtml({
