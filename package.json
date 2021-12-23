@@ -1,8 +1,8 @@
 {
   "name": "@buff2017/rich-spreadsheet",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/RichSpreadsheet.cjs.js",
-  "module": "dist/RichSpreadsheet.esm.js",
+  "module": "dist/RichSpreadsheet.es.js",
   "browser": "dist/RichSpreadsheet.umd.js",
   "types": "dist/index.d.ts",
   "scripts": {
