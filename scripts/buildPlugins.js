@@ -52,9 +52,11 @@ function pluginsJs() {
   return (
     src(paths.pluginsJs)
       .pipe(concat(paths.concatPluginsJs))
+      //  这个插件只支持浏览器加载
+      .pipe(replace('typeof exports', "false"))
       //  这里部分合并的插件, 还是用的 require(jquery) 这里替换下
       .pipe(replace('require("jquery")', "window.jQuery"))
-      .pipe(uglify())
+      // .pipe(uglify())
       .pipe(dest(paths.destPluginsJs))
   );
 }
