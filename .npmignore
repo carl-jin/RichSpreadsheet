@@ -1,0 +1,14 @@
+.github
+example
+docs
+node_modules
+src
+scripts
+index.html
+stats.html
+.gitignore
+.npmignore
+tsconfig.json
+vite.config.js
+yarn.lock
+gulpfile.js

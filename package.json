@@ -1,5 +1,5 @@
 {
-  "name": "@carljin/rich-spreadsheet",
+  "name": "@buff2017/rich-spreadsheet",
   "version": "0.0.2",
   "main": "dist/RichSpreadsheet.cjs.js",
   "module": "dist/RichSpreadsheet.esm.js",
@@ -16,6 +16,19 @@
     "dev": "cross-env NODE_ENV=development gulp dev",
     "release": "standard-version",
     "rmDist": "npx rimraf ./dist"
+  },
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "author": "carl-jin",
+  "bugs": {
+    "url": "https://github.com/carl-jin/RichSpreadsheet/issues"
+  },
+  "homepage": "https://github.com/carl-jin/RichSpreadsheet#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carl-jin/RichSpreadsheet.git"
   },
   "license": "MIT",
   "devDependencies": {
