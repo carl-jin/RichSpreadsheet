@@ -1,8 +1,5 @@
 import {
   CellRenderers,
-  CellRenderersMouseClickParams,
-  FormatValueBeforeRenderParams,
-  CellRenderersMouseEventParams,
   CellRenderersParams,
   ExtractDomConfig,
 } from "../../src";
@@ -39,32 +36,6 @@ export class Text extends CellRenderers {
 
     //  关闭裁剪区域
     this.closeCellClip(CellRenderersParams);
-  }
-
-  clickRender(
-    CellRenderersMouseClickParams: CellRenderersMouseClickParams
-  ): void {}
-
-  mouseenterRender(
-    CellRenderersMouseEventParams: CellRenderersMouseEventParams
-  ): void {}
-
-  mousemoveRender(
-    CellRenderersMouseEventParams: CellRenderersMouseEventParams
-  ): void {}
-
-  mouseoutRender(
-    CellRenderersMouseEventParams: CellRenderersMouseEventParams
-  ): void {}
-
-  formatValueBeforeRender(
-    FormatValueBeforeRenderParams: FormatValueBeforeRenderParams
-  ): any {
-    return FormatValueBeforeRenderParams.value;
-  }
-
-  parseFromClipboard(value: any, cellParams: any): string {
-    return value
   }
 
   showExtractDomOnMouseEnter(

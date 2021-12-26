@@ -1,3 +1,5 @@
+import cellTransformer from "../example/cellTransfomer";
+
 /**
  * The default luckysheet config object.
  */
@@ -16,6 +18,7 @@ export default {
   cellSpace: [2, 6], //  单元格 padding
   cellRenderers: {}, // 单元格 对应的 column 渲染逻辑
   cellEditors: {}, // 单元格 对应的 column 编辑框 渲染逻辑
+  cellTransformer: {}, // 单元格 对应的 column 数据转换逻辑
   GSClipboardOptions: {
     //  https://github.com/carl-jin/gs-clipboard 配置
     handlers: [],

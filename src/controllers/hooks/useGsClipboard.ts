@@ -28,17 +28,19 @@ export async function pasteFromClipboard(shiftKey: boolean = false) {
       const row = y + startRow;
       const col = x + startCol;
       const column = currentSheet.column[col];
+      const type = column.type
       let value = item.value;
 
       //  如果是 readonly 直接退出
       if (column.readonly) return;
 
       //  找到对应的转换器
-      if (item.type && Store.cellRenderers[item.type]?.parseFromClipboard) {
-        value = Store.cellRenderers[item.type].parseFromClipboard(
+      if (item.type && Store.cellTransformer[type]) {
+        value = Store.cellTransformer[type].parseFromClipboard(
           value,
           column.cellParams
         );
+        value = Store.cellTransformer[type].parseValueToData(value,column.cellParams)
       }
 
       if (d[row] && d[row][col]) {
@@ -99,11 +101,11 @@ export function setCopyToClipboard(
       const type = column.type ?? column.field;
       let value = data[row][col].v ? data[row][col].v : "";
 
-      if (Store.cellRenderers[type]) {
-        value = Store.cellRenderers[type].formatValueBeforeRender({
-          value: value,
-          cellParams: column.cellParams,
-        });
+      if (Store.cellTransformer[type]) {
+        value = Store.cellTransformer[type].formatValueFromData(
+          value,
+          column.cellParams,
+        );
       }
 
       cellCoordsData.push({

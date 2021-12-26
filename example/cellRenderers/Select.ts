@@ -1,6 +1,5 @@
 import { CellRenderers, ExtractDomConfig } from "../../src";
 import type {
-  FormatValueBeforeRenderParams,
   CellRenderersParams,
   CellRenderersMouseEventParams,
   CellRenderersMouseClickParams,
@@ -138,45 +137,11 @@ class Select extends CellRenderers {
     }
   }
 
-  formatValueBeforeRender({
-    value,
-    cellParams,
-  }: FormatValueBeforeRenderParams) {
-    if (!cellParams) return [];
-    if (value.length === 0) return [];
-
-    //  判断是否是数组字符串
-    try {
-      let parseArr = JSON.parse(value);
-      return this.transformKeyArrToTitleArr(parseArr, cellParams);
-    } catch (e) {
-      return [];
-    }
-  }
-
-  parseFromClipboard(value: any, cellParams: any): string {
-    return value
-  }
 
   showExtractDomOnMouseEnter(
     CellRenderersParams: CellRenderersParams
   ): ExtractDomConfig {
     return false;
-  }
-
-  private transformKeyArrToTitleArr(arr: string[], cellParams) {
-    let selectOptions = cellParams.options.options;
-    let outputArr = [];
-
-    //  找到每个 key 对应的 title
-    arr.map((key) => {
-      let currentOption = selectOptions.find((option) => option.key === key);
-      if (currentOption) {
-        outputArr.push(currentOption);
-      }
-    });
-
-    return outputArr;
   }
 }
 

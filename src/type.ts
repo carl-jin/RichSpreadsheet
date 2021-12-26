@@ -3,6 +3,7 @@ import { CellEditors } from "./customCell/cellEditors";
 import { cell } from "./customCell/types";
 import { GsClipboardOptions } from "gs-clipboard";
 import {ContextMenuParams, ContextMenuType} from "./controllers/hooks/useContextMenu";
+import {CellTransformer} from "./customCell/cellTransformer";
 
 export type ContentMenuItem = Partial<{
   name: string;
@@ -20,6 +21,9 @@ export type RichSpreadsheetParams = Partial<{
   cellEditors: {
     [key: string]: CellEditors;
   };
+  cellTransformer:{
+    [key:string]: CellTransformer;
+  }
   GSClipboardOptions: GsClipboardOptions;
   onReadonlyCellTryToEdit(): void;
   onCellUpdate(params: {

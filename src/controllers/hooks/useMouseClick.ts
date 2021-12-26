@@ -21,7 +21,7 @@ const reRenderCell = (mouseDetail, selectSaveDetail) => {
       })
     );
   setDevicePixelRatio();
-  Render["clickRender"](wrappedParams);
+  Render["clickRender"] && Render["clickRender"](wrappedParams);
   DataVerificationRenderRedTriangleIfDataVerificationFailed(wrappedParams);
   restoreDevicePixelRatio();
 };

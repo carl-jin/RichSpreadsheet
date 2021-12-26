@@ -1547,10 +1547,10 @@ let cellRender = function (
         column: currentSheet.column[c],
         columns: currentSheet.column,
         cell,
-        value: Render.formatValueBeforeRender({
-          value: cell.v,
-          cellParams: currentSheet.column[c].cellParams,
-        }),
+        value: Store.cellTransformer[type] ? Store.cellTransformer[type].formatValueFromData(
+          cell.v,
+          currentSheet.column[c].cellParams,
+        ) : cell.v,
         cellWidth: cellWidth,
         cellHeight: cellHeight,
         spaceX: space_width,

@@ -109,10 +109,10 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
         column: column,
         columns: currentSheet.column,
         cell,
-        value: Render.formatValueBeforeRender({
-          value: cell.v,
-          cellParams: column.cellParams,
-        }),
+        value: Store.cellTransformer[type] ? Store.cellTransformer[type].formatValueFromData(
+          cell.v,
+          column.cellParams,
+        ) : cell.v,
         cellWidth: cellWidth - 2,
         cellHeight: cellHeight - 1,
         spaceX: Store.cellSpace[1],

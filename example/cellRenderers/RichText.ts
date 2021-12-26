@@ -1,7 +1,6 @@
 import {
   CellRenderers,
   CellRenderersMouseClickParams,
-  FormatValueBeforeRenderParams,
   CellRenderersMouseEventParams,
   CellRenderersParams,
   ExtractDomConfig,
@@ -80,32 +79,6 @@ export class RichText extends CellRenderers {
     this.closeCellClip(CellRenderersParams);
     this.closeDevicePixelRatio(CellRenderersParams);
   }
-
-  formatValueBeforeRender(
-    FormatValueBeforeRenderParams: FormatValueBeforeRenderParams
-  ): any {
-    return FormatValueBeforeRenderParams.value;
-  }
-
-  parseFromClipboard(value: any, cellParams: any): string {
-    return value
-  }
-
-  clickRender(
-    CellRenderersMouseClickParams: CellRenderersMouseClickParams
-  ): void {}
-
-  mouseenterRender(
-    CellRenderersMouseEventParams: CellRenderersMouseEventParams
-  ): void {}
-
-  mousemoveRender(
-    CellRenderersMouseEventParams: CellRenderersMouseEventParams
-  ): void {}
-
-  mouseoutRender(
-    CellRenderersMouseEventParams: CellRenderersMouseEventParams
-  ): void {}
 
   showExtractDomOnMouseEnter(
     CellRenderersParams: CellRenderersParams

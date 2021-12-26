@@ -11,7 +11,13 @@ export class CustomBase {
   protected finishEdit() {
     if (Store.luckysheetCellUpdate.length > 0) {
       const [r, c] = Store.luckysheetCellUpdate;
+      window.stopEditing = true
       formula.updatecell(r, c);
+
+      //  为了避免触发键盘上的其他事件，这里做个事件停止锁
+      setTimeout(()=>{
+        window.stopEditing = false
+      },200)
     } else {
       console.log("无法找到当前 row_index 和 col_index", Store);
     }

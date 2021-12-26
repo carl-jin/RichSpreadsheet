@@ -1433,6 +1433,19 @@ const luckysheetformula = {
       value = value || $("#luckysheet-input-box").get(0).innerText;
     }
 
+    //  转换
+    if(Store.cellTransformer[type]){
+      value = Store.cellTransformer[type].parseValueToData(value,column.cellParams)
+    }
+
+
+    if (type && Store.cellEditors[type]) {
+      const Editor = Store.cellEditors[type];
+      value = value ?? Editor.getFinalValue();
+    } else {
+      value = value || $("#luckysheet-input-box").get(0).innerText;
+    }
+
     window.luckysheet_getcelldata_cache = null;
 
     let d = editor.deepCopyFlowData(Store.flowdata);
@@ -1474,7 +1487,7 @@ const luckysheetformula = {
     //  editor **** cell before destroy
     if (type && Store.cellEditors[type]) {
       const Editor = Store.cellEditors[type];
-      Editor.beforeDestroy(
+      Editor.beforeDestroy && Editor.beforeDestroy(
         document.querySelector(".cell-editor-custom"),
         document.querySelector("#luckysheet-input-box")
       );
@@ -1499,7 +1512,7 @@ const luckysheetformula = {
 
     if (type && Store.cellEditors[type]) {
       const Editor = Store.cellEditors[type];
-      Editor.afterDestroy();
+      Editor.afterDestroy && Editor.afterDestroy();
     }
   },
   canceFunctionrangeSelected: function () {

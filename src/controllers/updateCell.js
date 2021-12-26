@@ -197,16 +197,16 @@ export function luckysheetupdateCell(
       column: currentSheet.column[col_index],
       columns: currentSheet.column,
       cell: cell,
-      value: Editor.formatValueBeforeEdit({
+      value: Store.cellTransformer[type] ? Store.cellTransformer[type].formatValueFromData(
         value,
-        cellParams: currentSheet.column[col_index].cellParams,
-      }),
+        currentSheet.column[col_index].cellParams,
+      ) : value,
     });
     Dom.classList.add("cell-editor-custom");
     $("#luckysheet-input-box").css("padding", "0");
     $("#luckysheet-rich-text-editor").hide().after(Dom);
 
-    Editor.afterMounted(Dom);
+    Editor.afterMounted && Editor?.afterMounted(Dom);
   } else {
     $("#luckysheet-rich-text-editor").html(value).show();
   }

@@ -30,7 +30,7 @@ export type CellRenderersParams = {
   positionY: number;
 };
 
-export type FormatValueBeforeRenderParams = {
+export type FormatValueFromData = {
   value: string;
   cellParams: {
     [key: string]: any;
@@ -55,13 +55,6 @@ export type EditParams = {
   columns: column[];
   cell: cell;
   value: any;
-};
-
-export type FormatValueBeforeEditParams = {
-  value: string;
-  cellParams: {
-    [key: string]: any;
-  };
 };
 
 type PositionStr = "left" | "right" | "bottom" | "top";

@@ -33,7 +33,7 @@ const reRenderCell = (mouseDetail, eventName) => {
   const [wrappedParams, setDevicePixelRatio, restoreDevicePixelRatio] =
     devicePixelRatioHacks(params);
   setDevicePixelRatio();
-  Render[eventName](wrappedParams);
+  Render?.[eventName] && Render?.[eventName](wrappedParams);
   DataVerificationRenderRedTriangleIfDataVerificationFailed(wrappedParams);
   restoreDevicePixelRatio();
 };

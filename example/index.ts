@@ -11,6 +11,7 @@ import {
 import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
 import cellEditors from "./cellEditors";
+import cellTransformer from "./cellTransfomer";
 import GsClipboardHandler from "./GSClipboard/handler/index";
 import { deepClone } from "../src/controllers/hooks/helper";
 
@@ -20,6 +21,7 @@ function create() {
   RichSpread.create({
     cellRenderers,
     cellEditors,
+    cellTransformer,
     GSClipboardOptions: {
       handlers: GsClipboardHandler,
     },

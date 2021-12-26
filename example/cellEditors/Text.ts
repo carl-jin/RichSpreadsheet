@@ -1,7 +1,6 @@
 import {
   CellEditors,
   EditParams,
-  FormatValueBeforeEditParams,
 } from "../../src";
 
 export class Text extends CellEditors {
@@ -32,16 +31,6 @@ export class Text extends CellEditors {
 
     return input;
   }
-
-  formatValueBeforeEdit(
-    FormatValueBeforeEditParams: FormatValueBeforeEditParams
-  ): any {
-    return FormatValueBeforeEditParams.value;
-  }
-
-  afterDestroy(): void {}
-
-  beforeDestroy(el: Element, editBox: Element): void {}
 
   getFinalValue(): any {
     return this.value;

@@ -71,7 +71,7 @@ function getluckysheetfile(plugin) {
             }
         });
     }
-    
+
     return Store.luckysheetfile;
 }
 

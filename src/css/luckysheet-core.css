@@ -1639,10 +1639,9 @@ body:not(.ewa-ipad) .luckysheet-rows-h-cell-sel:hover {
 
 .luckysheet-cell-main {
     /*border: solid 1px #BEC1C4;*/
-    background-color: white;
     width: 15px;
     height: 15px;
-    background-color: #F3F3F2;
+    background-color: #fff;
     /*#E7E7E7;*/
     border-collapse: collapse;
     position: relative;
