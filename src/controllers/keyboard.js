@@ -354,6 +354,11 @@ export function keyboardInitial() {
       let shiftKey = event.shiftKey;
       let kcode = event.keyCode;
 
+      //  如果是在 cell 编辑框上的事件，直接跳过
+      if(event.target && event.target.closest('.cell-editor-custom')){
+        return;
+      }
+
       if (
         $("#luckysheet-modal-dialog-mask").is(":visible") ||
         $(event.target).hasClass("luckysheet-mousedown-cancel") ||

@@ -168,7 +168,7 @@ export function useShowCellExtractDomOnMouseEnter(mouseDetail, event) {
       }
     }
 
-    const DOM = Render?.showExtractDomOnMouseEnter(params) ?? false;
+    const DOM = Render.showExtractDomOnMouseEnter ? Render.showExtractDomOnMouseEnter(params) : false;
     if (DOM === false) return;
 
     if (DOM instanceof HTMLElement) {
