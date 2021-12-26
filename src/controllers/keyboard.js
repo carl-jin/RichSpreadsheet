@@ -535,7 +535,7 @@ export function keyboardInitial() {
             col_index = last["column_focus"];
 
           //  如果刚刚取消了 stop Editing 则不响应 edit 事件
-          if(window.stopEditing) return;
+          if(window['stopEditing']) return;
 
           luckysheetupdateCell(row_index, col_index, Store.flowdata);
           event.preventDefault();
