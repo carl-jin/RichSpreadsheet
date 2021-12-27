@@ -37,7 +37,7 @@ export async function pasteFromClipboard(shiftKey: boolean = false) {
       //  找到对应的转换器
       if (item.type && Store.cellTransformer[type]) {
         value = Store.cellTransformer[type].parseFromClipboard(
-          value,
+          item,
           column.cellParams
         );
         value = Store.cellTransformer[type].parseValueToData(value,column.cellParams)

@@ -187,6 +187,10 @@ export function luckysheetupdateCell(
 
   //  editor ****  这里处理 cell editor 显示
   const type = currentSheet.column[col_index].type;
+  value = Store.cellTransformer[type] ? Store.cellTransformer[type].formatValueFromData(
+    value,
+    currentSheet.column[col_index].cellParams,
+  ) : value
   if (type && Store.cellEditors[type]) {
     const Editor = Store.cellEditors[type];
     let cell = Store.flowdata[row_index][col_index];
@@ -197,10 +201,7 @@ export function luckysheetupdateCell(
       column: currentSheet.column[col_index],
       columns: currentSheet.column,
       cell: cell,
-      value: Store.cellTransformer[type] ? Store.cellTransformer[type].formatValueFromData(
-        value,
-        currentSheet.column[col_index].cellParams,
-      ) : value,
+      value,
     });
     Dom.classList.add("cell-editor-custom");
     $("#luckysheet-input-box").css("padding", "0");

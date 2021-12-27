@@ -30,13 +30,6 @@ export class CustomBase {
     formula.dontupdate();
   }
 
-  /**
-   * 在 render 时候显示一串额外的 dom
-   */
-  protected showDom() {
-    //  todo 如何关闭? 什么时候关闭?
-  }
-
   //  直接进入编辑状态
   protected startEdit(CellRenderersParams: CellRenderersParams) {
     const { colIndex: col, rowIndex: row } = CellRenderersParams;
@@ -114,12 +107,33 @@ export class CustomBase {
     }
   }
 
+  /**
+   * 与 setDevicePixelRatio 配合使用
+   * @param CellRenderersParams
+   * @protected
+   */
   protected closeDevicePixelRatio(CellRenderersParams: CellRenderersParams) {
     const { ctx } = CellRenderersParams;
     ctx.restore();
   }
 
+  /**
+   * 获取设备的 DevicePixelRatio
+   * @protected
+   */
   protected getDevicePixelRatio() {
     return Store.devicePixelRatio;
+  }
+
+  /**
+   * 更新 cell 的值 直接调用 formula.updatecell
+   * @param r
+   * @param c
+   * @param value
+   * @protected
+   */
+  protected updateCell(r, c, value) {
+    Store.luckysheetCellUpdate = [r, c];
+    formula.updatecell(r, c, value);
   }
 }
