@@ -14,7 +14,7 @@ export function drawHTMLtoImg(
     [key: string]: any;
   }
 ) {
-  return new Promise((res) => {
+  return new Promise((res,rej) => {
     const div = document.createElement("div");
     div.innerHTML = html;
     div.style.cssText = Object.keys(cssObj)
@@ -29,7 +29,7 @@ export function drawHTMLtoImg(
 
     //  设置图片缩放
     const scale = Store.devicePixelRatio;
-    let options = {};
+    let options  = {};
 
     if (scale !== 1) {
       const imageWidth = parseInt(cssObj.width);
@@ -60,6 +60,7 @@ export function drawHTMLtoImg(
         box.remove();
       })
       .catch((error) => {
+        rej(error)
         console.error("无法转化");
       });
   });

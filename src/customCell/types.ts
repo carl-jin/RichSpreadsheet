@@ -55,6 +55,7 @@ export type EditParams = {
   columns: column[];
   cell: cell;
   value: any;
+  originalValue: any;
 };
 
 type PositionStr = "left" | "right" | "bottom" | "top";
