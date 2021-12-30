@@ -144,4 +144,12 @@ export class CustomBase {
     Store.luckysheetCellUpdate = [r, c];
     formula.updatecell(r, c, value);
   }
+
+  /**
+   * 获取 Store
+   * @protected
+   */
+  protected getStore(){
+    return Store
+  }
 }
