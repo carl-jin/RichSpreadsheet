@@ -1412,7 +1412,6 @@ const luckysheetformula = {
     // Store old value for hook function
     const oldValue = JSON.stringify(curv);
 
-    //  假设不会出现没有 cellEditor 的情况
     const currentSheet =
       Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
     const column = currentSheet.column[c];

@@ -43,7 +43,8 @@ let currentEnterCellMouseDetail = {
   row_index: undefined,
   col_index: undefined,
 }; //  储存当前移入 cell 的信息, 鼠标离开时, 也会需要这个值去触发 mouseout
-export const canvasMousemove = throttle(50, false, (event) => {
+
+export const canvasMousemove = throttle(100, false, (event) => {
   const mouseDetail = getMouseRelateCell(event);
   const isHasPreCell = Object.keys(currentEnterCellMouseDetail).length > 0;
 

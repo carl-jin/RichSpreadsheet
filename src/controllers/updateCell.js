@@ -205,11 +205,21 @@ export function luckysheetupdateCell(
       value,
       originalValue
     });
-    Dom.classList.add("cell-editor-custom");
+    const isPopup = Editor.isPopup ? Editor.isPopup() : false
+    const customDomBox = document.createElement('div')
+    customDomBox.classList.add("cell-editor-custom");
+    customDomBox.appendChild(Dom)
     $("#luckysheet-input-box").css("padding", "0");
-    $("#luckysheet-rich-text-editor").hide().after(Dom);
+    $("#luckysheet-rich-text-editor").hide()
 
-    Editor.afterMounted && Editor?.afterMounted(Dom);
+    if(isPopup){
+      customDomBox.classList.add('cell-editor-custom-popup')
+      $("#luckysheet-input-box").after(customDomBox)
+    }else{
+      $("#luckysheet-rich-text-editor").after(customDomBox)
+    }
+
+    Editor.afterMounted && Editor?.afterMounted(customDomBox);
   } else {
     $("#luckysheet-rich-text-editor").html(value).show();
   }
@@ -219,6 +229,10 @@ export function luckysheetupdateCell(
   }
 
   $("#luckysheet-input-box").css(input_postition);
+  $('.cell-editor-custom-popup').css(Object.assign(input_postition,{
+    position:'absolute',
+    zIndex: 999
+  }));
   $("#luckysheet-rich-text-editor").css(inputContentScale);
 
   formula.rangetosheet = Store.currentSheetIndex;

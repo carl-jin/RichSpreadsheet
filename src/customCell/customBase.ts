@@ -3,6 +3,7 @@ import { getSheetIndex } from "../methods/get";
 import formula from "../global/formula";
 import type { CellRenderersParams } from "./types";
 import { decomposeMatrix2DW3 } from "./helper/tools";
+import {luckysheetrefreshgrid} from '../global/refresh'
 
 export class CustomBase {
   /**
@@ -21,6 +22,13 @@ export class CustomBase {
     } else {
       console.log("无法找到当前 row_index 和 col_index", Store);
     }
+  }
+
+  /**
+   * 重新渲染当前表格
+   */
+  protected reFreshGrid(){
+    luckysheetrefreshgrid()
   }
 
   /**

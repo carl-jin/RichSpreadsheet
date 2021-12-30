@@ -16,4 +16,7 @@ export abstract class CellEditors extends CustomBase {
 
   //  当 dom 塞入后触发
   protected afterMounted?(DOM: HTMLElement): void;
+
+  //  如果返回 true 则代表使用 absolute 定位来显示编辑框
+  protected isPopup?(): boolean;
 }
