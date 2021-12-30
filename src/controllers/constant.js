@@ -1470,7 +1470,7 @@ const luckysheetdefaultstyle = {
 };
 
 const luckysheetdefaultFont = function () {
-  return `normal 13px -apple-system`;
+  return `normal 13px -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif`;
 };
 
 const luckysheet_CFiconsImg = new Image();

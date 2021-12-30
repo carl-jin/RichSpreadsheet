@@ -50,6 +50,15 @@ export function getRowsIdFromSelectedSave(): string[] {
 }
 
 /**
+ * 获取 cell 对应行
+ * @param rowIndex
+ */
+export function getCellByRowIndexFromCellData(rowIndex){
+  const cellData = getCellData();
+  return cellData[rowIndex]
+}
+
+/**
  * 通过 ids 获取当前的所有 cell data 中的 rom
  */
 export function getCellDataRowsByIds(ids): any[] {

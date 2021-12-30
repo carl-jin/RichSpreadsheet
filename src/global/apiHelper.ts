@@ -10,6 +10,7 @@ import {
   deepClone,
   getRowsIdFromSelectedSave,
 } from "../controllers/hooks/helper";
+import {getCellByRowIndexFromCellData as _getCellByRowIndexFromCellData} from "../controllers/hooks/helper";
 
 /**
  * 将 cell 的值与 cellData 同步
@@ -78,6 +79,14 @@ export function getCurrentSheet() {
 export function getCellData() {
   let currentSheet = getCurrentSheet();
   return currentSheet.celldata;
+}
+
+/**
+ * 获取 cell 对应行
+ * @param rowIndex
+ */
+export function getCellByRowIndexFromCellData(rowIndex){
+ return _getCellByRowIndexFromCellData(rowIndex)
 }
 
 /**
