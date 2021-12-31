@@ -4,6 +4,7 @@ import formula from "../global/formula";
 import type { CellRenderersParams } from "./types";
 import { decomposeMatrix2DW3 } from "./helper/tools";
 import {luckysheetrefreshgrid} from '../global/refresh'
+import {luckysheetDrawMain} from '../global/draw'
 
 export class CustomBase {
   /**
@@ -28,7 +29,22 @@ export class CustomBase {
    * 重新渲染当前表格
    */
   protected reFreshGrid(){
-    luckysheetrefreshgrid()
+    // luckysheetrefreshgrid()
+  }
+
+  /**
+   * 刷新当个表格
+   * @param rowIndex
+   * @param colIndex
+   * @protected
+   */
+  protected reFreshCellByCoord(rowIndex:number,colIndex:number){
+    luckysheetDrawMain(
+      null,null,null,null,null,null,null,null,null,{
+        rowIndex,
+        colIndex
+      }
+    )
   }
 
   /**

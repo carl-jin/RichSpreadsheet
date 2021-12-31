@@ -488,7 +488,8 @@ function luckysheetDrawMain(
   offsetTop,
   columnOffsetCell,
   rowOffsetCell,
-  mycanvas
+  mycanvas,
+  drawSpecificCell = null //  {rowIndex:number;colIndex:number} 渲染指定 cell
 ) {
   if (Store.flowdata == null) {
     return;
@@ -550,7 +551,7 @@ function luckysheetDrawMain(
   luckysheetTableContent.save();
   luckysheetTableContent.scale(Store.devicePixelRatio, Store.devicePixelRatio);
 
-  luckysheetTableContent.clearRect(
+ !drawSpecificCell && luckysheetTableContent.clearRect(
     0,
     0,
     Store.luckysheetTableContentHW[0],
@@ -624,7 +625,7 @@ function luckysheetDrawMain(
 
   //表格canvas 初始化处理
   luckysheetTableContent.fillStyle = "#ffffff";
-  luckysheetTableContent.fillRect(
+  !drawSpecificCell && luckysheetTableContent.fillRect(
     offsetLeft - 1,
     offsetTop - 1,
     fill_col_ed - scrollWidth,
@@ -642,7 +643,7 @@ function luckysheetDrawMain(
   let bodrder05 = 0.5; //Default 0.5
 
   // 钩子函数
-  method.createHookFunction(
+  !drawSpecificCell && method.createHookFunction(
     "cellAllRenderBefore",
     Store.flowdata,
     sheetFile,
@@ -784,6 +785,12 @@ function luckysheetDrawMain(
         value = dynamicArray_compute[r + "_" + c].v;
       }
 
+      if(drawSpecificCell){
+        if(drawSpecificCell.rowIndex !== r || drawSpecificCell.colIndex !== c){
+          continue
+        }
+      }
+
       cellRender(
         r,
         c,
@@ -803,363 +810,12 @@ function luckysheetDrawMain(
         dataset_col_ed,
         scrollHeight,
         scrollWidth,
-        bodrder05
+        bodrder05,
+        false,
       );
     }
   }
   console.timeEnd("render cells");
-  //合并单元格再处理
-  for (let m = 0; m < mcArr.length; m++) {
-    let item = mcArr[m];
-    let r = item.r,
-      c = item.c,
-      start_r = item.start_r,
-      start_c = item.start_c,
-      end_r = item.end_r - 1,
-      end_c = item.end_c - 1;
-    let firstcolumnlen = item.firstcolumnlen;
-
-    let cell = Store.flowdata[r][c];
-    let value = null;
-
-    let margeMaindata = cell["mc"];
-
-    value = getRealCellValue(margeMaindata.r, margeMaindata.c);
-
-    r = margeMaindata.r;
-    c = margeMaindata.c;
-
-    let mainCell = Store.flowdata[r][c];
-
-    if (c == 0) {
-      start_c = -scrollWidth;
-    } else {
-      start_c = Store.visibledatacolumn[c - 1] - scrollWidth;
-    }
-
-    if (r == 0) {
-      start_r = -scrollHeight - 1;
-    } else {
-      start_r = Store.visibledatarow[r - 1] - scrollHeight - 1;
-    }
-
-    end_r = Store.visibledatarow[r + mainCell["mc"].rs - 1] - scrollHeight;
-    end_c = Store.visibledatacolumn[c + mainCell["mc"].cs - 1] - scrollWidth;
-
-    if (value == null || value.toString().length == 0) {
-      nullCellRender(
-        r,
-        c,
-        start_r,
-        start_c,
-        end_r,
-        end_c,
-        luckysheetTableContent,
-        af_compute,
-        cf_compute,
-        offsetLeft,
-        offsetTop,
-        dynamicArray_compute,
-        cellOverflowMap,
-        dataset_col_st,
-        dataset_col_ed,
-        scrollHeight,
-        scrollWidth,
-        bodrder05,
-        true
-      );
-
-      //sparklines渲染
-      let borderfix = menuButton.borderfix(Store.flowdata, r, c);
-      let cellsize = [
-        start_c + offsetLeft + borderfix[0],
-        start_r + offsetTop + borderfix[1],
-        end_c - start_c - 3 + borderfix[2],
-        end_r - start_r - 3 - 1 + borderfix[3],
-      ];
-      sparklinesRender(
-        r,
-        c,
-        cellsize[0],
-        cellsize[1],
-        "luckysheetTableContent",
-        luckysheetTableContent
-      );
-    } else {
-      if (r + "_" + c in dynamicArray_compute) {
-        //动态数组公式
-        value = dynamicArray_compute[r + "_" + c].v;
-      }
-      cellRender(
-        r,
-        c,
-        start_r,
-        start_c,
-        end_r,
-        end_c,
-        value,
-        luckysheetTableContent,
-        af_compute,
-        cf_compute,
-        offsetLeft,
-        offsetTop,
-        dynamicArray_compute,
-        cellOverflowMap,
-        dataset_col_st,
-        dataset_col_ed,
-        scrollHeight,
-        scrollWidth,
-        bodrder05,
-        true
-      );
-    }
-  }
-
-  //边框单独渲染
-  if (
-    Store.config["borderInfo"] != null &&
-    Store.config["borderInfo"].length > 0
-  ) {
-    //边框渲染
-    let borderLeftRender = function (
-      style,
-      color,
-      start_r,
-      start_c,
-      end_r,
-      end_c,
-      offsetLeft,
-      offsetTop,
-      canvas
-    ) {
-      let linetype = style;
-
-      let m_st = start_c - 2 + bodrder05 + offsetLeft;
-      let m_ed = start_r + offsetTop - 1;
-      let line_st = start_c - 2 + bodrder05 + offsetLeft;
-      let line_ed = end_r - 2 + bodrder05 + offsetTop;
-      canvas.save();
-      menuButton.setLineDash(
-        canvas,
-        linetype,
-        "v",
-        m_st,
-        m_ed,
-        line_st,
-        line_ed
-      );
-
-      canvas.strokeStyle = color;
-
-      canvas.stroke();
-      canvas.closePath();
-      canvas.restore();
-    };
-
-    let borderRightRender = function (
-      style,
-      color,
-      start_r,
-      start_c,
-      end_r,
-      end_c,
-      offsetLeft,
-      offsetTop,
-      canvas
-    ) {
-      let linetype = style;
-
-      let m_st = end_c - 2 + bodrder05 + offsetLeft;
-      let m_ed = start_r + offsetTop - 1;
-      let line_st = end_c - 2 + bodrder05 + offsetLeft;
-      let line_ed = end_r - 2 + bodrder05 + offsetTop;
-      canvas.save();
-      menuButton.setLineDash(
-        canvas,
-        linetype,
-        "v",
-        m_st,
-        m_ed,
-        line_st,
-        line_ed
-      );
-
-      canvas.strokeStyle = color;
-
-      canvas.stroke();
-      canvas.closePath();
-      canvas.restore();
-    };
-
-    let borderBottomRender = function (
-      style,
-      color,
-      start_r,
-      start_c,
-      end_r,
-      end_c,
-      offsetLeft,
-      offsetTop,
-      canvas
-    ) {
-      let linetype = style;
-
-      let m_st = start_c - 2 + bodrder05 + offsetLeft;
-      let m_ed = end_r - 2 + bodrder05 + offsetTop;
-      let line_st = end_c - 2 + bodrder05 + offsetLeft;
-      let line_ed = end_r - 2 + bodrder05 + offsetTop;
-      canvas.save();
-      menuButton.setLineDash(
-        canvas,
-        linetype,
-        "h",
-        m_st,
-        m_ed,
-        line_st,
-        line_ed
-      );
-
-      canvas.strokeStyle = color;
-
-      canvas.stroke();
-      canvas.closePath();
-      canvas.restore();
-    };
-
-    let borderTopRender = function (
-      style,
-      color,
-      start_r,
-      start_c,
-      end_r,
-      end_c,
-      offsetLeft,
-      offsetTop,
-      canvas
-    ) {
-      let linetype = style;
-
-      let m_st = start_c - 2 + bodrder05 + offsetLeft;
-      let m_ed = start_r - 1 + bodrder05 + offsetTop;
-      let line_st = end_c - 2 + bodrder05 + offsetLeft;
-      let line_ed = start_r - 1 + bodrder05 + offsetTop;
-      canvas.save();
-      menuButton.setLineDash(
-        canvas,
-        linetype,
-        "h",
-        m_st,
-        m_ed,
-        line_st,
-        line_ed
-      );
-
-      canvas.strokeStyle = color;
-
-      canvas.stroke();
-      canvas.closePath();
-      canvas.restore();
-    };
-
-    let borderInfoCompute = getBorderInfoComputeRange(
-      dataset_row_st,
-      dataset_row_ed,
-      dataset_col_st,
-      dataset_col_ed
-    );
-
-    for (let x in borderInfoCompute) {
-      //let bd_r = x.split("_")[0], bd_c = x.split("_")[1];
-
-      let bd_r = x.substr(0, x.indexOf("_"));
-      let bd_c = x.substr(x.indexOf("_") + 1);
-
-      // if(bd_r < dataset_row_st || bd_r > dataset_row_ed || bd_c < dataset_col_st || bd_c > dataset_col_ed){
-      //     continue;
-      // }
-
-      if (borderOffset[bd_r + "_" + bd_c]) {
-        let start_r = borderOffset[bd_r + "_" + bd_c].start_r;
-        let start_c = borderOffset[bd_r + "_" + bd_c].start_c;
-        let end_r = borderOffset[bd_r + "_" + bd_c].end_r;
-        let end_c = borderOffset[bd_r + "_" + bd_c].end_c;
-
-        let cellOverflow_colInObj = cellOverflow_colIn(
-          cellOverflowMap,
-          bd_r,
-          bd_c,
-          dataset_col_st,
-          dataset_col_ed
-        );
-
-        let borderLeft = borderInfoCompute[x].l;
-        if (
-          borderLeft != null &&
-          (!cellOverflow_colInObj.colIn || cellOverflow_colInObj.stc == bd_c)
-        ) {
-          borderLeftRender(
-            borderLeft.style,
-            borderLeft.color,
-            start_r,
-            start_c,
-            end_r,
-            end_c,
-            offsetLeft,
-            offsetTop,
-            luckysheetTableContent
-          );
-        }
-
-        let borderRight = borderInfoCompute[x].r;
-        if (
-          borderRight != null &&
-          (!cellOverflow_colInObj.colIn || cellOverflow_colInObj.colLast)
-        ) {
-          borderRightRender(
-            borderRight.style,
-            borderRight.color,
-            start_r,
-            start_c,
-            end_r,
-            end_c,
-            offsetLeft,
-            offsetTop,
-            luckysheetTableContent
-          );
-        }
-
-        let borderTop = borderInfoCompute[x].t;
-        if (borderTop != null) {
-          borderTopRender(
-            borderTop.style,
-            borderTop.color,
-            start_r,
-            start_c,
-            end_r,
-            end_c,
-            offsetLeft,
-            offsetTop,
-            luckysheetTableContent
-          );
-        }
-
-        let borderBottom = borderInfoCompute[x].b;
-        if (borderBottom != null) {
-          borderBottomRender(
-            borderBottom.style,
-            borderBottom.color,
-            start_r,
-            start_c,
-            end_r,
-            end_c,
-            offsetLeft,
-            offsetTop,
-            luckysheetTableContent
-          );
-        }
-      }
-    }
-  }
 
   //渲染表格时有尾列时，清除右边灰色区域，防止表格有值溢出
   if (dataset_col_ed == Store.visibledatacolumn.length - 1) {
@@ -1471,7 +1127,7 @@ let cellRender = function (
   scrollHeight,
   scrollWidth,
   bodrder05,
-  isMerge
+  isMerge,
 ) {
   let cell = Store.flowdata[r][c];
   let cellWidth = end_c - start_c - 2;

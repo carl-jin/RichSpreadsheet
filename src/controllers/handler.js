@@ -90,8 +90,12 @@ export const getMouseRelateCell = (event) => {
     return false;
   }
 
-  let x = mouse[0] + $("#luckysheet-cell-main").scrollLeft();
-  let y = mouse[1] + $("#luckysheet-cell-main").scrollTop();
+  const $main = $("#luckysheet-cell-main")
+  const scrollLeft = $main.scrollLeft()
+  const scrollTop = $main.scrollTop()
+
+  let x = mouse[0] + scrollLeft;
+  let y = mouse[1] + scrollTop;
 
   if (
     luckysheetFreezen.freezenverticaldata != null &&
@@ -130,10 +134,16 @@ export const getMouseRelateCell = (event) => {
     col,
     col_pre,
     col_index,
+    cell_offset_top:row_pre - scrollTop,
+    cell_offset_left:col_pre - scrollLeft,
     mouseEvent: {
       mouse_x: mouse[0] + luckysheetConfigsetting.rowHeaderWidth,
       mouse_y: mouse[1] + luckysheetConfigsetting.columnHeaderHeight,
     },
+    relatedMouseEvent:{
+      mouse_x: mouse[0],
+      mouse_y: mouse[1]
+    }
   };
 };
 

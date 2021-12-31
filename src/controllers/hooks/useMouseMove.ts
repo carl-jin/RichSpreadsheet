@@ -79,6 +79,11 @@ export const canvasMousemove = throttle(100, false, (event) => {
     };
   }
 
+  //  这俩应该放在 mouseout 下面处理， 不然从第二行移动到第一行时不会触发 out
+  //  如果鼠标在 column header 或者 row header 跳过
+  //  如果单元格被 column header 或者 row header 盖住时 跳过
+  if(isOnColumnHeaderOrRowHeader(mouseDetail) || isUnderColumnHeaderOrRowHeader(mouseDetail)) return;
+
   //  mousemove 事件
   if (
     isHasPreCell &&
@@ -93,3 +98,13 @@ export const canvasMousemove = throttle(100, false, (event) => {
   reRenderCell(mouseDetail, "mouseenterRender");
   currentEnterCellMouseDetail = Object.assign({}, mouseDetail);
 });
+
+function isUnderColumnHeaderOrRowHeader(mouseDetail){
+  const {cell_offset_top,cell_offset_left} = mouseDetail
+  return cell_offset_top < 0 || cell_offset_left < 0;
+}
+
+function isOnColumnHeaderOrRowHeader(mouseDetail){
+  const {mouse_x,mouse_y} = mouseDetail.relatedMouseEvent
+  return mouse_x < 0 || mouse_y < 0;
+}

@@ -57,7 +57,7 @@
 
 .luckysheet-loading-mask{
     position:absolute;
-    z-index:1000000000;
+    z-index:9999;
     margin: 0;
     top: 0;
     right: 0;
