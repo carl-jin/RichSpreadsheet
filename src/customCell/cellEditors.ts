@@ -6,7 +6,9 @@ export abstract class CellEditors extends CustomBase {
   public abstract getFinalValue(): any;
 
   //  cell 编辑时执行, 返回一个编辑的 DOM 节点
-  public abstract edit(EditParams: EditParams): Element;
+  //  如果返回 Dom 则使用 返回的 Dom 渲染
+  //  如果未返回 Dom 则按照传入的 DOM 进行渲染，这个传入的 DOM 可以给 vue 组件 $mount() 使用
+  public abstract edit(EditParams: EditParams, Dom: HTMLDivElement): Element | void;
 
   //  cell editor 销毁前调用
   protected beforeDestroy?(el: Element, editBox: Element): void;

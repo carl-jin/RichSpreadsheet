@@ -196,15 +196,9 @@ export function luckysheetupdateCell(
     const Editor = Store.cellEditors[type];
     let cell = Store.flowdata[row_index][col_index];
 
-    const Dom = Editor.edit({
-      rowIndex: row_index,
-      colIndex: col_index,
-      column: currentSheet.column[col_index],
-      columns: currentSheet.column,
-      cell: cell,
-      value,
-      originalValue
-    });
+    //  创建一个空 div
+    let Dom = document.createElement('div') ;
+
     const isPopup = Editor.isPopup ? Editor.isPopup() : false
     const customDomBox = document.createElement('div')
     customDomBox.classList.add("cell-editor-custom");
@@ -217,6 +211,22 @@ export function luckysheetupdateCell(
       $("#luckysheet-input-box").after(customDomBox)
     }else{
       $("#luckysheet-rich-text-editor").after(customDomBox)
+    }
+
+    //  调用 edit 时将 Dom 传递过去，这样可以让 vue 直接 $mount
+    let returnDom = Editor.edit({
+      rowIndex: row_index,
+      colIndex: col_index,
+      column: currentSheet.column[col_index],
+      columns: currentSheet.column,
+      cell: cell,
+      value,
+      originalValue
+    }, Dom);
+
+    //  如果 edit 返回的有 dom 则使用返回的 dom
+    if(returnDom){
+      Dom.appendChild(returnDom)
     }
 
     Editor.afterMounted && Editor?.afterMounted(customDomBox);

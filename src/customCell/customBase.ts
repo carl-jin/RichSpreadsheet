@@ -29,7 +29,7 @@ export class CustomBase {
    * 重新渲染当前表格
    */
   protected reFreshGrid(){
-    // luckysheetrefreshgrid()
+    luckysheetrefreshgrid()
   }
 
   /**
@@ -62,13 +62,18 @@ export class CustomBase {
     const { visibledatacolumn, visibledatarow } = currentSheet;
     const columnX = visibledatacolumn[Math.max(0, col - 1)] + 20;
     const rowY = visibledatarow[Math.max(0, row - 1)] + 20;
+    const $main = $("#luckysheet-cell-main")
+    const scrollLeft = $main.scrollLeft()
+    const scrollTop = $main.scrollTop()
 
     let event = $.Event("dblclick");
     let { left, top } = $("#" + Store.container).offset();
+
+
     //  @ts-ignore
     event.target = $(".luckysheet-cell-sheettable").get(0);
-    event.pageX = columnX + left + Store.rowHeaderWidth;
-    event.pageY = rowY + top + Store.columnHeaderHeight;
+    event.pageX = columnX + left + Store.rowHeaderWidth - scrollLeft;
+    event.pageY = rowY + top + Store.columnHeaderHeight - scrollTop;
 
     $(".luckysheet-cell-sheettable").trigger(event);
   }
