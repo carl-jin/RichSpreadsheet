@@ -732,7 +732,7 @@ function luckysheetDrawMain(
   let mcArr = [];
 
   //  **** 遍历生成 cell
-  console.time("render cells");
+  !drawSpecificCell && console.time("render cells");
   for (let cud = 0; cud < cellupdate.length; cud++) {
     let item = cellupdate[cud];
     let r = item.r,
@@ -816,7 +816,7 @@ function luckysheetDrawMain(
       );
     }
   }
-  console.timeEnd("render cells");
+  !drawSpecificCell && console.timeEnd("render cells");
 
   //渲染表格时有尾列时，清除右边灰色区域，防止表格有值溢出
   if (dataset_col_ed == Store.visibledatacolumn.length - 1) {

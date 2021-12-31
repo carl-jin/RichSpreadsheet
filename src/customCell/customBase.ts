@@ -3,23 +3,25 @@ import { getSheetIndex } from "../methods/get";
 import formula from "../global/formula";
 import type { CellRenderersParams } from "./types";
 import { decomposeMatrix2DW3 } from "./helper/tools";
-import {luckysheetrefreshgrid} from '../global/refresh'
-import {luckysheetDrawMain} from '../global/draw'
+import { luckysheetrefreshgrid } from "../global/refresh";
+import { luckysheetDrawMain } from "../global/draw";
 
 export class CustomBase {
+  private asyncTimer = {};
+
   /**
    * 关闭编辑, 更新值
    */
   protected finishEdit() {
     if (Store.luckysheetCellUpdate.length > 0) {
       const [r, c] = Store.luckysheetCellUpdate;
-      window['stopEditing'] = true
+      window["stopEditing"] = true;
       formula.updatecell(r, c);
 
       //  为了避免触发键盘上的其他事件，这里做个事件停止锁
-      setTimeout(()=>{
-        window['stopEditing'] = false
-      },200)
+      setTimeout(() => {
+        window["stopEditing"] = false;
+      }, 200);
     } else {
       console.log("无法找到当前 row_index 和 col_index", Store);
     }
@@ -28,23 +30,50 @@ export class CustomBase {
   /**
    * 重新渲染当前表格
    */
-  protected reFreshGrid(){
-    luckysheetrefreshgrid()
+  protected reFreshGridAsync() {
+    if (this.asyncTimer[`all`]) {
+      window.clearTimeout(this.asyncTimer[`all`]);
+    }
+    this.asyncTimer[`all`] = setTimeout(() => {
+      this.reFreshGrid();
+    }, 100);
   }
 
   /**
-   * 刷新当个表格
+   * 重新渲染当前表格
+   */
+  protected reFreshGrid() {
+    luckysheetrefreshgrid();
+  }
+
+  /**
+   * 刷新指定单元格 异步方法
+   * 因为部分单元格数据更新是异步的，同步刷新会导致数据还未更新完
+   * 这样直接刷新的话，还是老数据
    * @param rowIndex
    * @param colIndex
    * @protected
    */
-  protected reFreshCellByCoord(rowIndex:number,colIndex:number){
-    luckysheetDrawMain(
-      null,null,null,null,null,null,null,null,null,{
-        rowIndex,
-        colIndex
-      }
-    )
+  protected reFreshCellByCoordAsync(rowIndex: number, colIndex: number) {
+    if (this.asyncTimer[`${rowIndex}_${colIndex}`]) {
+      window.clearTimeout(this.asyncTimer[`${rowIndex}_${colIndex}`]);
+    }
+    this.asyncTimer[`${rowIndex}_${colIndex}`] = setTimeout(() => {
+      this.reFreshCellByCoord(rowIndex, colIndex);
+    }, 100);
+  }
+
+  /**
+   * 刷新指定单元格
+   * @param rowIndex
+   * @param colIndex
+   * @protected
+   */
+  protected reFreshCellByCoord(rowIndex: number, colIndex: number) {
+    luckysheetDrawMain(null, null, null, null, null, null, null, null, null, {
+      rowIndex,
+      colIndex,
+    });
   }
 
   /**
@@ -62,13 +91,12 @@ export class CustomBase {
     const { visibledatacolumn, visibledatarow } = currentSheet;
     const columnX = visibledatacolumn[Math.max(0, col - 1)] + 20;
     const rowY = visibledatarow[Math.max(0, row - 1)] + 20;
-    const $main = $("#luckysheet-cell-main")
-    const scrollLeft = $main.scrollLeft()
-    const scrollTop = $main.scrollTop()
+    const $main = $("#luckysheet-cell-main");
+    const scrollLeft = $main.scrollLeft();
+    const scrollTop = $main.scrollTop();
 
     let event = $.Event("dblclick");
     let { left, top } = $("#" + Store.container).offset();
-
 
     //  @ts-ignore
     event.target = $(".luckysheet-cell-sheettable").get(0);
@@ -170,7 +198,7 @@ export class CustomBase {
    * 获取 Store
    * @protected
    */
-  protected getStore(){
-    return Store
+  protected getStore() {
+    return Store;
   }
 }
