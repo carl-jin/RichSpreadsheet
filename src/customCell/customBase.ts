@@ -2,9 +2,15 @@ import Store from "../store";
 import { getSheetIndex } from "../methods/get";
 import formula from "../global/formula";
 import type { CellRenderersParams } from "./types";
-import { decomposeMatrix2DW3 } from "./helper/tools";
+import {
+  decomposeMatrix2DW3,
+  detectIsInFrozenByFrozenPosition,
+  FrozenPositionArea,
+  getFrozenAreaThatCellIn,
+} from "./helper/tools";
 import { luckysheetrefreshgrid } from "../global/refresh";
 import { luckysheetDrawMain } from "../global/draw";
+import luckysheetFreezen from "../controllers/freezen";
 
 export class CustomBase {
   private asyncTimer = {};
@@ -70,6 +76,124 @@ export class CustomBase {
    * @protected
    */
   protected reFreshCellByCoord(rowIndex: number, colIndex: number) {
+    //  判断是否在冻结区域内
+    const colFrozen = luckysheetFreezen.freezenverticaldata;
+    const rowFrozen = luckysheetFreezen.freezenhorizontaldata;
+    if (colFrozen !== null || rowFrozen !== null) {
+      const currentFrozenPosition = getFrozenAreaThatCellIn(rowIndex, colIndex);
+      const isInFrozen = detectIsInFrozenByFrozenPosition(
+        currentFrozenPosition
+      );
+
+      //  逻辑请参考
+      //  RichSpreadsheet/src/global/refresh.js
+      //  luckysheetrefreshgrid 方法
+      if (isInFrozen) {
+        const $main = $("#luckysheet-cell-main");
+        const scrollWidth = $main.scrollLeft();
+        const scrollHeight = $main.scrollTop();
+        const drawWidth = Store.luckysheetTableContentHW[0];
+        const drawHeight = Store.luckysheetTableContentHW[1];
+
+        //  左上角
+        if (currentFrozenPosition === FrozenPositionArea.LEFT_TOP) {
+          //  左上 canvas freezen_3
+          luckysheetDrawMain(
+            colFrozen[2],
+            rowFrozen[2],
+            colFrozen[0],
+            rowFrozen[0],
+            1,
+            1,
+            null,
+            null,
+            "freezen_3",
+            {
+              rowIndex,
+              colIndex,
+            }
+          );
+        }
+
+        //  右上 canvas freezen_3
+        if (currentFrozenPosition === FrozenPositionArea.RIGHT_TOP) {
+          luckysheetDrawMain(
+            scrollWidth + colFrozen[0] - colFrozen[2],
+            rowFrozen[2],
+            drawWidth - colFrozen[0] + colFrozen[2],
+            rowFrozen[0],
+            1,
+            1,
+            null,
+            null,
+            "freezen_4",
+            {
+              rowIndex,
+              colIndex,
+            }
+          );
+        }
+
+        //  左下 canvas freezen_7
+        if (currentFrozenPosition === FrozenPositionArea.LEFT_BOTTOM) {
+          luckysheetDrawMain(
+            colFrozen[2],
+            scrollHeight + rowFrozen[0] - rowFrozen[2],
+            colFrozen[0],
+            drawHeight - rowFrozen[0] + rowFrozen[2],
+            1,
+            1,
+            null,
+            null,
+            "freezen_7",
+            {
+              rowIndex,
+              colIndex,
+            }
+          );
+        }
+
+        //  左侧
+        if (currentFrozenPosition === FrozenPositionArea.LEFT) {
+          luckysheetDrawMain(
+            colFrozen[2],
+            scrollHeight,
+            colFrozen[0],
+            drawHeight,
+            1,
+            1,
+            null,
+            null,
+            "freezen_v",
+            {
+              rowIndex,
+              colIndex,
+            }
+          );
+        }
+
+        if (currentFrozenPosition === FrozenPositionArea.TOP) {
+          luckysheetDrawMain(
+            scrollWidth,
+            rowFrozen[2],
+            drawWidth,
+            rowFrozen[0],
+            1,
+            1,
+            null,
+            null,
+            "freezen_h",
+            {
+              rowIndex,
+              colIndex,
+            }
+          );
+        }
+
+        return;
+      }
+    }
+
     luckysheetDrawMain(null, null, null, null, null, null, null, null, null, {
       rowIndex,
       colIndex,

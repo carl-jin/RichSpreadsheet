@@ -1098,11 +1098,12 @@ export function rowColumnOperationInitial() {
       return;
     }
     let $menu = $("#luckysheet-rightclick-menu");
+
     let offset = $(this).offset();
     const { renderContextMenu } = useContextMenu();
     renderContextMenu("column");
     Store.luckysheetRightHeadClickIs = "column";
-    showrightclickmenu($menu, offset.left, offset.top + 18);
+    showrightclickmenu($menu, offset.left, offset.top + 8);
     Store.luckysheet_cols_menu_status = true;
   });
 

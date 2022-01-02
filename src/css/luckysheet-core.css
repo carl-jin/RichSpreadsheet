@@ -4733,7 +4733,7 @@ fieldset[disabled] .btn-danger.focus {
     background: #bcbdbc;
     /*            opacity: 0.80;
             filter: alpha(opacity=80);*/
-    height: 19px;
+    height: 100%;
     top: 0px;
 }
 

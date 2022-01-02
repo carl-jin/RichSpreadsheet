@@ -1,3 +1,5 @@
+import luckysheetFreezen from "../../controllers/freezen";
+
 /**
  * 将 DOMMatrix 转换为可识别的 transform 信息
  * @param m
@@ -67,4 +69,94 @@ export function decomposeMatrix2DW3(m) {
     scaleY: scaleY,
     matrix: [m11, m12, m21, m22, 0, 0],
   };
+}
+
+/**
+ * 获取指定单元格 相对与冻结区域的位置
+ * 判断要更新的数据是不是在冻结列范围内
+ * 冻结行列最多会将页面分割成 4 部分，不同的情况分别用
+ * left, right, top bottom
+ * left top, left bottom
+ * right top, right bottom
+ * 其中 right, bottom, right bottom 是不属于冻结行的情况
+ * @param rowIndex
+ * @param colIndex
+ */
+export enum FrozenPositionArea {
+  LEFT = "left",
+  RIGHT = "right",
+  TOP = "top",
+  BOTTOM = "bottom",
+  LEFT_TOP = "left top",
+  LEFT_BOTTOM = "left bottom",
+  RIGHT_TOP = "right top",
+  RIGHT_BOTTOM = "right bottom",
+}
+
+export function getFrozenAreaThatCellIn(
+  rowIndex: number,
+  colIndex: number
+): FrozenPositionArea {
+  //
+  //  首先判断是否是在冻结区域
+  const colFrozen = luckysheetFreezen.freezenverticaldata;
+  const rowFrozen = luckysheetFreezen.freezenhorizontaldata;
+
+  let position = FrozenPositionArea.RIGHT_BOTTOM;
+  if (colFrozen !== null || rowFrozen !== null) {
+    //  同时存在冻结行 和 冻结列
+    if (colFrozen !== null && rowFrozen !== null) {
+      if (colIndex < colFrozen[1]) {
+        if (rowIndex < rowFrozen[1]) {
+          position = FrozenPositionArea.LEFT_TOP;
+        } else {
+          position = FrozenPositionArea.LEFT_BOTTOM;
+        }
+      } else {
+        if (rowIndex < rowFrozen[1]) {
+          position = FrozenPositionArea.RIGHT_TOP;
+        } else {
+          position = FrozenPositionArea.RIGHT_BOTTOM;
+        }
+      }
+    }
+
+    //  只冻结了 列 column
+    if (colFrozen !== null && rowFrozen === null) {
+      if (colIndex < colFrozen[1]) {
+        position = FrozenPositionArea.LEFT;
+      } else {
+        position = FrozenPositionArea.RIGHT;
+      }
+    }
+
+    //  只冻结了行
+    if (colFrozen === null && rowFrozen !== null) {
+      if (rowIndex < rowFrozen[1]) {
+        position = FrozenPositionArea.TOP;
+      } else {
+        position = FrozenPositionArea.BOTTOM;
+      }
+    }
+  }
+
+  return position;
+}
+
+/**
+ * 通过 FrozenPositionArea 判断当前 position 是否属于冻结区域
+ * 请查看 getFrozenAreaThatCellIn 方法
+ * @param position
+ */
+export function detectIsInFrozenByFrozenPosition(position: FrozenPositionArea) {
+  if (position === FrozenPositionArea.RIGHT) {
+    return false;
+  }
+  if (position === FrozenPositionArea.BOTTOM) {
+    return false;
+  }
+  if (position === FrozenPositionArea.RIGHT_BOTTOM) {
+    return false;
+  }
+  return true;
 }
