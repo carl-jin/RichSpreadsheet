@@ -175,15 +175,15 @@ function selectHightlightShow(isRestore = false) {
         selectTitlesShow(Store.luckysheet_select_save, isRestore);
 
         //左上角范围显示
-        selectHelpboxFill();
+        // selectHelpboxFill();
 
         //动态数组显示
-        if (Store.luckysheet_select_save.length == 1 && Store.luckysheet_select_save[0].row[0] == Store.luckysheet_select_save[0].row[1] && Store.luckysheet_select_save[0].column[0] == Store.luckysheet_select_save[0].column[1]) {
-            dynamicArrayHightShow(Store.luckysheet_select_save[0].row[0], Store.luckysheet_select_save[0].column[0]);
-        }
+        // if (Store.luckysheet_select_save.length == 1 && Store.luckysheet_select_save[0].row[0] == Store.luckysheet_select_save[0].row[1] && Store.luckysheet_select_save[0].column[0] == Store.luckysheet_select_save[0].column[1]) {
+        //     dynamicArrayHightShow(Store.luckysheet_select_save[0].row[0], Store.luckysheet_select_save[0].column[0]);
+        // }
 
         /* 刷新当前状态栏 */
-        refreshMenuButtonFocus();
+        // refreshMenuButtonFocus();
     }
 
     Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)].luckysheet_select_save = Store.luckysheet_select_save;
@@ -195,6 +195,7 @@ function selectHightlightShow(isRestore = false) {
         }
 
         Store.luckysheet_select_save_previous = luckysheet_select_save_previous;
+
 }
 
 //选区标题栏

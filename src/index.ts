@@ -1,3 +1,11 @@
+declare global {
+  interface Window {
+    //  因为 esm 没法公用相同的 const，比如在 A 文件中定义了 const a
+    //  分别在文件 B C 中引入时，得到的却是两个不一样的 a
+    //  所以在模块中将常量放到 window 上
+    __luckysheetFreezen: any;
+  }
+}
 import "./css/index.less";
 import "./utils/math";
 import "./less/index.less";

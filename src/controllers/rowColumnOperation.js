@@ -60,6 +60,8 @@ import luckysheetConfigsetting from "./luckysheetConfigsetting";
 import { removeCellExtractDom } from "./hooks/useShowCellExtractDomOnMouseEnter";
 import { removeDataVerificationTooltip } from "./hooks/useDataVerification";
 import { useContextMenu } from "./hooks/useContextMenu";
+import luckysheetFreezen from "./freezen";
+
 
 export function rowColumnOperationInitial() {
   //表格行标题 mouse事件
@@ -517,28 +519,31 @@ export function rowColumnOperationInitial() {
       if (!checkProtectionAllSelected(Store.currentSheetIndex)) {
         return;
       }
-      //有批注在编辑时
-      luckysheetPostil.removeActivePs();
 
       //  删除掉 cell 额外的dom
       removeCellExtractDom();
       //  删除数据验证 dom
       removeDataVerificationTooltip();
-      //图片 active/cropping
-      if (
-        $("#luckysheet-modal-dialog-activeImage").is(":visible") ||
-        $("#luckysheet-modal-dialog-cropping").is(":visible")
-      ) {
-        imageCtrl.cancelActiveImgItem();
-      }
 
       let mouse = mouseposition(event.pageX, event.pageY);
       let x = mouse[0] + $(this).scrollLeft();
 
+  /*    //  **** 兼容冻结列下的鼠标 x 值
+      if (
+        luckysheetFreezen.freezenverticaldata != null &&
+        mouse[0] <
+        luckysheetFreezen.freezenverticaldata[0] -
+        luckysheetFreezen.freezenverticaldata[2]
+      ) {
+        x = mouse[0] + luckysheetFreezen.freezenverticaldata[2];
+      }*/
+
+
       let row_index = Store.visibledatarow.length - 1,
         row = Store.visibledatarow[row_index],
         row_pre = 0;
-      let col_location = colLocation(x),
+
+      let col_location = colLocation(x,true),
         col = col_location[1],
         col_pre = col_location[0],
         col_index = col_location[2];
@@ -579,212 +584,7 @@ export function rowColumnOperationInitial() {
 
       Store.luckysheet_scroll_status = true;
 
-      //公式相关
-      let $input = $("#luckysheet-input-box");
-      if (parseInt($input.css("top")) > 0) {
-        if (
-          formula.rangestart ||
-          formula.rangedrag_column_start ||
-          formula.rangedrag_row_start ||
-          formula.israngeseleciton() ||
-          $("#luckysheet-ifFormulaGenerator-multiRange-dialog").is(":visible")
-        ) {
-          //公式选区
-          let changeparam = menuButton.mergeMoveMain(
-            columnseleted,
-            [0, row_index],
-            { row_focus: 0, column_focus: col_index },
-            row_pre,
-            row,
-            left,
-            width
-          );
-          if (changeparam != null) {
-            columnseleted = changeparam[0];
-            //rowseleted= changeparam[1];
-            //top = changeparam[2];
-            //height = changeparam[3];
-            left = changeparam[4];
-            width = changeparam[5];
-          }
-
-          if (event.shiftKey) {
-            let last = formula.func_selectedrange;
-
-            let left = 0,
-              width = 0,
-              columnseleted = [];
-            if (last.left > col_pre) {
-              left = col_pre;
-              width = last.left + last.width - col_pre;
-
-              if (last.column[1] > last.column_focus) {
-                last.column[1] = last.column_focus;
-              }
-
-              columnseleted = [col_index, last.column[1]];
-            } else if (last.left == col_pre) {
-              left = col_pre;
-              width = last.left + last.width - col_pre;
-              columnseleted = [col_index, last.column[0]];
-            } else {
-              left = last.left;
-              width = col - last.left - 1;
-
-              if (last.column[0] < last.column_focus) {
-                last.column[0] = last.column_focus;
-              }
-
-              columnseleted = [last.column[0], col_index];
-            }
-
-            let changeparam = menuButton.mergeMoveMain(
-              columnseleted,
-              [0, row_index],
-              { row_focus: 0, column_focus: col_index },
-              row_pre,
-              row,
-              left,
-              width
-            );
-            if (changeparam != null) {
-              columnseleted = changeparam[0];
-              //rowseleted= changeparam[1];
-              //top = changeparam[2];
-              //height = changeparam[3];
-              left = changeparam[4];
-              width = changeparam[5];
-            }
-
-            last["column"] = columnseleted;
-
-            last["left_move"] = left;
-            last["width_move"] = width;
-
-            formula.func_selectedrange = last;
-          } else if (
-            event.ctrlKey &&
-            $("#luckysheet-rich-text-editor").find("span").last().text() != ","
-          ) {
-            //按住ctrl 选择选区时  先处理上一个选区
-            let vText = $("#luckysheet-rich-text-editor").text() + ",";
-            if (vText.length > 0 && vText.substr(0, 1) == "=") {
-              vText = formula.functionHTMLGenerate(vText);
-
-              if (window.getSelection) {
-                // all browsers, except IE before version 9
-                let currSelection = window.getSelection();
-                formula.functionRangeIndex = [
-                  $(currSelection.anchorNode).parent().index(),
-                  currSelection.anchorOffset,
-                ];
-              } else {
-                // Internet Explorer before version 9
-                let textRange = document.selection.createRange();
-                formula.functionRangeIndex = textRange;
-              }
-
-              $("#luckysheet-rich-text-editor").html(vText);
-
-              formula.canceFunctionrangeSelected();
-              formula.createRangeHightlight();
-            }
-
-            formula.rangestart = false;
-            formula.rangedrag_column_start = false;
-            formula.rangedrag_row_start = false;
-
-            $("#luckysheet-functionbox-cell").html(vText);
-            formula.rangeHightlightselected($("#luckysheet-rich-text-editor"));
-
-            //再进行 选区的选择
-            formula.israngeseleciton();
-            formula.func_selectedrange = {
-              left: left,
-              width: width,
-              top: rowLocationByIndex(0)[0],
-              height: rowLocationByIndex(0)[1] - rowLocationByIndex(0)[0] - 1,
-              left_move: left,
-              width_move: width,
-              top_move: row_pre,
-              height_move: row - row_pre - 1,
-              row: [0, row_index],
-              column: columnseleted,
-              row_focus: 0,
-              column_focus: col_index,
-            };
-          } else {
-            formula.func_selectedrange = {
-              left: left,
-              width: width,
-              top: rowLocationByIndex(0)[0],
-              height: rowLocationByIndex(0)[1] - rowLocationByIndex(0)[0] - 1,
-              left_move: left,
-              width_move: width,
-              top_move: row_pre,
-              height_move: row - row_pre - 1,
-              row: [0, row_index],
-              column: columnseleted,
-              row_focus: 0,
-              column_focus: col_index,
-            };
-          }
-
-          if (
-            formula.rangestart ||
-            formula.rangedrag_column_start ||
-            formula.rangedrag_row_start ||
-            formula.israngeseleciton()
-          ) {
-            formula.rangeSetValue({ row: [null, null], column: columnseleted });
-          } else if (
-            $("#luckysheet-ifFormulaGenerator-multiRange-dialog").is(":visible")
-          ) {
-            //if公式生成器
-            let range = getRangetxt(
-              Store.currentSheetIndex,
-              { row: [0, row_index], column: columnseleted },
-              Store.currentSheetIndex
-            );
-            $("#luckysheet-ifFormulaGenerator-multiRange-dialog input").val(
-              range
-            );
-          }
-
-          formula.rangedrag_column_start = true;
-          formula.rangestart = false;
-          formula.rangedrag_row_start = false;
-
-          $("#luckysheet-formula-functionrange-select")
-            .css({
-              left: left,
-              width: width,
-              top: row_pre,
-              height: row - row_pre - 1,
-            })
-            .show();
-          $("#luckysheet-formula-help-c").hide();
-
-          luckysheet_count_show(
-            left,
-            row_pre,
-            width,
-            row - row_pre - 1,
-            [0, row_index],
-            columnseleted
-          );
-
-          return;
-        } else {
-          formula.updatecell(
-            Store.luckysheetCellUpdate[0],
-            Store.luckysheetCellUpdate[1]
-          );
-          Store.luckysheet_cols_selected_status = true;
-        }
-      } else {
-        Store.luckysheet_cols_selected_status = true;
-      }
+      Store.luckysheet_cols_selected_status = true;
 
       if (Store.luckysheet_cols_selected_status) {
         if (event.shiftKey) {
@@ -869,13 +669,6 @@ export function rowColumnOperationInitial() {
         }
 
         selectHightlightShow();
-
-        //允许编辑后的后台更新时
-        server.saveParam(
-          "mv",
-          Store.currentSheetIndex,
-          Store.luckysheet_select_save
-        );
       }
 
       selectHelpboxFill();

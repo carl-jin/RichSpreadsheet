@@ -4794,7 +4794,7 @@ fieldset[disabled] .btn-danger.focus {
     overflow: hidden;
     background: rgba(0, 0, 0, 0.45);
     border-width: 2px 2px 1px 2px;
-    margin-left: 45px;
+    margin-left: 39px;
     left: 0px;
     right: 0px;
 }
@@ -4805,7 +4805,7 @@ fieldset[disabled] .btn-danger.focus {
     background: #bcbdbc;
     /*            opacity: 0.80;
             filter: alpha(opacity=80);*/
-    width: 45px;
+    width: 39px;
     left: 0px;
 }
 

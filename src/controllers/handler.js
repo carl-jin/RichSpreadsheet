@@ -79,6 +79,7 @@ import {
   useDataVerification,
 } from "./hooks/useDataVerification";
 import {useContextMenu} from "./hooks/useContextMenu";
+import {detectIsInFrozenByFrozenPosition, getFrozenAreaThatCellIn} from "../customCell/helper/tools";
 // import { createLuckyChart, hideAllNeedRangeShow } from '../expendPlugins/chart/plugin'
 
 export const getMouseRelateCell = (event) => {
@@ -382,13 +383,18 @@ export default function luckysheetHandler() {
       // dataVerificationCtrl.cellFocus(row_index, col_index, true);
       useDataVerification(row_index, col_index);
 
+      const currentFrozenPosition = getFrozenAreaThatCellIn(row_index, col_index);
+      const isInFrozen = detectIsInFrozenByFrozenPosition(
+        currentFrozenPosition
+      );
+
       //若点击单元格部分不在视图内
       if (col_pre < $("#luckysheet-cell-main").scrollLeft()) {
-        $("#luckysheet-scrollbar-x").scrollLeft(col_pre);
+        !isInFrozen && $("#luckysheet-scrollbar-x").scrollLeft(col_pre);
       }
 
       if (row_pre < $("#luckysheet-cell-main").scrollTop()) {
-        $("#luckysheet-scrollbar-y").scrollTop(row_pre);
+        !isInFrozen && $("#luckysheet-scrollbar-y").scrollTop(row_pre);
       }
 
       //mousedown是右键
