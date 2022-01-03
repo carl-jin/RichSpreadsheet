@@ -11,6 +11,11 @@ import {
   getRowsIdFromSelectedSave,
 } from "../controllers/hooks/helper";
 import { getCellByRowIndexFromCellData as _getCellByRowIndexFromCellData } from "../controllers/hooks/helper";
+import {
+  setCopyToClipboard as _setCopyToClipboard,
+  pasteFromClipboard as _pasteFromClipboard,
+  pasteFromClipboard
+} from "../controllers/hooks/useGsClipboard";
 
 /**
  * 将 cell 的值与 cellData 同步
@@ -211,4 +216,23 @@ export function showLoading() {
  */
 export function hideLoading() {
   Store.loadingObj.close();
+}
+
+/**
+ * 将指定的 单元格 数据塞入到 clipboard 中
+ * @param rowIndexArr
+ * @param colIndexArr
+ */
+export function setCopyToClipboard(
+  rowIndexArr: number[],
+  colIndexArr: number[]
+) {
+  return _setCopyToClipboard(rowIndexArr, colIndexArr);
+}
+
+/**
+ * 从 clipboard 获取数据, 更新到当前选中的单元格
+ */
+export async function pasteFromClipboard() {
+  return _pasteFromClipboard();
 }

@@ -1086,7 +1086,7 @@ export function insertRowOrColumn(type, index = 0, options = {}) {
     }
 
     number = parseInt(number);
-    if (number < 1 || number > 100) {
+    if (number < 1 || number > 9999) {
         if(isEditMode()){
             alert(locale_info.tipInputNumberLimit);
         } else{

@@ -66,7 +66,5 @@ export function deleteRowOrColumnCellSync(
   setCellData(cellData);
 
   deleteRowOrColumn(type, startIndex, endIndex);
-
-  console.log(getCellData())
 }
 

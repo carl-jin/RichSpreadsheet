@@ -10,7 +10,7 @@ import Store from '../store';
 import numeral from 'numeral';
 
 //数据排序方法
-function orderbydata(data, index, isAsc) {
+export function orderbydata(data, index, isAsc) {
     if (isAsc == null) {
         isAsc = true;
     }
@@ -95,7 +95,7 @@ function orderbydata(data, index, isAsc) {
     }
 }
 
-function orderbydata1D(data, isAsc) {
+export function orderbydata1D(data, isAsc) {
     if (isAsc == null) {
         isAsc = true;
     }
@@ -181,7 +181,7 @@ function orderbydata1D(data, isAsc) {
 }
 
 //排序选区数据
-function sortSelection(isAsc) {
+export function sortSelection(isAsc) {
     if(!checkProtectionAuthorityNormal(Store.currentSheetIndex, "sort")){
         return;
     }
@@ -202,9 +202,9 @@ function sortSelection(isAsc) {
 
     let d = editor.deepCopyFlowData(Store.flowdata);
 
-    let r1 = Store.luckysheet_select_save[0].row[0], 
+    let r1 = Store.luckysheet_select_save[0].row[0],
         r2 = Store.luckysheet_select_save[0].row[1];
-    let c1 = Store.luckysheet_select_save[0].column[0], 
+    let c1 = Store.luckysheet_select_save[0].column[0],
         c2 = Store.luckysheet_select_save[0].column[1];
 
     let str, edr;
@@ -222,9 +222,9 @@ function sortSelection(isAsc) {
                 edr = r + 1;
                 continue;
             }
-            
+
             if(str == null){
-                str = r;    
+                str = r;
             }
 
             edr = r;
@@ -287,7 +287,7 @@ function sortSelection(isAsc) {
 }
 
 //排序一列数据
-function sortColumnSeletion(colIndex, isAsc) {
+export function sortColumnSeletion(colIndex, isAsc) {
     if(!checkProtectionAuthorityNormal(Store.currentSheetIndex, "sort")){
         return;
     }
@@ -314,7 +314,7 @@ function sortColumnSeletion(colIndex, isAsc) {
         }
 
         if(str == null){
-            str = r;    
+            str = r;
         }
 
         if(d[r][colIndex] != null && !isRealNull(d[r][colIndex].v)){
@@ -375,11 +375,4 @@ function sortColumnSeletion(colIndex, isAsc) {
     }
 
     jfrefreshgrid(d, [{ "row": [str, edr], "column": [c1, c2] }], allParam);
-}
-
-export {
-    orderbydata,
-    orderbydata1D,
-    sortSelection,
-    sortColumnSeletion,
 }
