@@ -1,6 +1,6 @@
 {
   "name": "@buff2017/rich-spreadsheet",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "main": "dist/RichSpreadsheet.cjs.js",
   "module": "dist/RichSpreadsheet.es.js",
   "browser": "dist/RichSpreadsheet.umd.js",
@@ -62,7 +62,8 @@
     "typescript": "^4.5.4",
     "uuid": "^8.3.2",
     "vite": "^2.7.1",
-    "vite-plugin-html": "^2.1.1"
+    "vite-plugin-html": "^2.1.1",
+    "vite-plugin-mkcert": "^1.5.2"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.1",

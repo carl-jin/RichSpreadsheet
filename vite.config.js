@@ -2,6 +2,8 @@ import { defineConfig } from "vite";
 import { injectHtml } from "vite-plugin-html";
 import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
+import mkcert from "vite-plugin-mkcert";
+
 
 export default defineConfig(({ mode }) => {
   const isProd = mode === "production";
@@ -11,6 +13,9 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": "./src",
       },
+    },
+    server:{
+      https:true,
     },
     output: {
       exports: "named",
@@ -28,6 +33,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [
+      mkcert(),
       injectHtml({
         data: {
           //  注入 script

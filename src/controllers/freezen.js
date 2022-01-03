@@ -262,7 +262,7 @@ window.__luckysheetFreezen = window.__luckysheetFreezen
               currentSheet.freezen.horizontal.freezenhorizontaldata[1] - 1;
           }
 
-          method.createHookFunction("FrozenChanged", currentSheet.frozen);
+          Store.$emit("FrozenChanged", currentSheet.frozen);
         }
 
         // if(currentSheet.freezen != null){
@@ -2165,7 +2165,7 @@ window.__luckysheetFreezen = window.__luckysheetFreezen
           },
         };
 
-        method.createHookFunction("FrozenChanged", frozen[operate]);
+        Store.$emit("FrozenChanged", frozen[operate]);
 
         // store frozen
         Store.luckysheetfile[order]["frozen"] = frozen[operate];

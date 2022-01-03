@@ -209,6 +209,10 @@ function create() {
 
 create();
 
+let unsub = RichSpread.$on("FrozenChanged", (args) => {
+  console.log(args);
+});
+
 //  获取 rows id
 document.querySelector("#rowIds").addEventListener("click", () => {
   console.log(getSelectedRowIds());

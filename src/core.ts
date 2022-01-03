@@ -37,6 +37,7 @@ import { hideloading, showloading } from "./global/loading.js";
 import { luckysheetextendData } from "./global/extend.js";
 import { RichSpreadsheetParams } from "./type";
 import { useGsClipboard } from "./controllers/hooks/useGsClipboard";
+import { useEventManager } from "./hooks/useEventManager";
 
 export type RichSpreadType = Partial<{
   create(setting: RichSpreadsheetParams): void;
@@ -50,10 +51,16 @@ let RichSpread: RichSpreadType = {};
 // Object.assign(luckysheet, api);
 
 RichSpread = common_extend(api, RichSpread);
+const { $on, $emit, destroy: eventDestroy } = useEventManager();
+
+RichSpread.$on = $on;
+RichSpread.$emit = $emit;
 
 //创建luckysheet表格
 RichSpread.create = function (setting: RichSpreadsheetParams) {
   method.destroy();
+  eventDestroy();
+
   // Store original parameters for api: toJson
   Store.toJsonOptions = {};
   for (let c in setting) {
@@ -68,6 +75,11 @@ RichSpread.create = function (setting: RichSpreadsheetParams) {
   let title = extendsetting.title;
 
   let container = extendsetting.container;
+
+  //  使用事件管理
+  Store.$on = $on;
+  Store.$emit = $emit;
+
   Store.container = container;
   Store.cellRenderers = extendsetting.cellRenderers;
   Store.cellEditors = extendsetting.cellEditors;
