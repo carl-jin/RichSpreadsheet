@@ -10,7 +10,7 @@ import {
   deepClone,
   getRowsIdFromSelectedSave,
 } from "../controllers/hooks/helper";
-import {getCellByRowIndexFromCellData as _getCellByRowIndexFromCellData} from "../controllers/hooks/helper";
+import { getCellByRowIndexFromCellData as _getCellByRowIndexFromCellData } from "../controllers/hooks/helper";
 
 /**
  * 将 cell 的值与 cellData 同步
@@ -85,8 +85,28 @@ export function getCellData() {
  * 获取 cell 对应行
  * @param rowIndex
  */
-export function getCellByRowIndexFromCellData(rowIndex){
- return _getCellByRowIndexFromCellData(rowIndex)
+export function getCellByRowIndexFromCellData(rowIndex) {
+  return _getCellByRowIndexFromCellData(rowIndex);
+}
+
+/**
+ * 通过 columnId 获取 column index
+ * @param colId
+ */
+export function getColumnIndexByColumnId(colId:string):number{
+  let currentSheet = getCurrentSheet();
+  let column = currentSheet.column.find(column=>column.id === colId)
+  return currentSheet.column.indexOf(column)
+}
+
+/**
+ * 获取 column 通过 col_index
+ * @param colIndex
+ */
+export function getColumnByColIndex(colIndex) {
+  let currentSheet = getCurrentSheet();
+
+  return currentSheet.column[colIndex];
 }
 
 /**

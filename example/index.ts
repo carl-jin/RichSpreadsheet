@@ -202,6 +202,12 @@ function create() {
         column: cols,
         row: rows.length + 2,
         celldata: rows,
+        config:{
+          columnlen: {
+            0: 320,
+          },
+
+        }
       },
     ],
   });

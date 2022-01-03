@@ -1,3 +1,10 @@
+//
+//  事件中心管理
+//  支持的事件
+//  ColumnsWidthChanged  columns 宽度改变时触发
+//  RowHeightChanged     行高改变
+//  FrozenChanged        冻结行列改变时触发
+
 export function useEventManager() {
   let evenList = {};
 

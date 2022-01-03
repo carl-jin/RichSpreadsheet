@@ -78,8 +78,11 @@ import {
   removeDataVerificationTooltip,
   useDataVerification,
 } from "./hooks/useDataVerification";
-import {useContextMenu} from "./hooks/useContextMenu";
-import {detectIsInFrozenByFrozenPosition, getFrozenAreaThatCellIn} from "../customCell/helper/tools";
+import { useContextMenu } from "./hooks/useContextMenu";
+import {
+  detectIsInFrozenByFrozenPosition,
+  getFrozenAreaThatCellIn,
+} from "../customCell/helper/tools";
 // import { createLuckyChart, hideAllNeedRangeShow } from '../expendPlugins/chart/plugin'
 
 export const getMouseRelateCell = (event) => {
@@ -91,9 +94,9 @@ export const getMouseRelateCell = (event) => {
     return false;
   }
 
-  const $main = $("#luckysheet-cell-main")
-  const scrollLeft = $main.scrollLeft()
-  const scrollTop = $main.scrollTop()
+  const $main = $("#luckysheet-cell-main");
+  const scrollLeft = $main.scrollLeft();
+  const scrollTop = $main.scrollTop();
 
   let x = mouse[0] + scrollLeft;
   let y = mouse[1] + scrollTop;
@@ -135,16 +138,16 @@ export const getMouseRelateCell = (event) => {
     col,
     col_pre,
     col_index,
-    cell_offset_top:row_pre - scrollTop,
-    cell_offset_left:col_pre - scrollLeft,
+    cell_offset_top: row_pre - scrollTop,
+    cell_offset_left: col_pre - scrollLeft,
     mouseEvent: {
       mouse_x: mouse[0] + luckysheetConfigsetting.rowHeaderWidth,
       mouse_y: mouse[1] + luckysheetConfigsetting.columnHeaderHeight,
     },
-    relatedMouseEvent:{
+    relatedMouseEvent: {
       mouse_x: mouse[0],
-      mouse_y: mouse[1]
-    }
+      mouse_y: mouse[1],
+    },
   };
 };
 
@@ -383,7 +386,10 @@ export default function luckysheetHandler() {
       // dataVerificationCtrl.cellFocus(row_index, col_index, true);
       useDataVerification(row_index, col_index);
 
-      const currentFrozenPosition = getFrozenAreaThatCellIn(row_index, col_index);
+      const currentFrozenPosition = getFrozenAreaThatCellIn(
+        row_index,
+        col_index
+      );
       const isInFrozen = detectIsInFrozenByFrozenPosition(
         currentFrozenPosition
       );
@@ -1311,7 +1317,7 @@ export default function luckysheetHandler() {
         let y = event.pageY;
         Store.luckysheet_cols_menu_status = true;
         const { renderContextMenu } = useContextMenu();
-        renderContextMenu('cell');
+        renderContextMenu("cell");
         Store.luckysheetRightHeadClickIs = "row";
         showrightclickmenu($("#luckysheet-rightclick-menu"), x, y);
       }
@@ -3823,6 +3829,8 @@ export default function luckysheetHandler() {
       // imageCtrl.allImagesShow();
 
       jfrefreshgrid_rhcw(Store.flowdata.length, null);
+
+      Store.$emit("RowHeightChanged", cfg["rowlen"]);
     }
 
     //改变列宽
@@ -3953,6 +3961,8 @@ export default function luckysheetHandler() {
       setTimeout(function () {
         luckysheetrefreshgrid();
       }, 1);
+
+      Store.$emit("ColumnsWidthChanged", cfg["columnlen"]);
     }
 
     if (formula.rangeMove) {

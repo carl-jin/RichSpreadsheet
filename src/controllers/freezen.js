@@ -12,7 +12,7 @@ import locale from "../locale/locale";
 import { luckysheetrefreshgrid } from "../global/refresh";
 import method from "../global/method";
 
-window.__luckysheetFreezen = window.__luckysheetFreezen
+const luckysheetFreezen = window.__luckysheetFreezen = window.__luckysheetFreezen
   ? window.__luckysheetFreezen
   : {
       freezenHorizontalHTML:
