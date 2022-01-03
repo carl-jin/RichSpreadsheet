@@ -73,6 +73,15 @@ function getItemsDomByOption(option: ContentMenuItem) {
     return divItem;
   }
 
+  //  如果是 disabled 状态
+  if (option.disabled) {
+    divItem.style.cssText = `
+    opacity: .8;
+    cursor: not-allowed;
+    user-select: none;
+    `;
+  }
+
   //  插入 item
   const icon = option.icon ? `<i class="iconfont ${option.icon}"></i>` : ``;
   divItem.innerHTML = `
@@ -100,7 +109,7 @@ function getItemsDomByOption(option: ContentMenuItem) {
   }
 
   //  判断是否有事件
-  if (option.action && !option.subMenus) {
+  if (option.action && !option.subMenus && !option.disabled) {
     divItem.addEventListener("click", () => {
       luckysheetContainerFocus();
       option.action();

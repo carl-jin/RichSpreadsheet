@@ -93,10 +93,10 @@ export function getCellByRowIndexFromCellData(rowIndex) {
  * 通过 columnId 获取 column index
  * @param colId
  */
-export function getColumnIndexByColumnId(colId:string):number{
+export function getColumnIndexByColumnId(colId: string): number {
   let currentSheet = getCurrentSheet();
-  let column = currentSheet.column.find(column=>column.id === colId)
-  return currentSheet.column.indexOf(column)
+  let column = currentSheet.column.find((column) => column.id === colId);
+  return currentSheet.column.indexOf(column);
 }
 
 /**
@@ -197,4 +197,18 @@ export function setFrozen(range: Partial<{ col: number; row: number }>) {
     });
     return;
   }
+}
+
+/**
+ * 显示加载中
+ */
+export function showLoading() {
+  Store.loadingObj.show();
+}
+
+/**
+ * 隐藏加载中
+ */
+export function hideLoading() {
+  Store.loadingObj.close();
 }

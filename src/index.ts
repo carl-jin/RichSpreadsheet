@@ -4,6 +4,7 @@ declare global {
     //  分别在文件 B C 中引入时，得到的却是两个不一样的 a
     //  所以在模块中将常量放到 window 上
     __luckysheetFreezen: any;
+    __Store:any;
   }
 }
 import "./css/index.less";
@@ -24,5 +25,6 @@ export * from "./type";
 export * from "./customCell/helper/drawHelper";
 export * from "./global/apiCellSync";
 export * from "./global/apiHelper";
+export * from "./global/sort";
 import { RichSpread } from "./core";
 export { RichSpread };

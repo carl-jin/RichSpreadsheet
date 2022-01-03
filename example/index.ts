@@ -7,6 +7,8 @@ import {
   setFrozen,
   cancelFrozenHacks,
   getSelectedRowIds,
+  showLoading,
+  hideLoading,
 } from "../src";
 import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
@@ -202,12 +204,11 @@ function create() {
         column: cols,
         row: rows.length + 2,
         celldata: rows,
-        config:{
+        config: {
           columnlen: {
             0: 320,
           },
-
-        }
+        },
       },
     ],
   });
@@ -222,4 +223,9 @@ let unsub = RichSpread.$on("FrozenChanged", (args) => {
 //  获取 rows id
 document.querySelector("#rowIds").addEventListener("click", () => {
   console.log(getSelectedRowIds());
+
+  showLoading();
+  setTimeout(() => {
+    hideLoading();
+  }, 2000);
 });

@@ -254,8 +254,8 @@ function getMeasureText(value, ctx, fontset) {
       ctx.font = fontset;
     }*/
 
-    let measureText = ctx.measureText(value)
-      let cache = {};
+    let measureText = ctx.measureText(value);
+    let cache = {};
     // var regu = "^[ ]+$";
     // var re = new RegExp(regu);
     // if(measureText.actualBoundingBoxRight==null || re.test(value)){
@@ -274,7 +274,7 @@ function getMeasureText(value, ctx, fontset) {
 
     cache.actualBoundingBoxDescent = measureText.actualBoundingBoxDescent;
     cache.actualBoundingBoxAscent = measureText.actualBoundingBoxAscent;
- /*   if (
+    /*   if (
       cache.actualBoundingBoxDescent == null ||
       cache.actualBoundingBoxAscent == null ||
       isNaN(cache.actualBoundingBoxDescent) ||
@@ -300,7 +300,7 @@ function getMeasureText(value, ctx, fontset) {
       //console.log(value, oneLineTextHeight, measureText.actualBoundingBoxDescent+measureText.actualBoundingBoxAscent,ctx.font);
     }*/
 
-/*    if (ctx.textBaseline == "alphabetic") {
+    /*    if (ctx.textBaseline == "alphabetic") {
       let descText = "gjpqy",
         matchText = "abcdABCD";
       let descTextMeasure = Store.measureTextCache[descText + "_" + ctx.font];
@@ -374,7 +374,7 @@ function getCellTextInfo(cell, ctx, option) {
   }
 
   // let cell = Store.flowdata[r][c];
-  let { space_width, space_height } = option.space_width; //宽高方向 间隙
+  let { space_width, space_height } = option; //宽高方向 间隙
   space_width = space_width ?? 2;
   space_height = space_height ?? 2;
 
