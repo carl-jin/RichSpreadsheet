@@ -25,15 +25,6 @@ export type RichSpreadsheetParams = Partial<{
     [key:string]: CellTransformer;
   }
   GSClipboardOptions: GsClipboardOptions;
-  onReadonlyCellTryToEdit(): void;
-  onCellUpdate(params: {
-    colIndex: number;
-    rowIndex: number;
-    oldCell: cell;
-    newCell: cell;
-    value: string;
-    isRefresh: boolean;
-  }): void;
   ContextMenu(params: ContextMenuParams, type: ContextMenuType): ContentMenuItem[];
   [key: string]: any;
 }>;

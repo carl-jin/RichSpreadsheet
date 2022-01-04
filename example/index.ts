@@ -176,13 +176,6 @@ function create() {
       }
     },
 
-    onReadonlyCellTryToEdit() {
-      console.log("该字段无法编辑");
-    },
-    onCellUpdate() {
-      console.log("cellUpdate");
-    },
-
     container: "luckysheet",
     lang: "zh",
     forceCalculation: false,
@@ -216,7 +209,7 @@ function create() {
 
 create();
 
-let unsub = RichSpread.$on("FrozenChanged", (args) => {
+let unsub = RichSpread.$on("CellValueUpdated", (args) => {
   console.log(args);
 });
 

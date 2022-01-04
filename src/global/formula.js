@@ -69,6 +69,8 @@ import {
   removeDataVerificationTooltip,
   useDataVerificationBuildCache,
 } from "../controllers/hooks/useDataVerification";
+import { getColumnByColIndex } from "./apiHelper";
+import { getCellDataRowByRowIndex } from "../controllers/hooks/helper";
 
 const luckysheetformula = {
   error: {
@@ -1419,7 +1421,7 @@ const luckysheetformula = {
 
     //  判断 readonly 跳过
     if (column.readonly) {
-      Store.onReadonlyCellTryToEdit();
+      Store.$emit("CantEditReadonly");
       _this.cancelNormalSelected();
       return;
     }
@@ -1433,8 +1435,11 @@ const luckysheetformula = {
     }
 
     //  转换
-    if(Store.cellTransformer[type]){
-      value = Store.cellTransformer[type].parseValueToData(value,column.cellParams)
+    if (Store.cellTransformer[type]) {
+      value = Store.cellTransformer[type].parseValueToData(
+        value,
+        column.cellParams
+      );
     }
 
     window.luckysheet_getcelldata_cache = null;
@@ -1452,13 +1457,16 @@ const luckysheetformula = {
 
       //  判断是否通过了数据验证
       if (detectIsPassDataVerification(c, r)) {
-        Store.onCellUpdate({
+        const column = getColumnByColIndex(c);
+        const row = getCellDataRowByRowIndex(r);
+        Store.$emit("CellValueUpdated", {
           rowIndex: r,
           colIndex: c,
-          oldCell: JSON.parse(oldValue),
-          newCell: Store.flowdata[r][c],
           value: Store.flowdata[r][c].v,
-          isRefresh,
+          rowId: row.id,
+          colId: column.id,
+          row: row,
+          column: column,
         });
       }
     } else {
@@ -1478,10 +1486,11 @@ const luckysheetformula = {
     //  editor **** cell before destroy
     if (type && Store.cellEditors[type]) {
       const Editor = Store.cellEditors[type];
-      Editor.beforeDestroy && Editor.beforeDestroy(
-        document.querySelector(".cell-editor-custom"),
-        document.querySelector("#luckysheet-input-box")
-      );
+      Editor.beforeDestroy &&
+        Editor.beforeDestroy(
+          document.querySelector(".cell-editor-custom"),
+          document.querySelector("#luckysheet-input-box")
+        );
     }
     let _this = this;
 

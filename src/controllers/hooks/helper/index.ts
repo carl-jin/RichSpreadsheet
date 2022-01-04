@@ -53,13 +53,13 @@ export function getRowsIdFromSelectedSave(): string[] {
  * 获取 cell 对应行
  * @param rowIndex
  */
-export function getCellByRowIndexFromCellData(rowIndex){
+export function getCellByRowIndexFromCellData(rowIndex) {
   const cellData = getCellData();
-  return cellData[rowIndex]
+  return cellData[rowIndex];
 }
 
 /**
- * 通过 ids 获取当前的所有 cell data 中的 rom
+ * 通过 ids 获取当前的所有 cell data 中的 row
  */
 export function getCellDataRowsByIds(ids): any[] {
   if (ids.length === 0) return [];
@@ -76,6 +76,23 @@ export function getCellDataRowsByIds(ids): any[] {
   });
 
   return rows;
+}
+
+/**
+ * 通过 row index 获取对应 cell data 中的 row
+ */
+export function getCellDataRowByRowIndex(index): any {
+  const cellData = getCellData();
+  return cellData[index];
+}
+
+/**
+ * 通过 row id 获取对应 cell data 中的 row
+ */
+export function getRowIndexByRowId(id): any {
+  const cellData = getCellData();
+  const target = cellData.find((row) => row.id === id);
+  return cellData.indexOf(target);
 }
 
 /**
@@ -101,6 +118,7 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
   if (!column) return [false, false];
   const type = column.type;
   const Render = Store.cellRenderers[type];
+  if (!currentSheet.data[row_index]) return [false, false];
   const cell = currentSheet.data[row_index][col_index];
 
   if (type && Render && cell) {
@@ -108,7 +126,9 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
     const cellHeight = row - row_pre;
     const scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft();
     const scrollTop = $("#luckysheet-scrollbar-y").scrollTop();
-    const luckysheet = document.getElementById("luckysheetTableContent") as HTMLCanvasElement
+    const luckysheet = document.getElementById(
+      "luckysheetTableContent"
+    ) as HTMLCanvasElement;
     return [
       Render,
       {
@@ -118,10 +138,12 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
         column: column,
         columns: currentSheet.column,
         cell,
-        value: Store.cellTransformer[type] ? Store.cellTransformer[type].formatValueFromData(
-          cell.v,
-          column.cellParams,
-        ) : cell.v,
+        value: Store.cellTransformer[type]
+          ? Store.cellTransformer[type].formatValueFromData(
+              cell.v,
+              column.cellParams
+            )
+          : cell.v,
         cellWidth: cellWidth - 2,
         cellHeight: cellHeight - 1,
         spaceX: Store.cellSpace[1],

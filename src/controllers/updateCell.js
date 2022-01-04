@@ -27,7 +27,7 @@ export function luckysheetupdateCell(
 
   //  readonly 状态下禁止修改
   if (column.readonly === true) {
-    Store.onReadonlyCellTryToEdit();
+    Store.$emit('CantEditReadonly');
     return;
   }
 
@@ -187,46 +187,51 @@ export function luckysheetupdateCell(
 
   //  editor ****  这里处理 cell editor 显示
   const type = currentSheet.column[col_index].type;
-  const originalValue = value
-  value = Store.cellTransformer[type] ? Store.cellTransformer[type].formatValueFromData(
-    value,
-    currentSheet.column[col_index].cellParams,
-  ) : value
+  const originalValue = value;
+  value = Store.cellTransformer[type]
+    ? Store.cellTransformer[type].formatValueFromData(
+        value,
+        currentSheet.column[col_index].cellParams
+      )
+    : value;
   if (type && Store.cellEditors[type]) {
     const Editor = Store.cellEditors[type];
     let cell = Store.flowdata[row_index][col_index];
 
     //  创建一个空 div
-    let Dom = document.createElement('div') ;
+    let Dom = document.createElement("div");
 
-    const isPopup = Editor.isPopup ? Editor.isPopup() : false
-    const customDomBox = document.createElement('div')
+    const isPopup = Editor.isPopup ? Editor.isPopup() : false;
+    const customDomBox = document.createElement("div");
     customDomBox.classList.add("cell-editor-custom");
-    customDomBox.appendChild(Dom)
+    customDomBox.appendChild(Dom);
     $("#luckysheet-input-box").css("padding", "0");
-    $("#luckysheet-rich-text-editor").hide()
+    $("#luckysheet-rich-text-editor").hide();
 
-    if(isPopup){
-      customDomBox.classList.add('cell-editor-custom-popup')
-      $("#luckysheet-input-box").after(customDomBox)
-    }else{
-      $("#luckysheet-rich-text-editor").after(customDomBox)
+    if (isPopup) {
+      customDomBox.classList.add("cell-editor-custom-popup");
+      $("#luckysheet-input-box").after(customDomBox);
+    } else {
+      $("#luckysheet-rich-text-editor").after(customDomBox);
     }
 
     //  调用 edit 时将 Dom 传递过去，这样可以让 vue 直接 $mount
-    let returnDom = Editor.edit({
-      rowIndex: row_index,
-      colIndex: col_index,
-      column: currentSheet.column[col_index],
-      columns: currentSheet.column,
-      cell: cell,
-      value,
-      originalValue
-    }, Dom);
+    let returnDom = Editor.edit(
+      {
+        rowIndex: row_index,
+        colIndex: col_index,
+        column: currentSheet.column[col_index],
+        columns: currentSheet.column,
+        cell: cell,
+        value,
+        originalValue,
+      },
+      Dom
+    );
 
     //  如果 edit 返回的有 dom 则使用返回的 dom
-    if(returnDom){
-      Dom.appendChild(returnDom)
+    if (returnDom) {
+      Dom.appendChild(returnDom);
     }
 
     Editor.afterMounted && Editor?.afterMounted(customDomBox);
@@ -239,10 +244,12 @@ export function luckysheetupdateCell(
   }
 
   $("#luckysheet-input-box").css(input_postition);
-  $('.cell-editor-custom-popup').css(Object.assign(input_postition,{
-    position:'absolute',
-    zIndex: 999
-  }));
+  $(".cell-editor-custom-popup").css(
+    Object.assign(input_postition, {
+      position: "absolute",
+      zIndex: 99999,
+    })
+  );
   $("#luckysheet-rich-text-editor").css(inputContentScale);
 
   formula.rangetosheet = Store.currentSheetIndex;

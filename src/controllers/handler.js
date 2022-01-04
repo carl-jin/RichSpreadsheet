@@ -83,6 +83,7 @@ import {
   detectIsInFrozenByFrozenPosition,
   getFrozenAreaThatCellIn,
 } from "../customCell/helper/tools";
+import { isColExisted, isRowExisted } from "../global/apiHelper";
 // import { createLuckyChart, hideAllNeedRangeShow } from '../expendPlugins/chart/plugin'
 
 export const getMouseRelateCell = (event) => {
@@ -128,6 +129,11 @@ export const getMouseRelateCell = (event) => {
     col = col_location[1],
     col_pre = col_location[0],
     col_index = col_location[2];
+
+  //  判断这个 row 和 col 存不存在， 如果不存在直接返回 false
+  if (!isRowExisted(row_index) || !isColExisted(col_index)) {
+    return false;
+  }
 
   return {
     row_location,

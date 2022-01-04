@@ -4,6 +4,7 @@ import { CopyDataItemFormat, GsClipboard } from "gs-clipboard";
 import { coordsTo2dArray } from "./helper";
 import { jfrefreshgrid } from "../../global/refresh";
 import { selectHightlightShow } from "../select";
+import { setcellvalue } from "../../global/setdata";
 import editor from "../../global/editor";
 
 export function useGsClipboard() {
@@ -28,7 +29,7 @@ export async function pasteFromClipboard(shiftKey: boolean = false) {
       const row = y + startRow;
       const col = x + startCol;
       const column = currentSheet.column[col];
-      const type = column.type
+      const type = column.type;
       let value = item.value;
 
       //  如果是 readonly 直接退出
@@ -40,14 +41,17 @@ export async function pasteFromClipboard(shiftKey: boolean = false) {
           item,
           column.cellParams
         );
-        value = Store.cellTransformer[type].parseValueToData(value,column.cellParams)
+        value = Store.cellTransformer[type].parseValueToData(
+          value,
+          column.cellParams
+        );
       }
 
       if (d[row] && d[row][col]) {
-        if (d[row][col].v !== value) {
-          d[row][col].v = value;
-          hasChange = true;
-        }
+        setcellvalue(row, col, d, value);
+        hasChange = true;
+      } else {
+        //  粘贴的格式范围溢出了
       }
     });
   });
@@ -104,7 +108,7 @@ export function setCopyToClipboard(
       if (Store.cellTransformer[type]) {
         value = Store.cellTransformer[type].formatValueFromData(
           value,
-          column.cellParams,
+          column.cellParams
         );
       }
 

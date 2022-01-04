@@ -30,12 +30,6 @@ export default {
   },
   pointEditZoom: 1, //编辑器表格编辑时缩放比例
 
-  //  事件触发
-  //  点击 readonly 字段时触发
-  onReadonlyCellTryToEdit: $.noop,
-  //  cell 更新时触发
-  onCellUpdate: $.noop,
-
   // menu: "undo|redo|freezenrow|freezencolumn|download|share|chart|pivot",
   data: [
     {

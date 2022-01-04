@@ -4,6 +4,8 @@
 //  ColumnsWidthChanged  columns 宽度改变时触发
 //  RowHeightChanged     行高改变
 //  FrozenChanged        冻结行列改变时触发
+//  CellValueUpdated     cell 的值发生了改变
+//  CantEditReadonly     无法编辑只读 column
 
 export function useEventManager() {
   let evenList = {};

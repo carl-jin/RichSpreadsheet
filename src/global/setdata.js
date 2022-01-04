@@ -4,21 +4,69 @@ import { genarate, update } from "./format";
 import server from "../controllers/server";
 import luckysheetConfigsetting from "../controllers/luckysheetConfigsetting";
 import Store from "../store";
-import { updateSpecificCellData } from "./apiHelper";
+import { getColumnByColIndex, updateSpecificCellData } from "./apiHelper";
+import { getCellDataRowByRowIndex } from "../controllers/hooks/helper";
+import { reFreshCellByCoord } from "../customCell/helper/baseMethods";
 
-//Set cell value
-function setcellvalue(r, c, d, v) {
+/**
+ * 设置 cell 的值
+ * @param r rowIndex
+ * @param c colIndex
+ * @param d database = Store.flowdata
+ * @param v value
+ * @param options
+ */
+function setcellvalue(r, c, d, v, options) {
+  options = Object.assign(
+    {
+      silent: false, //  如果为 true 时，不会触发 CellValueUpdated 事件
+      force: false, //  如果为 true 时，将会强行更新（因为如果 cell 值前后一样的话是不会更新的）
+      reRenderCell: false, //  是否重新渲染单元格，默认情况下是不渲染，因为 luckysheet 内部调用时会自动重新渲染整个表格
+    },
+    options
+  );
+
   if (d == null) {
     d = Store.flowdata;
   }
-  // 若采用深拷贝，初始化时的单元格属性丢失
-  // let cell = $.extend(true, {}, d[r][c]);
-  // let cell = d[r][c];
 
-  updateSpecificCellData(r, c, v);
-
+  //  如果值存在，代表着这是个更新的操作，反之为初始化数据库
   if (d[r][c]) {
+    let newValue = v;
+    //  如果是 '[]' 或者 '{}' 都认定为空字符串
+    let emptyLikeStringArr = ["[]", "{}"];
+    newValue = !!~emptyLikeStringArr.indexOf(newValue) ? "" : newValue;
+    //  判断值是否一样，如果前后的值一样跳过更新
+    const oldValue = d[r][c].v;
+    if (oldValue === v || (newValue === oldValue && oldValue === "")) {
+      if (!options.force) {
+        return;
+      }
+    }
+
+    //  判断是否是 readonly 字段，如果是跳过更新
+    const column = getColumnByColIndex(c);
+    if (column.readonly && !options.force) {
+      return;
+    }
+
+    updateSpecificCellData(r, c, v);
+    if (!options.silent) {
+      const column = getColumnByColIndex(c);
+      const row = getCellDataRowByRowIndex(r);
+      Store.$emit("CellValueUpdated", {
+        rowIndex: r,
+        colIndex: c,
+        value: v,
+        rowId: row.id,
+        colId: column.id,
+        row: row,
+        column: column,
+      });
+    }
+
     d[r][c].v = v;
+    options.reRenderCell && reFreshCellByCoord(r, c);
   } else {
     d[r][c] = {
       ct: { fa: "@", t: "s" },

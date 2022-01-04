@@ -31,6 +31,7 @@ import locale from "../locale/locale";
 import { enterKeyControll } from "./inlineString";
 import Store from "../store";
 import {pasteFromClipboard} from "./hooks/useGsClipboard";
+import {deleteCurrentSelection} from "../global/apiHelper";
 
 let luckysheet_shiftkeydown = false;
 
@@ -1038,7 +1039,7 @@ export function keyboardInitial() {
           if (imageCtrl.currentImgId != null) {
             imageCtrl.removeImgItem();
           } else {
-            $("#luckysheet-delete-text").click();
+            deleteCurrentSelection()
           }
 
           event.preventDefault();
@@ -1101,7 +1102,10 @@ export function keyboardInitial() {
 
           luckysheetMoveHighlightCell("right", 1, "rangeOfSelect");
           event.preventDefault();
-        } else if (
+        }
+
+        //  点击任意键进入编辑状态
+   /*     else if (
           !(
             (kcode >= 112 && kcode <= 123) ||
             kcode <= 46 ||
@@ -1143,7 +1147,7 @@ export function keyboardInitial() {
               kcode
             );
           }
-        }
+        }*/
       }
 
       luckysheetactiveCell();

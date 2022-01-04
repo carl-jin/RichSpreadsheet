@@ -102,9 +102,6 @@ RichSpread.create = function (setting: RichSpreadsheetParams) {
   Store.fontList = extendsetting.fontList;
 
   //  事件
-  Store.onReadonlyCellTryToEdit = extendsetting.onReadonlyCellTryToEdit;
-  Store.onCellUpdate = extendsetting.onCellUpdate;
-
   server.gridKey = extendsetting.gridKey;
   server.loadUrl = extendsetting.loadUrl;
   server.updateUrl = extendsetting.updateUrl;

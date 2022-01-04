@@ -3,7 +3,7 @@ import {
   insertRowBottomOrColumnRight,
   deleteRowOrColumn,
 } from "./api";
-import {getCellData, setCellData} from "./apiHelper";
+import {getCellData, getCurrentSheet, setCellData} from "./apiHelper";
 
 /**
  * 向上方插入一行/多行
@@ -62,7 +62,8 @@ export function deleteRowOrColumnCellSync(
 ) {
   //  更新下 cellData
   const cellData = getCellData();
-  cellData.splice(startIndex, endIndex - startIndex + 1);
+  const linesCount = endIndex - startIndex + 1
+  cellData.splice(startIndex, linesCount);
   setCellData(cellData);
 
   deleteRowOrColumn(type, startIndex, endIndex);

@@ -8,14 +8,15 @@ import {
 } from "./api";
 import {
   deepClone,
+  getRowIndexByRowId,
   getRowsIdFromSelectedSave,
 } from "../controllers/hooks/helper";
 import { getCellByRowIndexFromCellData as _getCellByRowIndexFromCellData } from "../controllers/hooks/helper";
 import {
   setCopyToClipboard as _setCopyToClipboard,
   pasteFromClipboard as _pasteFromClipboard,
-  pasteFromClipboard
 } from "../controllers/hooks/useGsClipboard";
+import { setcellvalue as _setcellvalue } from "./setdata";
 
 /**
  * 将 cell 的值与 cellData 同步
@@ -233,6 +234,73 @@ export function setCopyToClipboard(
 /**
  * 从 clipboard 获取数据, 更新到当前选中的单元格
  */
-export async function pasteFromClipboard() {
+export function pasteFromClipboard() {
   return _pasteFromClipboard();
+}
+
+/**
+ * 设置 cell 的值
+ * @param r rowIndex
+ * @param c colIndex
+ * @param v value
+ * @param options
+ */
+export function setCellValue(r, c, v, options = {}) {
+  return _setcellvalue(r, c, null, v, options);
+}
+
+/**
+ * 通过 cellData 中的 rowId 和 colId 来更新值
+ * @param rowId
+ * @param colId
+ * @param value
+ * @param options∏
+ */
+export function setCellValueById(rowId, colId, value, options = {}) {
+  const colIndex = getColumnIndexByColumnId(colId);
+  const rowIndex = getRowIndexByRowId(rowId);
+
+  if (colIndex < 0 || rowIndex < 0) return;
+
+  _setcellvalue(rowIndex, colIndex, null, value, options);
+}
+
+/**
+ * 删除当前所选区域
+ */
+export function deleteCurrentSelection() {
+  if (Store.luckysheet_select_save.length > 0) {
+    for (let s = 0; s < Store.luckysheet_select_save.length; s++) {
+      let r1 = Store.luckysheet_select_save[s].row[0],
+        r2 = Store.luckysheet_select_save[s].row[1];
+      let c1 = Store.luckysheet_select_save[s].column[0],
+        c2 = Store.luckysheet_select_save[s].column[1];
+
+      for (let r = r1; r <= r2; r++) {
+        for (let c = c1; c <= c2; c++) {
+          setCellValue(r, c, "", {
+            reRenderCell: true,
+          });
+        }
+      }
+    }
+  }
+}
+
+/**
+ * 判断这个 rowIndex 存不存在
+ * @param rowIndex
+ */
+export function isRowExisted(rowIndex) {
+  const cellData = getCellData();
+  return !!cellData[rowIndex];
+}
+
+/**
+ * 判断这个 col 存不存在
+ * @param colIndex
+ */
+export function isColExisted(colIndex) {
+  let currentSheet = getCurrentSheet();
+  return !!currentSheet.column[colIndex];
 }

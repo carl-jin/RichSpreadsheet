@@ -1832,6 +1832,7 @@ body:not(.ewa-ipad) .luckysheet-rows-h-cell-sel:hover {
 }
 
 .luckysheet-bottom-controll-row {
+  display: none !important;
   position: absolute;
   height: 30px;
   /*width: 400px;*/
