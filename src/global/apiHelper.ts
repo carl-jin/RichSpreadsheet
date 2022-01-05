@@ -8,7 +8,7 @@ import {
 } from "./api";
 import {
   deepClone,
-  getRowIndexByRowId,
+  getRowIndexByRowId as _getRowIndexByRowId,
   getRowsIdFromSelectedSave,
 } from "../controllers/hooks/helper";
 import { getCellByRowIndexFromCellData as _getCellByRowIndexFromCellData } from "../controllers/hooks/helper";
@@ -258,11 +258,19 @@ export function setCellValue(r, c, v, options = {}) {
  */
 export function setCellValueById(rowId, colId, value, options = {}) {
   const colIndex = getColumnIndexByColumnId(colId);
-  const rowIndex = getRowIndexByRowId(rowId);
+  const rowIndex = _getRowIndexByRowId(rowId);
 
   if (colIndex < 0 || rowIndex < 0) return;
 
   _setcellvalue(rowIndex, colIndex, null, value, options);
+}
+
+/**
+ * 通过 row id 获取当前 index
+ * @param rowId
+ */
+export function getRowIndexByRowId(rowId) {
+  return _getRowIndexByRowId(rowId);
 }
 
 /**

@@ -5,7 +5,10 @@ import server from "../controllers/server";
 import luckysheetConfigsetting from "../controllers/luckysheetConfigsetting";
 import Store from "../store";
 import { getColumnByColIndex, updateSpecificCellData } from "./apiHelper";
-import { getCellDataRowByRowIndex } from "../controllers/hooks/helper";
+import {
+  deepClone,
+  getCellDataRowByRowIndex,
+} from "../controllers/hooks/helper";
 import { reFreshCellByCoord } from "../customCell/helper/baseMethods";
 
 /**
@@ -62,6 +65,7 @@ function setcellvalue(r, c, d, v, options) {
         colId: column.id,
         row: row,
         column: column,
+        oldValue: oldValue,
       });
     }
 

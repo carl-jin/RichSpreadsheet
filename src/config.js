@@ -12,7 +12,7 @@ export default {
   showtoolbar: true, //是否第二列显示工具栏
   showinfobar: true, //是否显示顶部名称栏
   showsheetbar: true, //是否显示底部表格名称区域
-  showstatisticBar: true, //是否显示底部计数栏
+  showstatisticBar: false, //是否显示底部计数栏
   pointEdit: false, //是否是编辑器插入表格模式
   pointEditUpdate: null, //编辑器表格更新函数
   cellSpace: [2, 6], //  单元格 padding

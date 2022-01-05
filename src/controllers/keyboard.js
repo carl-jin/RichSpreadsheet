@@ -798,7 +798,7 @@ export function keyboardInitial() {
             event.stopPropagation();
             return;
           } else if (kcode == 88) {
-            //Ctrl + X  剪切
+          /*  //Ctrl + X  剪切
             //复制时存在格式刷状态，取消格式刷
             if (menuButton.luckysheetPaintModelOn) {
               menuButton.cancelPaintModel();
@@ -851,18 +851,19 @@ export function keyboardInitial() {
             luckysheetactiveCell();
 
             event.stopPropagation();
+            */
             return;
           } else if (kcode == 90) {
             //Ctrl + Z  撤销
-            controlHistory.redo(event);
-            luckysheetactiveCell();
-            event.stopPropagation();
+            // controlHistory.redo(event);
+            // luckysheetactiveCell();
+            // event.stopPropagation();
             return;
           } else if (kcode == 89) {
             //Ctrl + Y  重做
-            controlHistory.undo(event);
-            luckysheetactiveCell();
-            event.stopPropagation();
+            // controlHistory.undo(event);
+            // luckysheetactiveCell();
+            // event.stopPropagation();
             return;
           } else if (kcode == keycode.UP) {
             //Ctrl + up  调整单元格
@@ -910,40 +911,40 @@ export function keyboardInitial() {
             luckysheetMoveHighlightCell2("right", "rangeOfSelect");
           } else if (kcode == 186) {
             //Ctrl + ; 填充系统日期
-            let last =
-              Store.luckysheet_select_save[
-                Store.luckysheet_select_save.length - 1
-              ];
-            let row_index = last["row_focus"],
-              col_index = last["column_focus"];
-            luckysheetupdateCell(row_index, col_index, Store.flowdata, true);
-
-            let value = getNowDateTime(1);
-            $("#luckysheet-rich-text-editor").html(value);
-            luckysheetRangeLast($("#luckysheet-rich-text-editor")[0]);
-            formula.functionInputHanddler(
-              $("#luckysheet-functionbox-cell"),
-              $("#luckysheet-rich-text-editor"),
-              kcode
-            );
+            // let last =
+            //   Store.luckysheet_select_save[
+            //     Store.luckysheet_select_save.length - 1
+            //   ];
+            // let row_index = last["row_focus"],
+            //   col_index = last["column_focus"];
+            // luckysheetupdateCell(row_index, col_index, Store.flowdata, true);
+            //
+            // let value = getNowDateTime(1);
+            // $("#luckysheet-rich-text-editor").html(value);
+            // luckysheetRangeLast($("#luckysheet-rich-text-editor")[0]);
+            // formula.functionInputHanddler(
+            //   $("#luckysheet-functionbox-cell"),
+            //   $("#luckysheet-rich-text-editor"),
+            //   kcode
+            // );
           } else if (kcode == 222) {
             //Ctrl + ' 填充系统时间
-            let last =
-              Store.luckysheet_select_save[
-                Store.luckysheet_select_save.length - 1
-              ];
-            let row_index = last["row_focus"],
-              col_index = last["column_focus"];
-            luckysheetupdateCell(row_index, col_index, Store.flowdata, true);
-
-            let value = getNowDateTime(2);
-            $("#luckysheet-rich-text-editor").html(value);
-            luckysheetRangeLast($("#luckysheet-rich-text-editor")[0]);
-            formula.functionInputHanddler(
-              $("#luckysheet-functionbox-cell"),
-              $("#luckysheet-rich-text-editor"),
-              kcode
-            );
+            // let last =
+            //   Store.luckysheet_select_save[
+            //     Store.luckysheet_select_save.length - 1
+            //   ];
+            // let row_index = last["row_focus"],
+            //   col_index = last["column_focus"];
+            // luckysheetupdateCell(row_index, col_index, Store.flowdata, true);
+            //
+            // let value = getNowDateTime(2);
+            // $("#luckysheet-rich-text-editor").html(value);
+            // luckysheetRangeLast($("#luckysheet-rich-text-editor")[0]);
+            // formula.functionInputHanddler(
+            //   $("#luckysheet-functionbox-cell"),
+            //   $("#luckysheet-rich-text-editor"),
+            //   kcode
+            // );
           } else if (String.fromCharCode(kcode).toLocaleUpperCase() == "A") {
             //Ctrl + A  全选
             // $("#luckysheet-left-top").trigger("mousedown");
@@ -1018,7 +1019,7 @@ export function keyboardInitial() {
             luckysheetMoveHighlightRange("right", 1, "rangeOfSelect");
           } else if (altKey && (kcode == 53 || kcode == 101)) {
             //Alt + Shift + 5（删除线）
-            $("#luckysheet-icon-strikethrough").click();
+            // $("#luckysheet-icon-strikethrough").click();
           }
           // else if (altKey && (kcode == 54 || kcode == 102)) {
           //     //Alt + Shift + 6（删除线）
@@ -1044,8 +1045,8 @@ export function keyboardInitial() {
 
           event.preventDefault();
         } else if (kcode == 8 && imageCtrl.currentImgId != null) {
-          imageCtrl.removeImgItem();
-          event.preventDefault();
+          // imageCtrl.removeImgItem();
+          // event.preventDefault();
         } else if (kcode == keycode.UP) {
           if (
             parseInt($inputbox.css("top")) > 0 ||

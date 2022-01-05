@@ -7,7 +7,7 @@ const luckysheetConfigsetting = {
     showtoolbar: true,
     showinfobar: true,
     showsheetbar: true,
-    showstatisticBar: true,
+    showstatisticBar: false,
     pointEdit: false,
     pointEditUpdate: null,
     pointEditZoom: 1,

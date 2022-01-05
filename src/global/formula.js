@@ -1411,8 +1411,6 @@ const luckysheetformula = {
   updatecell: function (r, c, value, isRefresh = true) {
     let _this = this;
     let curv = Store.flowdata[r][c];
-    // Store old value for hook function
-    const oldValue = JSON.stringify(curv);
 
     const currentSheet =
       Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
@@ -1454,21 +1452,6 @@ const luckysheetformula = {
       jfrefreshgrid(d, [{ row: [r, r], column: [c, c] }], {}, false);
       // Store.luckysheetCellUpdate.length = 0; //clear array
       _this.execFunctionGlobalData = null; //销毁
-
-      //  判断是否通过了数据验证
-      if (detectIsPassDataVerification(c, r)) {
-        const column = getColumnByColIndex(c);
-        const row = getCellDataRowByRowIndex(r);
-        Store.$emit("CellValueUpdated", {
-          rowIndex: r,
-          colIndex: c,
-          value: Store.flowdata[r][c].v,
-          rowId: row.id,
-          colId: column.id,
-          row: row,
-          column: column,
-        });
-      }
     } else {
       return {
         data: d,
