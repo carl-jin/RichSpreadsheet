@@ -4,7 +4,8 @@ declare global {
     //  分别在文件 B C 中引入时，得到的却是两个不一样的 a
     //  所以在模块中将常量放到 window 上
     __luckysheetFreezen: any;
-    __Store:any;
+    __Store: any;
+    __luckysheetDropCell: any;
   }
 }
 import "./css/index.less";

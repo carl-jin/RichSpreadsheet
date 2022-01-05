@@ -4,7 +4,11 @@ import { genarate, update } from "./format";
 import server from "../controllers/server";
 import luckysheetConfigsetting from "../controllers/luckysheetConfigsetting";
 import Store from "../store";
-import { getColumnByColIndex, updateSpecificCellData } from "./apiHelper";
+import {
+  getColumnByColIndex,
+  getOutputFromColumnTransformerParseValueToDataByValue,
+  updateSpecificCellData,
+} from "./apiHelper";
 import {
   deepClone,
   getCellDataRowByRowIndex,
@@ -35,6 +39,10 @@ function setcellvalue(r, c, d, v, options) {
 
   //  如果值存在，代表着这是个更新的操作，反之为初始化数据库
   if (d[r][c]) {
+    //  这个 v 需要经过 transformer 处理才能放入数据
+    let colId = getColumnByColIndex(c).id;
+    v = getOutputFromColumnTransformerParseValueToDataByValue(colId, v);
+
     let newValue = v;
     //  如果是 '[]' 或者 '{}' 都认定为空字符串
     let emptyLikeStringArr = ["[]", "{}"];

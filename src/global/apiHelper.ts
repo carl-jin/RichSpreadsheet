@@ -116,6 +116,17 @@ export function getColumnByColIndex(colIndex) {
 }
 
 /**
+ * 获取 column 通过 colId
+ * @param colId
+ */
+export function getColumnById(colId) {
+  const colIndex = getColumnIndexByColumnId(colId);
+  let currentSheet = getCurrentSheet();
+
+  return currentSheet.column[colIndex];
+}
+
+/**
  * 设置 cellData
  * @param data
  */
@@ -311,4 +322,40 @@ export function isRowExisted(rowIndex) {
 export function isColExisted(colIndex) {
   let currentSheet = getCurrentSheet();
   return !!currentSheet.column[colIndex];
+}
+
+/**
+ * 通过 value 值获取指定 column 下的 transformer 中 ParseValueToData 转换后的数据
+ * @param colId
+ * @param value
+ */
+export function getOutputFromColumnTransformerParseValueToDataByValue(
+  colId,
+  value
+) {
+  const column = getColumnById(colId);
+  if (!column) return value;
+
+  const transformer = Store.cellTransformer[column.type];
+  if (!transformer) return value;
+
+  return transformer.parseValueToData(value, column.cellParams);
+}
+
+/**
+ * 通过 value 值获取指定 column 下的 transformer 中 FormatValueFromData 转换后的数据
+ * @param colId
+ * @param value
+ */
+export function getOutputFromColumnTransformerFormatValueFromDataByValue(
+  colId,
+  value
+) {
+  const column = getColumnById(colId);
+  if (!column) return value;
+
+  const transformer = Store.cellTransformer[column.type];
+  if (!transformer) return value;
+
+  return transformer.formatValueFromData(value, column.cellParams);
 }

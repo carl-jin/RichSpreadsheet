@@ -3583,8 +3583,8 @@ export default function luckysheetHandler() {
       .find(".luckysheet-cs-fillhandle")
       .css("cursor", "crosshair")
       .end()
-      .find(".luckysheet-cs-draghandle")
-      .css("cursor", "move");
+      // .find(".luckysheet-cs-draghandle")
+      // .css("cursor", "move");
     $(
       "#luckysheet-cell-main, #luckysheetTableContent, #luckysheet-sheettable_0"
     ).css("cursor", "default");
@@ -4392,7 +4392,7 @@ export default function luckysheetHandler() {
         column: $.extend(true, [], last["column"]),
       };
       //applyType
-      let typeItemHide = luckysheetDropCell.typeItemHide();
+/*      let typeItemHide = luckysheetDropCell.typeItemHide();
 
       if (
         !typeItemHide[0] &&
@@ -4406,7 +4406,9 @@ export default function luckysheetHandler() {
         luckysheetDropCell.applyType = "0";
       } else {
         luckysheetDropCell.applyType = "1";
-      }
+      }*/
+      //0复制单元格，1填充序列，2仅填充格式，3不带格式填充，4以天数填充，5以工作日填充，6以月填充，7以年填充，8以中文小写数字序列填充
+      luckysheetDropCell.applyType = "0";
 
       if (
         Math.abs(row_index_original - row_index) >
@@ -4556,7 +4558,7 @@ export default function luckysheetHandler() {
   );
 
   //选区拖动替换
-  $("#luckysheet-cell-main div.luckysheet-cs-draghandle").mousedown(function (
+  /*$("#luckysheet-cell-main div.luckysheet-cs-draghandle").mousedown(function (
     event
   ) {
     if (isEditMode() || Store.allowEdit === false) {
@@ -4568,8 +4570,8 @@ export default function luckysheetHandler() {
       .find(".luckysheet-cs-fillhandle")
       .css("cursor", "move")
       .end()
-      .find(".luckysheet-cs-draghandle")
-      .css("cursor", "move");
+      // .find(".luckysheet-cs-draghandle")
+      // .css("cursor", "move");
     $(
       "#luckysheet-cell-main, #luckysheetTableContent, #luckysheet-sheettable_0"
     ).css("cursor", "move");
@@ -4601,7 +4603,7 @@ export default function luckysheetHandler() {
     });
 
     event.stopPropagation();
-  });
+  });*/
 
   //选区下拉
   $("#luckysheet-cell-main div.luckysheet-cs-fillhandle")
@@ -4655,7 +4657,7 @@ export default function luckysheetHandler() {
       clearTimeout(Store.luckysheet_cell_selected_extend_time);
       event.stopPropagation();
     })
-    .dblclick(function () {
+    /*.dblclick(function () {
       let last = Store.luckysheet_select_save[0];
 
       let r0 = last.row[0],
@@ -4663,9 +4665,9 @@ export default function luckysheetHandler() {
         c0 = last.column[0],
         c1 = last.column[1];
 
-      /*    if (pivotTable.isPivotRange(r0, c0)) {
+      /!*    if (pivotTable.isPivotRange(r0, c0)) {
         return;
-      }*/
+      }*!/
 
       let dropCellState = false;
       let step = 0;
@@ -4782,7 +4784,7 @@ export default function luckysheetHandler() {
       }, 500);
 
       event.stopPropagation();
-    });
+    });*/
 
   //
   $(
