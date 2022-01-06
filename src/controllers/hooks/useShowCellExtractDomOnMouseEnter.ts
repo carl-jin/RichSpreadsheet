@@ -8,7 +8,7 @@
 //  全局搜索 removeCellExtractDom 方法
 
 import { createColumnCellRendererParamsViaMouseDetail } from "./helper";
-import freezen from '../freezen'
+import freezen from "../freezen";
 
 enum ClassName {
   NAME = "rich-spreadsheet-cell-extract-dom",
@@ -46,15 +46,16 @@ function RenderDom(
     top = params.positionY;
   }
 
-  let [newLeft,isNewColPreInFrozen,mainScrollLeft] = freezen.getAdaptOffsetLeftInfo(left)
-  left = newLeft + (isNewColPreInFrozen ? mainScrollLeft : 0)
+  let [newLeft, isNewColPreInFrozen, mainScrollLeft] =
+    freezen.getAdaptOffsetLeftInfo(left);
+  left = newLeft + (isNewColPreInFrozen ? mainScrollLeft : 0);
 
   $el.css({
     position: "absolute",
-    background: "#f0fdfb",
+    background: "#f8fdfc",
     "box-shadow":
       "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
-    "border-radius": "4px",
+    "border-radius": "2px",
     border: "1px solid #ccc",
     "z-index": 1000,
     "font-size": "14px",
@@ -62,6 +63,7 @@ function RenderDom(
     left: 0,
     top: 0,
     opacity: 0,
+    color: "#000",
   });
 
   $el.appendTo($("#luckysheet"));
@@ -81,7 +83,8 @@ function RenderDom(
 
   //  底部溢出
   if (top + elHeight + 20 > boxHeight) {
-    top = params.positionY - elHeight;
+    // top = params.positionY - elHeight;
+    top = top - (top + elHeight + 20 - boxHeight);
   }
 
   $(el).css({
@@ -89,7 +92,7 @@ function RenderDom(
     top,
   });
 
-  $el.css('opacity',1);
+  $el.css("opacity", 1);
 }
 
 /**
@@ -172,7 +175,9 @@ export function useShowCellExtractDomOnMouseEnter(mouseDetail, event) {
       }
     }
 
-    const DOM = Render.showExtractDomOnMouseEnter ? Render.showExtractDomOnMouseEnter(params) : false;
+    const DOM = Render.showExtractDomOnMouseEnter
+      ? Render.showExtractDomOnMouseEnter(params)
+      : false;
     if (DOM === false) return;
 
     if (DOM instanceof HTMLElement) {
@@ -184,5 +189,5 @@ export function useShowCellExtractDomOnMouseEnter(mouseDetail, event) {
         RenderDom(key, DOM[key], params);
       });
     }
-  }, 400);
+  }, 100);
 }

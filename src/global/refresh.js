@@ -1287,7 +1287,7 @@ function jfrefreshgrid_rhcw(rowheight, colwidth, isRefreshCanvas = true) {
 
 //Refresh the canvas display data according to scrollHeight and scrollWidth
 function luckysheetrefreshgrid(scrollWidth, scrollHeight) {
-  formula.groupValuesRefresh();
+  // formula.groupValuesRefresh();
 
   if (scrollWidth == null) {
     scrollWidth = $("#luckysheet-cell-main").scrollLeft();

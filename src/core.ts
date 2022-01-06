@@ -29,6 +29,7 @@ import { selectHightlightShow } from "./controllers/select";
 import { zoomInitial } from "./controllers/zoom";
 import { printInitial } from "./controllers/print";
 import method from "./global/method";
+import { handlerFrozenOverflow } from "./utils/hacks.js";
 
 import * as api from "./global/api";
 
@@ -196,6 +197,14 @@ RichSpread.create = function (setting: RichSpreadsheetParams) {
   Store.loadingObj = loadingObj;
 
   sheetmanage.initialjfFile(menu, title);
+
+
+  //  加个 timeout 不然用户在 .create 之后绑定事件的话，监听不到
+  setTimeout(() => {
+    //  如果冻结区域超出显示范围则取消冻结
+    handlerFrozenOverflow(Store);
+  }, 300);
+
   // luckysheetsizeauto();
   initialWorkBook();
 };

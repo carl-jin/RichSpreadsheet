@@ -7,6 +7,7 @@
 //  CellValueUpdated     cell 的值发生了改变
 //  CantEditReadonly     无法编辑只读 column
 //  sheetEmptied         sheet 一条数据都没有时触发
+//  cancelFrozenAutomatically 自动取消冻结（当冻结区域溢出时触发）
 
 export function useEventManager() {
   let evenList = {};
