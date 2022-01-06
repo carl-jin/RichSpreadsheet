@@ -8,6 +8,7 @@ import { jfrefreshgrid } from './refresh';
 import {checkProtectionAuthorityNormal} from '../controllers/protection';
 import Store from '../store';
 import numeral from 'numeral';
+import {getCellData, regenerateCellDataByFlowData} from "./apiHelper";
 
 //数据排序方法
 export function orderbydata(data, index, isAsc) {
@@ -375,4 +376,5 @@ export function sortColumnSeletion(colIndex, isAsc) {
     }
 
     jfrefreshgrid(d, [{ "row": [str, edr], "column": [c1, c2] }], allParam);
+    regenerateCellDataByFlowData(d)
 }

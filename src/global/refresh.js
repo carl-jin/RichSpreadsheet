@@ -665,6 +665,10 @@ function jfrefreshgrid_adRC(
   // server.saveParam("all", Store.currentSheetIndex, file.hyperlink, { "k": "hyperlink" });
 
   //行高、列宽刷新
+  if(!Store.flowdata[0]){
+    Store.$emit("sheetEmptied")
+    return
+  }
   jfrefreshgrid_rhcw(Store.flowdata.length, Store.flowdata[0].length);
 }
 

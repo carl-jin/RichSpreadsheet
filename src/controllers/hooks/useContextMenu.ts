@@ -58,6 +58,10 @@ function renderContextMenu(type: ContextMenuType) {
   });
 
   $menu.append(div);
+
+  if(options.length === 0){
+    $("#luckysheet-rightclick-menu").hide()
+  }
 }
 
 /**

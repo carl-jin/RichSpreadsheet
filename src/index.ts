@@ -26,6 +26,5 @@ export * from "./type";
 export * from "./customCell/helper/drawHelper";
 export * from "./global/apiCellSync";
 export * from "./global/apiHelper";
-export * from "./global/sort";
 import { RichSpread } from "./core";
 export { RichSpread };

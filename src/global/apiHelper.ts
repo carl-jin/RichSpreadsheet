@@ -17,6 +17,30 @@ import {
   pasteFromClipboard as _pasteFromClipboard,
 } from "../controllers/hooks/useGsClipboard";
 import { setcellvalue as _setcellvalue } from "./setdata";
+import { sortColumnSeletion as _sortColumnSeletion } from "./sort";
+
+/**
+ * 根据 flowData 更新 cellData
+ * @param data
+ */
+type cellData = {
+  v: any;
+  columnId: string;
+  rowId: string;
+};
+export function regenerateCellDataByFlowData(data: cellData[][]) {
+  let newCellData = [];
+  data.map((row) => {
+    let newRow = {};
+    row.map(({ rowId, columnId, v }) => {
+      newRow[columnId] = v;
+    });
+    newRow.id = row[0].rowId;
+    newCellData.push(newRow);
+  });
+
+  setCellData(deepClone(newCellData));
+}
 
 /**
  * 将 cell 的值与 cellData 同步
@@ -358,4 +382,11 @@ export function getOutputFromColumnTransformerFormatValueFromDataByValue(
   if (!transformer) return value;
 
   return transformer.formatValueFromData(value, column.cellParams);
+}
+
+/**
+ * 排序一列数据
+ */
+export function sortColumnSelection(colIndex, isAsc) {
+  return _sortColumnSeletion(colIndex, isAsc);
 }

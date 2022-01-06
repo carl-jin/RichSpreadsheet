@@ -11,6 +11,8 @@ import Store from "../store";
 import locale from "../locale/locale";
 import { luckysheetrefreshgrid } from "../global/refresh";
 import method from "../global/method";
+import {cancelFrozen} from "../global/api";
+import {cancelFrozenHacks} from "../global/apiHelper";
 
 const luckysheetFreezen = window.__luckysheetFreezen = window.__luckysheetFreezen
   ? window.__luckysheetFreezen
@@ -260,6 +262,19 @@ const luckysheetFreezen = window.__luckysheetFreezen = window.__luckysheetFreeze
           if (currentSheet.freezen?.horizontal?.freezenhorizontaldata) {
             currentSheet.frozen.range.row_focus =
               currentSheet.freezen.horizontal.freezenhorizontaldata[1] - 1;
+          }
+
+          //  如果用户拖拽 冻结条 到最开始（他想通过这种方式取消冻结)
+          //  则会出现 column_focus = -1 或者 row_focus = -1 的情况
+          if(currentSheet.frozen.range){
+            if(currentSheet.frozen.range.column_focus < 0){
+              cancelFrozenHacks('column')
+              return;
+            }
+            if(currentSheet.frozen.range.row_focus < 0){
+              cancelFrozenHacks('row')
+              return
+            }
           }
 
           Store.$emit("FrozenChanged", currentSheet.frozen);

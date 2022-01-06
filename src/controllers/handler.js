@@ -224,8 +224,11 @@ export default function luckysheetHandler() {
     let colscroll = 0;
     let rowscroll = 0;
 
-    let scrollNum = event.deltaFactor < 40 ? 1 : event.deltaFactor < 80 ? 2 : 3;
-    //一次滚动三行或三列
+    // let scrollNum = event.deltaFactor < 40 ? 1 : event.deltaFactor < 80 ? 2 : 3;
+    //  判断鼠标滚动速度
+    let scrollNum =
+      Math.ceil(Math.abs(event.originalEvent.wheelDelta) / 100) - 1;
+
     if (event.deltaY != 0) {
       let row_ed,
         step = Math.round(scrollNum / Store.zoomRatio);
@@ -257,13 +260,13 @@ export default function luckysheetHandler() {
 
       // if((isMac && event.deltaX >0 ) || (!isMac && event.deltaX < 0)){
       if (event.deltaX > 0) {
-        scrollLeft = scrollLeft + 20 * Store.zoomRatio;
+        scrollLeft = scrollLeft + 20 * Store.zoomRatio * scrollNum;
 
         // if(col_ed >= visibledatacolumn_c.length){
         //     col_ed = visibledatacolumn_c.length - 1;
         // }
       } else {
-        scrollLeft = scrollLeft - 20 * Store.zoomRatio;
+        scrollLeft = scrollLeft - 20 * Store.zoomRatio * scrollNum;
 
         // if(col_ed < 0){
         //     col_ed = 0;
@@ -2037,11 +2040,12 @@ export default function luckysheetHandler() {
           let left = 0,
             width = 0,
             columnseleted = [];
-          let lastLeft = last.left
-          let [new_last_left, isInFrozen, scrollLeft] = freezen.getAdaptOffsetLeftInfo(lastLeft);
+          let lastLeft = last.left;
+          let [new_last_left, isInFrozen, scrollLeft] =
+            freezen.getAdaptOffsetLeftInfo(lastLeft);
           //  todo 这里往左拖还是有 bug
-          lastLeft = new_last_left - (isInFrozen ? scrollLeft : 0)
-          last.left = lastLeft
+          lastLeft = new_last_left - (isInFrozen ? scrollLeft : 0);
+          last.left = lastLeft;
 
           if (last.left > col_pre) {
             left = col_pre;
@@ -3482,9 +3486,9 @@ export default function luckysheetHandler() {
     $("#luckysheet-cell-selected")
       .find(".luckysheet-cs-fillhandle")
       .css("cursor", "crosshair")
-      .end()
-      // .find(".luckysheet-cs-draghandle")
-      // .css("cursor", "move");
+      .end();
+    // .find(".luckysheet-cs-draghandle")
+    // .css("cursor", "move");
     $(
       "#luckysheet-cell-main, #luckysheetTableContent, #luckysheet-sheettable_0"
     ).css("cursor", "default");
@@ -4292,7 +4296,7 @@ export default function luckysheetHandler() {
         column: $.extend(true, [], last["column"]),
       };
       //applyType
-/*      let typeItemHide = luckysheetDropCell.typeItemHide();
+      /*      let typeItemHide = luckysheetDropCell.typeItemHide();
 
       if (
         !typeItemHide[0] &&
@@ -4556,8 +4560,8 @@ export default function luckysheetHandler() {
     .click(function () {
       clearTimeout(Store.luckysheet_cell_selected_extend_time);
       event.stopPropagation();
-    })
-    /*.dblclick(function () {
+    });
+  /*.dblclick(function () {
       let last = Store.luckysheet_select_save[0];
 
       let r0 = last.row[0],
