@@ -8,6 +8,7 @@
 //  全局搜索 removeCellExtractDom 方法
 
 import { createColumnCellRendererParamsViaMouseDetail } from "./helper";
+import freezen from '../freezen'
 
 enum ClassName {
   NAME = "rich-spreadsheet-cell-extract-dom",
@@ -45,6 +46,9 @@ function RenderDom(
     top = params.positionY;
   }
 
+  let [newLeft,isNewColPreInFrozen,mainScrollLeft] = freezen.getAdaptOffsetLeftInfo(left)
+  left = newLeft + (isNewColPreInFrozen ? mainScrollLeft : 0)
+
   $el.css({
     position: "absolute",
     background: "#f0fdfb",
@@ -52,7 +56,7 @@ function RenderDom(
       "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
     "border-radius": "4px",
     border: "1px solid #ccc",
-    "z-index": 33,
+    "z-index": 1000,
     "font-size": "14px",
     "user-select": "auto",
     left: 0,

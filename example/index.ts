@@ -197,6 +197,13 @@ function create() {
         column: cols,
         row: rows.length + 2,
         celldata: rows,
+        frozen: {
+          type: "rangeColumn",
+          range: {
+            row_focus: 0,
+            column_focus: 2,
+          },
+        },
         config: {
           columnlen: {
             0: 320,

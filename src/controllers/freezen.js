@@ -756,6 +756,26 @@ const luckysheetFreezen = window.__luckysheetFreezen = window.__luckysheetFreeze
           _this.scrollAdaptOffilteroptions();
         }
       },
+    getAdaptOffsetLeftInfo : function(x){
+      let scrollLeft = $("#luckysheet-cell-main").scrollLeft();
+      if (this.freezenverticaldata === null) return [x, false, scrollLeft];
+      let freezenLeft = this.freezenverticaldata[0];
+      let offLeft = scrollLeft - this.freezenverticaldata[2];
+
+      let left_move = x;
+      let isInFrozen = false;
+
+      if (x <= freezenLeft) {
+        isInFrozen = true;
+      } else if (x - offLeft < freezenLeft) {
+        left_move = left_move - offLeft;
+        isInFrozen = true;
+      } else {
+        // console.log('冻结区域外')
+      }
+
+      return [left_move, isInFrozen, scrollLeft];
+    },
       scrollAdaptOfselect: function () {
         let _this = this;
 

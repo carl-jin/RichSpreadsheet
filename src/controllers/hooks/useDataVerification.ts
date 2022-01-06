@@ -16,6 +16,7 @@ import { rowLocationByIndex, colLocationByIndex } from "../../global/location";
 import luckysheetConfigsetting from "../luckysheetConfigsetting";
 import Store from "../../store";
 import { getSheetIndex } from "../../methods/get";
+import freezen from '../freezen'
 
 enum ClassName {
   NAME = "rich-spreadsheet-cell-data-verification",
@@ -184,6 +185,9 @@ export function useDataVerification(r, c) {
   $el.html(html);
 
   let left = positionX;
+  let [newLeft,isNewColPreInFrozen,mainScrollLeft] = freezen.getAdaptOffsetLeftInfo(left)
+  left = newLeft + (isNewColPreInFrozen ? mainScrollLeft : 0)
+
   let top = positionY + cellHeight;
 
   $el.css({
@@ -194,7 +198,7 @@ export function useDataVerification(r, c) {
       "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
     "border-radius": "2px",
     border: "1px solid #ccc",
-    "z-index": 44,
+    "z-index": 1001,
     "font-size": "14px",
     "user-select": "auto",
     left: 0,

@@ -9,6 +9,7 @@ import Store from '../store';
 import method from '../global/method';
 import locale from '../locale/locale';
 import { refreshMenuButtonFocus } from "../global/api";
+import freezen from "./freezen";
 
 //公式函数 选区实体框
 function seletedHighlistByindex(id, r1, r2, c1, c2) {
@@ -71,6 +72,12 @@ function selectHightlightShow(isRestore = false) {
                 col_pre_f = margeset.column[0];
             }
 
+            let [new_col_pref_f, isInFrozen, scrollLeft] = freezen.getAdaptOffsetLeftInfo(col_pre_f);
+            col_pre_f = new_col_pref_f + (isInFrozen ? scrollLeft : 0)
+            col_f = col_f + (isInFrozen ? scrollLeft : 0)
+            col_pre = col_pre + (isInFrozen ? scrollLeft : 0)
+            col = col + (isInFrozen ? scrollLeft : 0)
+
             Store.luckysheet_select_save[i]["row"] = [r1, r2];
             Store.luckysheet_select_save[i]["column"] = [c1, c2];
 
@@ -89,42 +96,22 @@ function selectHightlightShow(isRestore = false) {
 
             if (i == 0) {
                 if (Store.luckysheet_select_save.length == 1) {
-                    if (browser.mobilecheck()) {//移动端
-                        $("#luckysheet-cell-selected-boxs #luckysheet-cell-selected").css({
-                            "left": Store.luckysheet_select_save[i]["left_move"],
-                            "width": Store.luckysheet_select_save[i]["width_move"],
-                            "top": Store.luckysheet_select_save[i]["top_move"],
-                            "height": Store.luckysheet_select_save[i]["height_move"],
-                            "display": "block",
-                            "border": "1px solid #0188fb"
-                        })
-                            .find(".luckysheet-cs-draghandle")
-                            .css("display", "block")
-                            .end()
-                            .find(".luckysheet-cs-fillhandle")
-                            .css("display", "none")
-                            .end()
-                            .find(".luckysheet-cs-touchhandle")
-                            .css("display", "block");
-                    }
-                    else {
-                        $("#luckysheet-cell-selected-boxs #luckysheet-cell-selected").css({
-                            "left": Store.luckysheet_select_save[i]["left_move"],
-                            "width": Store.luckysheet_select_save[i]["width_move"],
-                            "top": Store.luckysheet_select_save[i]["top_move"],
-                            "height": Store.luckysheet_select_save[i]["height_move"],
-                            "display": "block",
-                            "border": "1px solid #0188fb"
-                        })
-                            .find(".luckysheet-cs-draghandle")
-                            .css("display", "block")
-                            .end()
-                            .find(".luckysheet-cs-fillhandle")
-                            .css("display", "block")
-                            .end()
-                            .find(".luckysheet-cs-touchhandle")
-                            .css("display", "none");
-                    }
+                    $("#luckysheet-cell-selected-boxs #luckysheet-cell-selected").css({
+                        "left": Store.luckysheet_select_save[i]["left_move"],
+                        "width": Store.luckysheet_select_save[i]["width_move"],
+                        "top": Store.luckysheet_select_save[i]["top_move"],
+                        "height": Store.luckysheet_select_save[i]["height_move"],
+                        "display": "block",
+                        "border": "1px solid #0188fb"
+                    })
+                      .find(".luckysheet-cs-draghandle")
+                      .css("display", "block")
+                      .end()
+                      .find(".luckysheet-cs-fillhandle")
+                      .css("display", "block")
+                      .end()
+                      .find(".luckysheet-cs-touchhandle")
+                      .css("display", "none");
                 }
                 else {
                     $("#luckysheet-cell-selected-boxs #luckysheet-cell-selected").css({
@@ -239,7 +226,13 @@ function selectTitlesShow(rangeArr, isRestore = false) {
     let columnTitleRange = selectTitlesRange(columnTitleMap);
     for (let j = 0; j < columnTitleRange.length; j++) {
         let c1 = columnTitleRange[j][0], c2 = columnTitleRange[j][columnTitleRange[j].length - 1];
-        let col = colLocationByIndex(c2)[1], col_pre = colLocationByIndex(c1)[0];
+        let col = colLocationByIndex(c2)[1]
+        let col_pre = colLocationByIndex(c1)[0];
+
+        let [new_col_pre,isNewColPreInFrozen,scrollLeft] = freezen.getAdaptOffsetLeftInfo(col_pre)
+        let [new_col] = freezen.getAdaptOffsetLeftInfo(col)
+        col_pre = new_col_pre + (isNewColPreInFrozen ? scrollLeft : 0)
+        col = new_col + (isNewColPreInFrozen ? scrollLeft : 0)
 
         $("#luckysheet-cols-h-selected").append('<div class="luckysheet-cols-h-selected" style="left: ' + col_pre + 'px; width: ' + (col - col_pre - 1) + 'px; display: block; background-color: rgba(76, 76, 76, 0.1);"></div>');
 

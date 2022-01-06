@@ -61,6 +61,7 @@ import { removeCellExtractDom } from "./hooks/useShowCellExtractDomOnMouseEnter"
 import { removeDataVerificationTooltip } from "./hooks/useDataVerification";
 import { useContextMenu } from "./hooks/useContextMenu";
 import luckysheetFreezen from "./freezen";
+import freezen from "./freezen";
 
 
 export function rowColumnOperationInitial() {
@@ -528,7 +529,7 @@ export function rowColumnOperationInitial() {
       let mouse = mouseposition(event.pageX, event.pageY);
       let x = mouse[0] + $(this).scrollLeft();
 
-  /*    //  **** 兼容冻结列下的鼠标 x 值
+      //  **** 兼容冻结列下的鼠标 x 值
       if (
         luckysheetFreezen.freezenverticaldata != null &&
         mouse[0] <
@@ -536,7 +537,7 @@ export function rowColumnOperationInitial() {
         luckysheetFreezen.freezenverticaldata[2]
       ) {
         x = mouse[0] + luckysheetFreezen.freezenverticaldata[2];
-      }*/
+      }
 
 
       let row_index = Store.visibledatarow.length - 1,
@@ -706,10 +707,26 @@ export function rowColumnOperationInitial() {
       let mouse = mouseposition(event.pageX, event.pageY);
       let x = mouse[0] + $("#luckysheet-cols-h-c").scrollLeft();
 
+      if (
+        luckysheetFreezen.freezenverticaldata != null &&
+        mouse[0] <
+          luckysheetFreezen.freezenverticaldata[0] -
+            luckysheetFreezen.freezenverticaldata[2]
+      ) {
+        x = mouse[0] + luckysheetFreezen.freezenverticaldata[2];
+      }
+
+      let [new_x] = freezen.getAdaptOffsetLeftInfo(x)
+      x = new_x
+
       let col_location = colLocation(x),
         col = col_location[1],
         col_pre = col_location[0],
         col_index = col_location[2];
+
+      let [new_col,isNewColInFrozen,scrollLeft] = freezen.getAdaptOffsetLeftInfo(col)
+      col = new_col + (isNewColInFrozen ? scrollLeft : 0)
+      // console.log(col,isNewColInFrozen,col_index)
 
       $("#luckysheet-cols-h-hover").css({
         left: col_pre,
