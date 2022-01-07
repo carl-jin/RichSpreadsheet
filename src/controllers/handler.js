@@ -172,6 +172,9 @@ export default function luckysheetHandler() {
   let prev, mousewheelArrayUniqueTimeout;
 
   //    表格鼠标滚动
+  $("#luckysheet-grid-window-1").get(0).addEventListener('wheel',ev=>{
+    console.log(getWheelSpeed(ev))
+  })
   $("#luckysheet-grid-window-1").mousewheel(function (event, delta) {
     //  删除掉 cell 额外的dom
     removeCellExtractDom();
@@ -231,11 +234,12 @@ export default function luckysheetHandler() {
     const speedDetail = getWheelSpeed(event.originalEvent);
     let isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
 
+    //  mac 和 window 上 mousewheel 触发的频率还不一样, 这里额外做下兼容
     if (Math.abs(speedDetail.spinY) > 1) {
-      mouseWheelSpeedTimeCount += 1;
+      mouseWheelSpeedTimeCount += isMac ? 1 : 2;
       setTimeout(
         () => {
-          mouseWheelSpeedTimeCount -= 1;
+          mouseWheelSpeedTimeCount -= isMac ? 1 : 2;
         },
         isMac ? 200 : 600
       );
@@ -252,7 +256,12 @@ export default function luckysheetHandler() {
       );
     }
 
-    if (event.deltaY != 0) {
+    if(event.shiftKey && !isMac){
+      event.deltaX = event.deltaY * -1
+      event.detalY = event.deltaX
+    }
+
+    if (event.deltaY != 0 && !event.shiftKey) {
       let row_ed,
         step = Math.round(scrollNum / Store.zoomRatio);
       step = step < 1 ? 1 : step;
@@ -278,27 +287,26 @@ export default function luckysheetHandler() {
 
       $("#luckysheet-scrollbar-y").scrollTop(rowscroll);
     } else if (event.deltaX != 0) {
-      //  todo 横向滚动失效
       let col_ed;
 
-      // if((isMac && event.deltaX >0 ) || (!isMac && event.deltaX < 0)){
-      if (event.deltaX > 0) {
-        scrollLeft = scrollLeft + 20 * Store.zoomRatio * scrollNum;
+      if(event.deltaX > 0){
+        col_ed = col_st + scrollNum;
 
-        // if(col_ed >= visibledatacolumn_c.length){
-        //     col_ed = visibledatacolumn_c.length - 1;
-        // }
-      } else {
-        scrollLeft = scrollLeft - 20 * Store.zoomRatio * scrollNum;
+        if(col_ed >= visibledatacolumn_c.length){
+          col_ed = visibledatacolumn_c.length - 1;
+        }
+      }
+      else{
+        col_ed = col_st - scrollNum;
 
-        // if(col_ed < 0){
-        //     col_ed = 0;
-        // }
+        if(col_ed < 0){
+          col_ed = 0;
+        }
       }
 
-      // colscroll = col_ed == 0 ? 0 : visibledatacolumn_c[col_ed - 1];
+      colscroll = col_ed == 0 ? 0 : visibledatacolumn_c[col_ed - 1];
 
-      $("#luckysheet-scrollbar-x").scrollLeft(scrollLeft);
+      $("#luckysheet-scrollbar-x").scrollLeft(colscroll);
     }
 
     mousewheelArrayUniqueTimeout = setTimeout(() => {
