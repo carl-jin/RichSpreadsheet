@@ -27,7 +27,7 @@ export function luckysheetupdateCell(
 
   //  readonly 状态下禁止修改
   if (column.readonly === true) {
-    Store.$emit('CantEditReadonly');
+    Store.$emit("CantEditReadonly");
     return;
   }
 
@@ -245,10 +245,15 @@ export function luckysheetupdateCell(
 
   $("#luckysheet-input-box").css(input_postition);
   $(".cell-editor-custom-popup").css(
-    Object.assign(input_postition, {
-      position: "absolute",
-      zIndex: 99999,
-    })
+    Object.assign(
+      input_postition,
+      //  稍微偏移以下，不至于盖住 border
+      { left: input_postition.left + 2 + 'px', top: input_postition.top + 2 },
+      {
+        position: "absolute",
+        zIndex: 99999,
+      }
+    )
   );
   $("#luckysheet-rich-text-editor").css(inputContentScale);
 
@@ -256,6 +261,29 @@ export function luckysheetupdateCell(
   formula.createRangeHightlight();
   formula.rangeResizeTo = $("#luckysheet-rich-text-editor");
   cleargridelement();
+
+  //  设置自定义编辑框 size
+  const $customBox = $(".cell-editor-custom");
+  if ($customBox.length === 0) return;
+
+  const { width: boxWidth, height: boxHeight } = $("#luckysheet-input-box")
+    .get(0)
+    .getBoundingClientRect();
+  const { width: inputWidth, height: inputHeight } = $customBox
+    .get(0)
+    .getBoundingClientRect();
+
+  if (boxWidth - inputWidth > 10) {
+    $customBox.css({
+      width: boxWidth,
+    });
+  }
+
+  if (boxHeight - inputHeight > 10) {
+    $customBox.css({
+      height: boxHeight,
+    });
+  }
 }
 
 export function setCenterInputPosition(row_index, col_index, d) {
