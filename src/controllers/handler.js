@@ -85,6 +85,7 @@ import {
 } from "../customCell/helper/tools";
 import { isColExisted, isRowExisted } from "../global/apiHelper";
 import freezen from "./freezen";
+import { getWheelSpeed } from "./hooks/helper/getWheelSpeed";
 // import { createLuckyChart, hideAllNeedRangeShow } from '../expendPlugins/chart/plugin'
 
 export const getMouseRelateCell = (event) => {
@@ -225,9 +226,9 @@ export default function luckysheetHandler() {
     let rowscroll = 0;
 
     // let scrollNum = event.deltaFactor < 40 ? 1 : event.deltaFactor < 80 ? 2 : 3;
+    const speedDetail = getWheelSpeed(event.originalEvent);
     //  判断鼠标滚动速度
-    let scrollNum =
-      Math.ceil(Math.abs(event.originalEvent.wheelDelta) / 100) - 1;
+    let scrollNum = Math.ceil(Math.abs(event.deltaY != 0 ? speedDetail.spinY : speedDetail.spinX));
 
     if (event.deltaY != 0) {
       let row_ed,
