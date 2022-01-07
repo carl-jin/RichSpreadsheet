@@ -229,12 +229,16 @@ export default function luckysheetHandler() {
 
     // let scrollNum = event.deltaFactor < 40 ? 1 : event.deltaFactor < 80 ? 2 : 3;
     const speedDetail = getWheelSpeed(event.originalEvent);
+    let isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
 
     if (Math.abs(speedDetail.spinY) > 1) {
       mouseWheelSpeedTimeCount += 1;
-      setTimeout(() => {
-        mouseWheelSpeedTimeCount -= 1;
-      }, 300);
+      setTimeout(
+        () => {
+          mouseWheelSpeedTimeCount -= 1;
+        },
+        isMac ? 200 : 600
+      );
     }
 
     let scrollNum = 1;
