@@ -31,7 +31,7 @@ type cellData = {
 export function regenerateCellDataByFlowData(data: cellData[][]) {
   let newCellData = [];
   data.map((row) => {
-    let newRow = {};
+    let newRow:any = {};
     row.map(({ rowId, columnId, v }) => {
       newRow[columnId] = v;
     });
