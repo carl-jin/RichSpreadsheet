@@ -289,24 +289,25 @@ export default function luckysheetHandler() {
     } else if (event.deltaX != 0) {
       let col_ed;
 
-      if(event.deltaX > 0){
-        col_ed = col_st + scrollNum;
+      // if((isMac && event.deltaX >0 ) || (!isMac && event.deltaX < 0)){
+      if(event.deltaX >0){
+        scrollLeft = scrollLeft + scrollNum * 20 *Store.zoomRatio;
 
-        if(col_ed >= visibledatacolumn_c.length){
-          col_ed = visibledatacolumn_c.length - 1;
-        }
+        // if(col_ed >= visibledatacolumn_c.length){
+        //     col_ed = visibledatacolumn_c.length - 1;
+        // }
       }
       else{
-        col_ed = col_st - scrollNum;
+        scrollLeft = scrollLeft -  scrollNum * 20 *Store.zoomRatio;
 
-        if(col_ed < 0){
-          col_ed = 0;
-        }
+        // if(col_ed < 0){
+        //     col_ed = 0;
+        // }
       }
 
-      colscroll = col_ed == 0 ? 0 : visibledatacolumn_c[col_ed - 1];
+      // colscroll = col_ed == 0 ? 0 : visibledatacolumn_c[col_ed - 1];
 
-      $("#luckysheet-scrollbar-x").scrollLeft(colscroll);
+      $("#luckysheet-scrollbar-x").scrollLeft(scrollLeft);
     }
 
     mousewheelArrayUniqueTimeout = setTimeout(() => {
