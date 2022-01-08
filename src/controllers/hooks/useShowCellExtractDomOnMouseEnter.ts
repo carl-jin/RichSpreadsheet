@@ -78,7 +78,8 @@ function RenderDom(
 
   //  右侧溢出
   if (left + elWidth + 20 > boxWidth) {
-    left = params.positionX - elWidth;
+    // left = params.positionX - elWidth;
+    left = left - (left + elWidth + 20 - boxWidth);
   }
 
   //  底部溢出

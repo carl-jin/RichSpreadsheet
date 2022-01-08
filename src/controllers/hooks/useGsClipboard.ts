@@ -37,8 +37,20 @@ export async function pasteFromClipboard(shiftKey: boolean = false) {
 
       //  找到对应的转换器
       if (item.type && Store.cellTransformer[type]) {
+        const GSCHandlers = Store.GSClipboardOptions.handlers;
+        let text = "";
+        let html = "";
+        const correspondingHandler = GSCHandlers.find((_item) => _item.type === item.type);
+        if (correspondingHandler) {
+          text = correspondingHandler.toText(item.value);
+          html = correspondingHandler.toHtml(item.value);
+        }
+
         value = Store.cellTransformer[type].parseFromClipboard(
-          item,
+          Object.assign(item, {
+            text: text,
+            html: html,
+          }),
           column.cellParams
         );
         value = Store.cellTransformer[type].parseValueToData(

@@ -73,6 +73,7 @@ export function luckysheetupdateCell(
   }
 
   let input_postition = {
+    opacity: 1,
     "min-width": col - col_pre + 1 - 8,
     "min-height": row - row_pre + 1 - 4,
 
@@ -243,19 +244,24 @@ export function luckysheetupdateCell(
     luckysheetRangeLast($("#luckysheet-rich-text-editor")[0]);
   }
 
+  const isPopup = $(".cell-editor-custom-popup").length > 0;
+
   $("#luckysheet-input-box").css(input_postition);
-  $(".cell-editor-custom-popup").css(
-    Object.assign(
-      input_postition,
-      //  稍微偏移以下，不至于盖住 border
-      { left: input_postition.left + 2 + 'px', top: input_postition.top + 2 },
-      {
-        position: "absolute",
-        zIndex: 99999,
-      }
-    )
-  );
   $("#luckysheet-rich-text-editor").css(inputContentScale);
+
+  if (isPopup) {
+    $(".cell-editor-custom-popup").css({
+      left: input_postition.left,
+      top: input_postition.top,
+      position: "absolute",
+      zIndex: 99999,
+      border: "2px #5292f7 solid",
+      backgroundColor: "#fff",
+    });
+    $("#luckysheet-input-box").css({
+      opacity: 0,
+    });
+  }
 
   formula.rangetosheet = Store.currentSheetIndex;
   formula.createRangeHightlight();
@@ -263,26 +269,72 @@ export function luckysheetupdateCell(
   cleargridelement();
 
   //  设置自定义编辑框 size
-  const $customBox = $(".cell-editor-custom");
-  if ($customBox.length === 0) return;
+  {
+    const $customBox = $(".cell-editor-custom");
+    if ($customBox.length === 0) return;
 
-  const { width: boxWidth, height: boxHeight } = $("#luckysheet-input-box")
-    .get(0)
-    .getBoundingClientRect();
-  const { width: inputWidth, height: inputHeight } = $customBox
-    .get(0)
-    .getBoundingClientRect();
+    const { width: boxWidth, height: boxHeight } = $("#luckysheet-input-box")
+      .get(0)
+      .getBoundingClientRect();
+    const { width: inputWidth, height: inputHeight } = $customBox
+      .get(0)
+      .getBoundingClientRect();
 
-  if (boxWidth - inputWidth > 10) {
-    $customBox.css({
-      width: boxWidth,
-    });
+    if (boxWidth - inputWidth > 10) {
+      $customBox.css({
+        width: boxWidth,
+      });
+    }
+
+    if (boxHeight - inputHeight > 10) {
+      $customBox.css({
+        height: boxHeight,
+      });
+    }
   }
 
-  if (boxHeight - inputHeight > 10) {
-    $customBox.css({
-      height: boxHeight,
-    });
+  //  检测内容是否溢出
+  {
+    setTimeout(() => {
+      //  如果 .cell-editor-custom 和 #luckysheet-rich-text-editor 同级则当前为 popup 状态
+      const isPopup = $(".cell-editor-custom-popup").length > 0;
+      const $container = $("#" + Store.container);
+      const $target = isPopup
+        ? $(".cell-editor-custom-popup")
+        : $("#luckysheet-input-box");
+
+      if ($container.length === 0 || $target.length === 0) return;
+
+      const {
+        left: BLeft,
+        top: BTop,
+        width: BWidth,
+        height: BHeight,
+      } = $container.get(0).getBoundingClientRect();
+      const {
+        left: ELeft,
+        top: ETop,
+        width: EWidth,
+        height: EHeight,
+      } = $target.get(0).getBoundingClientRect();
+
+      //  判断底部是否溢出
+      if (ETop - BTop + EHeight > BHeight) {
+        $(isPopup ? ".cell-editor-custom-popup" : "#luckysheet-input-box").css({
+          top: "auto",
+          bottom: 18,
+        });
+      }
+
+      //  判断右侧是否溢出
+      if (ELeft - BLeft + EWidth > BWidth) {
+        $(isPopup ? ".cell-editor-custom-popup" : "#luckysheet-input-box").css({
+          left: "auto",
+          right: 18 + $(window).outerWidth() - BWidth - BLeft,
+          width: $target.outerWidth(),
+        });
+      }
+    }, 200);
   }
 }
 

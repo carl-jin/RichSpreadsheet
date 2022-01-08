@@ -171,10 +171,6 @@ export default function luckysheetHandler() {
   const locale_info = _locale.info;
   let prev, mousewheelArrayUniqueTimeout;
 
-  //    表格鼠标滚动
-  $("#luckysheet-grid-window-1").get(0).addEventListener('wheel',ev=>{
-    console.log(getWheelSpeed(ev))
-  })
   $("#luckysheet-grid-window-1").mousewheel(function (event, delta) {
     //  删除掉 cell 额外的dom
     removeCellExtractDom();
