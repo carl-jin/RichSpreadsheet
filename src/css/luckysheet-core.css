@@ -2070,14 +2070,14 @@ body:not(.ewa-ipad) .luckysheet-rows-h-cell-sel:hover {
   z-index: 15;
   border: 1px solid #0188fb;
   margin: -1px 0 0 -1px;
-  background: rgba(1, 136, 251, 0);
+  background: rgba(1, 136, 251, .1);
   display: none;
   /*transition: all 0.1s;*/
 }
 
 .luckysheet-cs-inner-border {
   pointer-events: none;
-  border: 1px solid #fff;
+  border: 1px solid #0188fb;
   position: absolute;
   top: 0;
   bottom: 0;
