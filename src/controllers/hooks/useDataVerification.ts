@@ -16,7 +16,13 @@ import { rowLocationByIndex, colLocationByIndex } from "../../global/location";
 import luckysheetConfigsetting from "../luckysheetConfigsetting";
 import Store from "../../store";
 import { getSheetIndex } from "../../methods/get";
-import freezen from '../freezen'
+import freezen from "../freezen";
+import {
+  getColumnByColIndex,
+  getColumnById,
+  getCurrentSheet,
+  getRowIdByRowIndex,
+} from "../../global/apiHelper";
 
 enum ClassName {
   NAME = "rich-spreadsheet-cell-data-verification",
@@ -68,13 +74,77 @@ export function removeDataVerificationTooltip() {
   removeDom();
 }
 
-export function detectIsPassDataVerification(row, col) {
-  return !window.richSpreadSheetDataVerificationCache[`${row}_${col}`];
+export function detectIsPassDataVerificationByIndex(rowIndex, colIndex) {
+  const rowId = getRowIdByRowIndex(rowIndex);
+  const { id: colId } = getColumnByColIndex(colIndex);
+  return detectIsPassDataVerificationById (rowId,colId);
+}
+
+export function detectIsPassDataVerificationById(rowId, colId) {
+  if (window.richSpreadSheetDataVerificationCache[`${rowId}_${colId}`]) {
+    return (
+      window.richSpreadSheetDataVerificationCache[`${rowId}_${colId}`]
+        .length === 0
+    );
+  } else {
+    return true;
+  }
+}
+
+export function getDataVerificationByIndex(rowIndex, colIndex) {
+  const rowId = getRowIdByRowIndex(rowIndex);
+  const { id: colId } = getColumnByColIndex(colIndex);
+  return window.richSpreadSheetDataVerificationCache[`${rowId}_${colId}`]
+    ? window.richSpreadSheetDataVerificationCache[`${rowId}_${colId}`]
+    : [];
+}
+
+/**
+ * 重新检测指定 cell 是否通过验证
+ * @param rowIndex
+ * @param colIndex
+ * @param v
+ */
+export function reVerificationSpecificCellByIndex(
+  rowIndex,
+  colIndex,
+  v = undefined
+) {
+  let file: FileData = getCurrentSheet();
+  if (file.data[rowIndex][colIndex] === null) return;
+  const rowId = getRowIdByRowIndex(rowIndex);
+  const { id: colId } = getColumnByColIndex(colIndex);
+  const column = getColumnById(colId);
+  const key = `${rowId}_${colId}`;
+  const value = v === undefined ? file.data[rowIndex][colIndex].v : v;
+
+  if(!column.dataVerification) return;
+
+  if (window.richSpreadSheetDataVerificationCache[key]) {
+    window.richSpreadSheetDataVerificationCache[key] = [];
+  }
+
+
+  column.dataVerification.map(({ pattern, errorMessage }) => {
+    let isPassed = dataValidate(pattern, value);
+
+    if (!isPassed) {
+      const info = {
+        pattern: pattern,
+        value: value,
+        errorMessage: errorMessage,
+      };
+      if (window.richSpreadSheetDataVerificationCache[key]) {
+        window.richSpreadSheetDataVerificationCache[key].push(info);
+      } else {
+        window.richSpreadSheetDataVerificationCache[key] = [info];
+      }
+    }
+  });
 }
 
 export function useDataVerificationBuildCache() {
-  let file: FileData =
-    Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
+  let file: FileData = getCurrentSheet();
 
   //  清空
   window.richSpreadSheetDataVerificationCache = {};
@@ -90,6 +160,9 @@ export function useDataVerificationBuildCache() {
         if (value !== null) {
           column.dataVerification.map(({ pattern, errorMessage }) => {
             let isPassed = dataValidate(pattern, value);
+            const rowId = getRowIdByRowIndex(row);
+            const { id: colId } = getColumnByColIndex(col);
+            const key = `${rowId}_${colId}`;
 
             if (!isPassed) {
               const info = {
@@ -97,16 +170,10 @@ export function useDataVerificationBuildCache() {
                 value: value,
                 errorMessage: errorMessage,
               };
-              if (
-                window.richSpreadSheetDataVerificationCache[`${row}_${col}`]
-              ) {
-                window.richSpreadSheetDataVerificationCache[
-                  `${row}_${col}`
-                ].push(info);
+              if (window.richSpreadSheetDataVerificationCache[key]) {
+                window.richSpreadSheetDataVerificationCache[key].push(info);
               } else {
-                window.richSpreadSheetDataVerificationCache[`${row}_${col}`] = [
-                  info,
-                ];
+                window.richSpreadSheetDataVerificationCache[key] = [info];
               }
             }
           });
@@ -124,7 +191,8 @@ export function DataVerificationRenderRedTriangleIfDataVerificationFailed(
   CellRenderersParams: CellRenderersParams
 ) {
   const { rowIndex, colIndex, positionX, positionY, ctx } = CellRenderersParams;
-  if (window.richSpreadSheetDataVerificationCache[`${rowIndex}_${colIndex}`]) {
+
+  if (!detectIsPassDataVerificationByIndex(rowIndex, colIndex)) {
     const path = new Path2D();
     const w = 4;
     const h = 4;
@@ -155,10 +223,9 @@ export function useDataVerification(r, c) {
 
   removeDom();
 
-  const cache =
-    window.richSpreadSheetDataVerificationCache[`${row_index}_${col_index}`];
+  const cache = getDataVerificationByIndex(row_index, col_index);
   //  判断是否有缓存, 如果没有的话代表验证通过, 无需继续执行
-  if (!cache) return;
+  if (!cache || cache.length === 0) return;
 
   const cellWidth = col - col_pre - 2;
   const cellHeight = row - row_pre - 1;
@@ -185,8 +252,9 @@ export function useDataVerification(r, c) {
   $el.html(html);
 
   let left = positionX;
-  let [newLeft,isNewColPreInFrozen,mainScrollLeft] = freezen.getAdaptOffsetLeftInfo(left)
-  left = newLeft + (isNewColPreInFrozen ? mainScrollLeft : 0)
+  let [newLeft, isNewColPreInFrozen, mainScrollLeft] =
+    freezen.getAdaptOffsetLeftInfo(left);
+  left = newLeft + (isNewColPreInFrozen ? mainScrollLeft : 0);
 
   let top = positionY + cellHeight;
 

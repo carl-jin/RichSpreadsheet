@@ -14,6 +14,10 @@ import {
   getCellDataRowByRowIndex,
 } from "../controllers/hooks/helper";
 import { reFreshCellByCoord } from "../customCell/helper/baseMethods";
+import {
+  detectIsPassDataVerificationById,
+  reVerificationSpecificCellByIndex,
+} from "../controllers/hooks/useDataVerification";
 
 /**
  * 设置 cell 的值
@@ -62,6 +66,7 @@ function setcellvalue(r, c, d, v, options) {
     }
 
     updateSpecificCellData(r, c, v);
+    reVerificationSpecificCellByIndex(r, c, v);
     if (!options.silent) {
       const column = getColumnByColIndex(c);
       const row = getCellDataRowByRowIndex(r);
@@ -74,6 +79,7 @@ function setcellvalue(r, c, d, v, options) {
         row: row,
         column: column,
         oldValue: oldValue,
+        isVerified: detectIsPassDataVerificationById(row.id, column.id),
       });
     }
 

@@ -309,6 +309,19 @@ export function getRowIndexByRowId(rowId) {
 }
 
 /**
+ * 通过 row index 获取 row id
+ * @param rowIndex
+ */
+export function getRowIdByRowIndex(rowIndex){
+  let currentSheet = getCurrentSheet();
+  if(currentSheet.celldata[rowIndex]){
+    return currentSheet.celldata[rowIndex].id ?? ''
+  }else{
+    return ''
+  }
+}
+
+/**
  * 删除当前所选区域
  */
 export function deleteCurrentSelection() {

@@ -9,6 +9,7 @@ import {checkProtectionAuthorityNormal} from '../controllers/protection';
 import Store from '../store';
 import numeral from 'numeral';
 import {getCellData, regenerateCellDataByFlowData} from "./apiHelper";
+import {useDataVerificationBuildCache} from "../controllers/hooks/useDataVerification";
 
 //数据排序方法
 export function orderbydata(data, index, isAsc) {
@@ -377,4 +378,9 @@ export function sortColumnSeletion(colIndex, isAsc) {
 
     jfrefreshgrid(d, [{ "row": [str, edr], "column": [c1, c2] }], allParam);
     regenerateCellDataByFlowData(d)
+
+    //  重建校验缓存
+    useDataVerificationBuildCache()
+    //  再次刷新表格
+    jfrefreshgrid(d, [{ "row": [str, edr], "column": [c1, c2] }], allParam);
 }

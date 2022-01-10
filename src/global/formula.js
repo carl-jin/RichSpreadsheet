@@ -65,7 +65,6 @@ import locale from "../locale/locale";
 import json from "./json";
 import method from "./method";
 import {
-  detectIsPassDataVerification,
   removeDataVerificationTooltip,
   useDataVerificationBuildCache,
 } from "../controllers/hooks/useDataVerification";
