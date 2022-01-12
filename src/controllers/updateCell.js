@@ -74,8 +74,8 @@ export function luckysheetupdateCell(
 
   let input_postition = {
     opacity: 1,
-    "min-width": col - col_pre + 1 - 8,
-    "min-height": row - row_pre + 1 - 4,
+    "min-width": col - col_pre + 1 - 7,
+    "min-height": row - row_pre + 1 - 3,
 
     "max-width": winW + scrollLeft - col_pre - 20 - Store.rowHeaderWidth,
     "max-height":

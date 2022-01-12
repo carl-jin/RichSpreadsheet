@@ -352,7 +352,7 @@ export default function luckysheetHandler() {
       // luckysheetPostil.removeActivePs();
 
       //  删除掉 cell 额外的dom
-      removeCellExtractDom();
+      // removeCellExtractDom();
 
       //图片 active/cropping
       /*  if (
@@ -4873,7 +4873,7 @@ export default function luckysheetHandler() {
       // luckysheetPostil.removeActivePs();
 
       //  删除掉 cell 额外的dom
-      removeCellExtractDom(event);
+      // removeCellExtractDom(event);
 
       hideMenuByCancel(event);
 

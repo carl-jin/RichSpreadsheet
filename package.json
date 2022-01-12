@@ -1,6 +1,6 @@
 {
   "name": "@buff2017/rich-spreadsheet",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "main": "dist/RichSpreadsheet.cjs.js",
   "module": "dist/RichSpreadsheet.es.js",
   "browser": "dist/RichSpreadsheet.umd.js",
@@ -71,7 +71,7 @@
     "dom-to-image": "^2.6.0",
     "esbuild": "^0.11.6",
     "flatpickr": "^4.6.6",
-    "gs-clipboard": "^0.0.8",
+    "gs-clipboard": "^0.0.9",
     "jquery": "^3.6.0",
     "lodash-es": "^4.17.21",
     "numeral": "^2.0.6",

@@ -3083,6 +3083,9 @@ fieldset[disabled] .btn-danger.focus {
 .luckysheet-row-count-show div {
   writing-mode: vertical-rl;
 }
+.luckysheet-row-count-show div:not(:last-of-type){
+  margin-left: -3px;
+}
 
 .luckysheet-row-count-show div:last-child {
   writing-mode: initial;

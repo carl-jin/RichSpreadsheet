@@ -135,7 +135,11 @@ export function removeCellExtractDom(event = null) {
   }
 }
 
-export function useShowCellExtractDomOnMouseEnter(mouseDetail, event) {
+export function useShowCellExtractDomOnMouseEnter(
+  mouseDetail,
+  event,
+  immediately: boolean = false
+) {
   window.clearTimeout(timerShow);
   timerShow = setTimeout(() => {
     //  如果不是在表格上的 mousemove 事件,直接关闭
@@ -190,5 +194,5 @@ export function useShowCellExtractDomOnMouseEnter(mouseDetail, event) {
         RenderDom(key, DOM[key], params);
       });
     }
-  }, 100);
+  }, immediately ? 0 : 400);
 }
