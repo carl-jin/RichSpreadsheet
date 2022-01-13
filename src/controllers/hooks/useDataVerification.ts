@@ -327,7 +327,8 @@ export function useDataVerificationOnInput(inputWrapDom, colIndex) {
 
   //  监听事件
   $target.on("input", (ev) => {
-    const value = ev.target.value;
+    const target = ev.target as HTMLInputElement
+    const value = target.value;
     let unPassMsg = [];
     column.dataVerification.map(({ pattern, errorMessage }) => {
       let isPassed = dataValidate(pattern, value);
