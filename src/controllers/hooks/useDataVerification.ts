@@ -14,8 +14,6 @@ import { cell, column } from "../../customCell/types";
 import type { CellRenderersParams } from "../../customCell/types";
 import { rowLocationByIndex, colLocationByIndex } from "../../global/location";
 import luckysheetConfigsetting from "../luckysheetConfigsetting";
-import Store from "../../store";
-import { getSheetIndex } from "../../methods/get";
 import freezen from "../freezen";
 import {
   getColumnByColIndex,
@@ -77,7 +75,7 @@ export function removeDataVerificationTooltip() {
 export function detectIsPassDataVerificationByIndex(rowIndex, colIndex) {
   const rowId = getRowIdByRowIndex(rowIndex);
   const { id: colId } = getColumnByColIndex(colIndex);
-  return detectIsPassDataVerificationById (rowId,colId);
+  return detectIsPassDataVerificationById(rowId, colId);
 }
 
 export function detectIsPassDataVerificationById(rowId, colId) {
@@ -118,12 +116,11 @@ export function reVerificationSpecificCellByIndex(
   const key = `${rowId}_${colId}`;
   const value = v === undefined ? file.data[rowIndex][colIndex].v : v;
 
-  if(!column.dataVerification) return;
+  if (!column.dataVerification) return;
 
   if (window.richSpreadSheetDataVerificationCache[key]) {
     window.richSpreadSheetDataVerificationCache[key] = [];
   }
-
 
   column.dataVerification.map(({ pattern, errorMessage }) => {
     let isPassed = dataValidate(pattern, value);
@@ -246,7 +243,7 @@ export function useDataVerification(r, c) {
   let html = ``;
 
   cache.map((item) => {
-    html += `<p style="font-size: 12px;margin-bottom:6px;"><span style="color:#f20">数据格式错误: </span><span>${item.errorMessage}</span></p>`;
+    html += `<p style="font-size: 12px;margin-bottom:6px;"><span style="color:#f20">验证错误: </span><span>${item.errorMessage}</span></p>`;
   });
 
   $el.html(html);
@@ -300,4 +297,80 @@ export function useDataVerification(r, c) {
   });
 
   $el.animate({ opacity: 1 }, { duration: 200 });
+}
+
+/**
+ * 编辑输入时判断验证是否通过
+ * 并且显示对应的未通过内容
+ */
+export function useDataVerificationOnInput(inputWrapDom, colIndex) {
+  const $inputBox = $("#luckysheet-input-box");
+  $inputBox
+    .removeClass("on-error-data-verification")
+    .removeClass("error-msg-stick-top");
+  $inputBox.find(".error-message-box").remove();
+
+  const column = getColumnByColIndex(colIndex);
+  if (
+    !column ||
+    !column.dataVerification ||
+    column.dataVerification.length === 0
+  )
+    return;
+
+  //  判断是否能找到元素
+  const $target =
+    $(inputWrapDom).find("input").length === 0
+      ? $(inputWrapDom).find("textarea")
+      : $(inputWrapDom).find("input");
+  if ($target.length === 0) return;
+
+  //  监听事件
+  $target.on("input", (ev) => {
+    const value = ev.target.value;
+    let unPassMsg = [];
+    column.dataVerification.map(({ pattern, errorMessage }) => {
+      let isPassed = dataValidate(pattern, value);
+      if (!isPassed) {
+        unPassMsg.push(errorMessage);
+      }
+    });
+
+    let $errorSpan = $inputBox.find(".error-message-box");
+
+    //  如果存在未通过信息则进行显示
+    if (unPassMsg.length > 0) {
+      if ($errorSpan.length === 0) {
+        $inputBox.append('<div class="error-message-box" />');
+        $errorSpan = $inputBox.find(".error-message-box");
+      }
+
+      $inputBox.addClass("on-error-data-verification");
+      $errorSpan.text(unPassMsg[0]);
+
+      //  溢出判断
+
+      //  边缘检测, 这里要放在 $el 插入 dom 后才能获取到实际的 size
+      const {
+        width: elWidth,
+        height: elHeight,
+        top: elTop,
+      } = $errorSpan.get(0).getBoundingClientRect();
+      const {
+        width: boxWidth,
+        height: boxHeight,
+        top: boxTop,
+      } = $("#luckysheet").get(0).getBoundingClientRect();
+
+      let top = elTop - boxTop;
+
+      //  底部溢出
+      if (top + elHeight + 20 > boxHeight) {
+        $inputBox.addClass("error-msg-stick-top");
+      }
+    } else {
+      $errorSpan.remove();
+      $inputBox.removeClass("on-error-data-verification");
+    }
+  });
 }

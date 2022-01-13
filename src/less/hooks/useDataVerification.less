@@ -1,0 +1,26 @@
+#luckysheet-input-box.on-error-data-verification {
+  @errorColor: rgb(244, 67, 54);
+  border-color: @errorColor;
+  overflow: visible !important;
+
+  .error-message-box {
+    position: absolute;
+    left: -2px;
+    bottom: 0;
+    height: 26px;
+    background: @errorColor;
+    font-size: 12px;
+    color: #fff;
+    padding: 0 8px;
+    line-height: 26px;
+    transform: translateY(100%);
+  }
+
+  &.error-msg-stick-top {
+    .error-message-box {
+        bottom: auto;
+        top: 0;
+        transform: translateY(-100%);
+    }
+  }
+}

@@ -10,7 +10,7 @@ import cleargridelement from "../global/cleargridelement";
 import { isInlineStringCell } from "./inlineString";
 import Store from "../store";
 import { getSheetIndex } from "../methods/get";
-import { removeDataVerificationTooltip } from "./hooks/useDataVerification";
+import {removeDataVerificationTooltip, useDataVerificationOnInput} from "./hooks/useDataVerification";
 
 //  editor **** editor cell 编辑
 export function luckysheetupdateCell(
@@ -235,6 +235,8 @@ export function luckysheetupdateCell(
       Dom.appendChild(returnDom);
     }
 
+    //  内容输入时显示验证信息
+    useDataVerificationOnInput(customDomBox,col_index)
     Editor.afterMounted && Editor?.afterMounted(customDomBox);
   } else {
     $("#luckysheet-rich-text-editor").html(value).show();
