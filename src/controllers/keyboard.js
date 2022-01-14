@@ -15,6 +15,7 @@ import selection from "./selection";
 import searchReplace from "./searchReplace";
 import controlHistory from "./controlHistory";
 import imageCtrl from "./imageCtrl";
+import { deleteCellByIndex } from "../global/apiHelper";
 
 import {
   getByteLen,
@@ -30,8 +31,8 @@ import tooltip from "../global/tooltip";
 import locale from "../locale/locale";
 import { enterKeyControll } from "./inlineString";
 import Store from "../store";
-import {pasteFromClipboard} from "./hooks/useGsClipboard";
-import {deleteCurrentSelection} from "../global/apiHelper";
+import { pasteFromClipboard } from "./hooks/useGsClipboard";
+import { deleteCurrentSelection } from "../global/apiHelper";
 
 let luckysheet_shiftkeydown = false;
 
@@ -356,7 +357,7 @@ export function keyboardInitial() {
       let kcode = event.keyCode;
 
       //  如果是在 cell 编辑框上的事件，直接跳过
-      if(event.target && event.target.closest('.cell-editor-custom')){
+      if (event.target && event.target.closest(".cell-editor-custom")) {
         return;
       }
 
@@ -453,7 +454,7 @@ export function keyboardInitial() {
         enterKeyControll(Store.flowdata[row_index][col_index]);
         event.preventDefault();
       } else if (kcode == keycode.ENTER && parseInt($inputbox.css("top")) > 0) {
-        if(shiftKey) return;
+        if (shiftKey) return;
 
         if (
           $("#luckysheet-formula-search-c").is(":visible") &&
@@ -541,7 +542,7 @@ export function keyboardInitial() {
             col_index = last["column_focus"];
 
           //  如果刚刚取消了 stop Editing 则不响应 edit 事件
-          if(window['stopEditing']) return;
+          if (window["stopEditing"]) return;
 
           luckysheetupdateCell(row_index, col_index, Store.flowdata);
           event.preventDefault();
@@ -791,48 +792,34 @@ export function keyboardInitial() {
             }
 
             selection.isPasteAction = true;
+
+            //  如果是剪贴后执行的粘贴，删除之前的值
+            if (
+              Store.luckysheet_paste_iscut &&
+              Store.luckysheet_copy_save.copyRange[0]
+            ) {
+              const { column: copyColumn, row: copyRow } =
+                Store.luckysheet_copy_save.copyRange[0];
+              const [startRow, endRow] = copyRow;
+              const [startCol, endCol] = copyColumn;
+
+              for (let r = startRow; r <= endRow; r++) {
+                for (let c = startCol; c <= endCol; c++) {
+                  deleteCellByIndex(r, c);
+                }
+              }
+              Store.luckysheet_paste_iscut = false;
+            }
             //  **** paste 数据
-            pasteFromClipboard(shiftKey)
+            pasteFromClipboard(shiftKey);
             luckysheetactiveCell();
 
             event.stopPropagation();
             return;
           } else if (kcode == 88) {
-          /*  //Ctrl + X  剪切
-            //复制时存在格式刷状态，取消格式刷
-            if (menuButton.luckysheetPaintModelOn) {
-              menuButton.cancelPaintModel();
-            }
-
+            //Ctrl + X  剪切
             if (Store.luckysheet_select_save.length == 0) {
               return;
-            }
-
-            //复制范围内包含部分合并单元格，提示
-            if (Store.config["merge"] != null) {
-              let has_PartMC = false;
-
-              for (let s = 0; s < Store.luckysheet_select_save.length; s++) {
-                let r1 = Store.luckysheet_select_save[s].row[0],
-                  r2 = Store.luckysheet_select_save[s].row[1];
-                let c1 = Store.luckysheet_select_save[s].column[0],
-                  c2 = Store.luckysheet_select_save[s].column[1];
-
-                has_PartMC = hasPartMC(Store.config, r1, r2, c1, c2);
-
-                if (has_PartMC) {
-                  break;
-                }
-              }
-
-              if (has_PartMC) {
-                if (luckysheetConfigsetting.editMode) {
-                  alert(_locale_drag.noMerge);
-                } else {
-                  tooltip.info(_locale_drag.noMerge, "");
-                }
-                return;
-              }
             }
 
             //多重选区时 提示
@@ -851,7 +838,6 @@ export function keyboardInitial() {
             luckysheetactiveCell();
 
             event.stopPropagation();
-            */
             return;
           } else if (kcode == 90) {
             //Ctrl + Z  撤销
@@ -1040,7 +1026,7 @@ export function keyboardInitial() {
           if (imageCtrl.currentImgId != null) {
             imageCtrl.removeImgItem();
           } else {
-            deleteCurrentSelection()
+            deleteCurrentSelection();
           }
 
           event.preventDefault();
@@ -1106,7 +1092,7 @@ export function keyboardInitial() {
         }
 
         //  点击任意键进入编辑状态
-   /*     else if (
+        /*     else if (
           !(
             (kcode >= 112 && kcode <= 123) ||
             kcode <= 46 ||

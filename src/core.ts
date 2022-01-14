@@ -198,9 +198,23 @@ RichSpread.create = function (setting: RichSpreadsheetParams) {
 
   sheetmanage.initialjfFile(menu, title);
 
-
   //  加个 timeout 不然用户在 .create 之后绑定事件的话，监听不到
   setTimeout(() => {
+    //  判断是否 column 或者 rows 为空
+    if (setting) {
+      if (setting.data[0]) {
+        if (
+          setting.data[0].celldata.length === 0 ||
+          setting.data[0].column.length === 0
+        ) {
+          Store.$emit("sheetEmptied");
+          method.destroy();
+          eventDestroy();
+          return;
+        }
+      }
+    }
+
     //  如果冻结区域超出显示范围则取消冻结
     handlerFrozenOverflow(Store);
   }, 300);

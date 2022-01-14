@@ -31,7 +31,7 @@ type cellData = {
 export function regenerateCellDataByFlowData(data: cellData[][]) {
   let newCellData = [];
   data.map((row) => {
-    let newRow:any = {};
+    let newRow: any = {};
     row.map(({ rowId, columnId, v }) => {
       newRow[columnId] = v;
     });
@@ -312,12 +312,12 @@ export function getRowIndexByRowId(rowId) {
  * 通过 row index 获取 row id
  * @param rowIndex
  */
-export function getRowIdByRowIndex(rowIndex){
+export function getRowIdByRowIndex(rowIndex) {
   let currentSheet = getCurrentSheet();
-  if(currentSheet.celldata[rowIndex]){
-    return currentSheet.celldata[rowIndex].id ?? ''
-  }else{
-    return ''
+  if (currentSheet.celldata[rowIndex]) {
+    return currentSheet.celldata[rowIndex].id ?? "";
+  } else {
+    return "";
   }
 }
 
@@ -341,6 +341,28 @@ export function deleteCurrentSelection() {
       }
     }
   }
+}
+
+/**
+ * 删除指定行 by index
+ * @param rowIndex
+ * @param colIndex
+ */
+export function deleteCellByIndex(rowIndex, colIndex) {
+  setCellValue(rowIndex, colIndex, "", {
+    reRenderCell: true,
+  });
+}
+
+/**
+ * 删除指定行 by id
+ * @param rowId
+ * @param colId
+ */
+export function deleteCellById(rowId, colId) {
+  const rowIndex = getRowIndexByRowId(rowId);
+  const colIndex = getColumnIndexByColumnId(colId);
+  deleteCellByIndex(rowIndex, colIndex);
 }
 
 /**
