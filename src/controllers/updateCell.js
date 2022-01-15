@@ -256,7 +256,7 @@ export function luckysheetupdateCell(
       left: input_postition.left,
       top: input_postition.top,
       position: "absolute",
-      zIndex: 99999,
+      zIndex: 888,
       border: "2px #5292f7 solid",
       backgroundColor: "#fff",
     });

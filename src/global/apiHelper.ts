@@ -8,6 +8,7 @@ import {
 } from "./api";
 import {
   deepClone,
+  getColumnsFromSelectedSave,
   getRowIndexByRowId as _getRowIndexByRowId,
   getRowsIdFromSelectedSave,
 } from "../controllers/hooks/helper";
@@ -194,6 +195,13 @@ export function cancelFrozenHacks(cancelType: "row" | "column") {
  */
 export function getSelectedRowIds() {
   return getRowsIdFromSelectedSave();
+}
+
+/**
+ * 获取当前选中的 columns
+ */
+export function getSelectedColumns() {
+  return getColumnsFromSelectedSave();
 }
 
 /**
