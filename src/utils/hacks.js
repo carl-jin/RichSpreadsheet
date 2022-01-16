@@ -4,6 +4,7 @@
  * @param store
  */
 import { cancelFrozenHacks, getCurrentSheet } from "../global/apiHelper";
+import Store from "../store";
 
 export function handlerFrozenOverflow(Store) {
   const sheet = getCurrentSheet();
@@ -12,12 +13,18 @@ export function handlerFrozenOverflow(Store) {
     let isHasCancel = false;
 
     //  如果 column 冻结溢出
-    if (Store.visibledatacolumn[column_focus] + 100 > Store.cellmainWidth) {
+    if (
+      Store.visibledatacolumn[column_focus] + 100 >
+      $("#" + Store.container).width()
+    ) {
       cancelFrozenHacks("column");
       isHasCancel = true;
     }
 
-    if (Store.visibledatarow[row_focus] + 100 > Store.cellmainHeight) {
+    if (
+      Store.visibledatarow[row_focus] + 100 >
+      $("#" + Store.container).height()
+    ) {
       cancelFrozenHacks("row");
       isHasCancel = true;
     }
