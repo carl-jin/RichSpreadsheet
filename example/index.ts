@@ -9,6 +9,7 @@ import {
   getSelectedRowIds,
   showLoading,
   hideLoading,
+  setCellValue, hideColumnByIndex,
 } from "../src";
 import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
@@ -157,6 +158,9 @@ function create() {
           },
           {
             name: "隐藏当前列",
+            action:()=>{
+              hideColumnByIndex(1)
+            }
           },
           {
             separator: true,
@@ -198,11 +202,12 @@ function create() {
         row: rows.length + 2,
         celldata: rows,
         frozen: {
-          type: "rangeColumn",
+          type: "cancel",
+          /*    type: "rangeColumn",
           range: {
             row_focus: 0,
             column_focus: 2,
-          },
+          },*/
         },
         config: {
           columnlen: {
@@ -228,4 +233,12 @@ document.querySelector("#rowIds").addEventListener("click", () => {
   setTimeout(() => {
     hideLoading();
   }, 2000);
+});
+
+//  更新 cell
+document.querySelector("#updateCell").addEventListener("click", () => {
+  setCellValue(0, 0, `new value ${Math.random()}`, {
+    force: true,
+    reRenderCell: true,
+  });
 });

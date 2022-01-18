@@ -376,25 +376,25 @@ function luckysheetDrawgridColumnTitle(scrollWidth, drawWidth, offsetLeft) {
     }
 
     //列标题栏竖线 vertical
-    if (
-      Store.config["colhidden"] != null &&
-      Store.config["colhidden"][c] == null &&
-      Store.config["colhidden"][c + 1] != null
-    ) {
-      luckysheetTableContent.beginPath();
-      luckysheetTableContent.moveTo(end_c + offsetLeft - 4 + bodrder05, 0);
-      luckysheetTableContent.lineTo(
-        end_c + offsetLeft - 4 + bodrder05,
-        Store.columnHeaderHeight - 2
-      );
-      luckysheetTableContent.lineWidth = 1;
-      luckysheetTableContent.strokeStyle = luckysheetdefaultstyle.strokeStyle;
-      luckysheetTableContent.closePath();
-      luckysheetTableContent.stroke();
-    } else if (
-      Store.config["colhidden"] == null ||
-      Store.config["colhidden"][c] == null
-    ) {
+    // if (
+    //   Store.config["colhidden"] != null &&
+    //   Store.config["colhidden"][c] == null &&
+    //   Store.config["colhidden"][c + 1] != null
+    // ) {
+    //   luckysheetTableContent.beginPath();
+    //   luckysheetTableContent.moveTo(end_c + offsetLeft - 4 + bodrder05, 0);
+    //   luckysheetTableContent.lineTo(
+    //     end_c + offsetLeft - 4 + bodrder05,
+    //     Store.columnHeaderHeight - 2
+    //   );
+    //   luckysheetTableContent.lineWidth = 1;
+    //   luckysheetTableContent.strokeStyle = luckysheetdefaultstyle.strokeStyle;
+    //   luckysheetTableContent.closePath();
+    //   luckysheetTableContent.stroke();
+    // } else if (
+    //   Store.config["colhidden"] == null ||
+    //   Store.config["colhidden"][c] == null
+    // ) {
       luckysheetTableContent.beginPath();
       luckysheetTableContent.moveTo(end_c + offsetLeft - 2 + bodrder05, 0);
       luckysheetTableContent.lineTo(
@@ -406,24 +406,24 @@ function luckysheetDrawgridColumnTitle(scrollWidth, drawWidth, offsetLeft) {
       luckysheetTableContent.strokeStyle = luckysheetdefaultstyle.strokeStyle;
       luckysheetTableContent.closePath();
       luckysheetTableContent.stroke();
-    }
+    // }
 
-    if (
-      Store.config["colhidden"] != null &&
-      Store.config["colhidden"][c - 1] != null &&
-      preEndC != null
-    ) {
-      luckysheetTableContent.beginPath();
-      luckysheetTableContent.moveTo(preEndC + offsetLeft + bodrder05, 0);
-      luckysheetTableContent.lineTo(
-        preEndC + offsetLeft + bodrder05,
-        Store.columnHeaderHeight - 2
-      );
-      // luckysheetTableContent.lineWidth = 1;
-      // luckysheetTableContent.strokeStyle = luckysheetdefaultstyle.strokeStyle;
-      luckysheetTableContent.closePath();
-      luckysheetTableContent.stroke();
-    }
+    // if (
+    //   Store.config["colhidden"] != null &&
+    //   Store.config["colhidden"][c - 1] != null &&
+    //   preEndC != null
+    // ) {
+    //   luckysheetTableContent.beginPath();
+    //   luckysheetTableContent.moveTo(preEndC + offsetLeft + bodrder05, 0);
+    //   luckysheetTableContent.lineTo(
+    //     preEndC + offsetLeft + bodrder05,
+    //     Store.columnHeaderHeight - 2
+    //   );
+    //   // luckysheetTableContent.lineWidth = 1;
+    //   // luckysheetTableContent.strokeStyle = luckysheetdefaultstyle.strokeStyle;
+    //   luckysheetTableContent.closePath();
+    //   luckysheetTableContent.stroke();
+    // }
 
     //horizen
     luckysheetTableContent.beginPath();

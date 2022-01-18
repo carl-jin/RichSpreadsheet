@@ -21,6 +21,7 @@ import {
   getCurrentSheet,
   getRowIdByRowIndex,
 } from "../../global/apiHelper";
+import Store from "../../store";
 
 enum ClassName {
   NAME = "rich-spreadsheet-cell-data-verification",
@@ -194,12 +195,14 @@ export function DataVerificationRenderRedTriangleIfDataVerificationFailed(
     const w = 4;
     const h = 4;
 
-    path.moveTo(positionX, positionY);
-    path.lineTo(positionX + w, positionY);
-    path.lineTo(positionX, positionY + h);
+    if (positionX + w >= Store.rowHeaderWidth) {
+      path.moveTo(positionX, positionY);
+      path.lineTo(positionX + w, positionY);
+      path.lineTo(positionX, positionY + h);
 
-    ctx.fillStyle = "#f20";
-    ctx.fill(path);
+      ctx.fillStyle = "#f20";
+      ctx.fill(path);
+    }
   }
 }
 
@@ -327,7 +330,7 @@ export function useDataVerificationOnInput(inputWrapDom, colIndex) {
 
   //  监听事件
   $target.on("input", (ev) => {
-    const target = ev.target as HTMLInputElement
+    const target = ev.target as HTMLInputElement;
     const value = target.value;
     let unPassMsg = [];
     column.dataVerification.map(({ pattern, errorMessage }) => {

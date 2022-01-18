@@ -19,7 +19,8 @@ import {
 } from "../controllers/hooks/useGsClipboard";
 import { setcellvalue as _setcellvalue } from "./setdata";
 import { sortColumnSeletion as _sortColumnSeletion } from "./sort";
-
+import { jfrefreshgrid_rhcw } from "../global/refresh";
+import { luckysheetContainerFocus } from "../utils/util";
 /**
  * 根据 flowData 更新 cellData
  * @param data
@@ -432,4 +433,32 @@ export function getOutputFromColumnTransformerFormatValueFromDataByValue(
  */
 export function sortColumnSelection(colIndex, isAsc) {
   return _sortColumnSeletion(colIndex, isAsc);
+}
+
+/**
+ * 隐藏指定 index 的 column
+ * @param index
+ */
+export function hideColumnByIndex(index: number) {
+  luckysheetContainerFocus();
+
+  let cfg = $.extend(true, {}, Store.config);
+  if (cfg["colhidden"] == null) {
+    cfg["colhidden"] = {};
+  }
+
+  cfg["colhidden"][index] = 0;
+
+  //config
+  Store.config = cfg;
+  Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)].config =
+    Store.config;
+
+  //行高、列宽 刷新
+  jfrefreshgrid_rhcw(Store.flowdata.length, Store.flowdata[0].length);
+
+  $("#luckysheet-cell-selected").hide();
+  $("#luckysheet-cols-h-hover").hide();
+  $("#luckysheet-cols-menu-btn").hide();
+
 }

@@ -83,9 +83,19 @@ export class CustomBase {
   protected clearCell(CellRenderersParams: CellRenderersParams) {
     const { ctx, positionX, positionY, cellWidth, cellHeight } =
       CellRenderersParams;
+
+    let left = positionX;
+    let width = cellWidth;
+    //  判断是否会盖住 row header
+    //  如果盖住的话，处理下 left 的偏移
+    if (positionX < Store.rowHeaderWidth) {
+      left = Store.rowHeaderWidth;
+      width = cellWidth - (left - positionX);
+    }
+
     ctx.beginPath();
     ctx.save();
-    ctx.rect(positionX, positionY, cellWidth - 1, cellHeight - 1);
+    ctx.rect(left, positionY, width - 1, cellHeight - 1);
     ctx.fillStyle = "#fff";
     ctx.fill();
     ctx.restore();
@@ -99,9 +109,19 @@ export class CustomBase {
   protected startCellClip(CellRenderersParams: CellRenderersParams) {
     const { ctx, positionX, positionY, cellWidth, cellHeight } =
       CellRenderersParams;
+
+    let left = positionX;
+    let width = cellWidth;
+    //  判断是否会盖住 row header
+    //  如果盖住的话，处理下 left 的偏移
+    if (positionX < Store.rowHeaderWidth) {
+      left = Store.rowHeaderWidth;
+      width = cellWidth - (left - positionX);
+    }
+
     ctx.save();
     ctx.beginPath();
-    ctx.rect(positionX, positionY, cellWidth - 1, cellHeight - 1);
+    ctx.rect(left, positionY, width - 1, cellHeight - 1);
     ctx.clip();
   }
 
