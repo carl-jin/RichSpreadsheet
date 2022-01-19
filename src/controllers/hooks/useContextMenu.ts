@@ -54,13 +54,16 @@ function renderContextMenu(type: ContextMenuType) {
   div.classList.add("context-menu-box");
 
   options.map((item) => {
-    div.appendChild(getItemsDomByOption(item));
+    const dom = getItemsDomByOption(item);
+    if (dom) {
+      div.appendChild(getItemsDomByOption(item));
+    }
   });
 
   $menu.append(div);
 
-  if(options.length === 0){
-    $("#luckysheet-rightclick-menu").hide()
+  if (options.length === 0) {
+    $("#luckysheet-rightclick-menu").hide();
   }
 }
 
@@ -69,6 +72,8 @@ function renderContextMenu(type: ContextMenuType) {
  * @param option
  */
 function getItemsDomByOption(option: ContentMenuItem) {
+  if (!option) return false;
+
   let divItem = document.createElement("div");
   divItem.classList.add("context-menu-item");
   //  插入分割线

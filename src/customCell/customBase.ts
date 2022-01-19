@@ -1,7 +1,7 @@
 import Store from "../store";
 import formula from "../global/formula";
 import type { CellRenderersParams } from "./types";
-import { decomposeMatrix2DW3 } from "./helper/tools";
+import { decomposeMatrix2DW3, getFrozenAreaThatCellIn } from "./helper/tools";
 import { luckysheetrefreshgrid } from "../global/refresh";
 import {
   finishEdit,
@@ -81,14 +81,26 @@ export class CustomBase {
    * 清理单元格内容
    */
   protected clearCell(CellRenderersParams: CellRenderersParams) {
-    const { ctx, positionX, positionY, cellWidth, cellHeight } =
-      CellRenderersParams;
+    const {
+      ctx,
+      positionX,
+      positionY,
+      cellWidth,
+      cellHeight,
+      rowIndex,
+      colIndex,
+    } = CellRenderersParams;
 
     let left = positionX;
     let width = cellWidth;
+
+    const cellArea = getFrozenAreaThatCellIn(rowIndex, colIndex);
+    //  只有在最左侧的区域才需要处理偏移值
+    const isInTheEdge = ~cellArea.indexOf("left");
+
     //  判断是否会盖住 row header
     //  如果盖住的话，处理下 left 的偏移
-    if (positionX < Store.rowHeaderWidth) {
+    if (positionX < Store.rowHeaderWidth && isInTheEdge) {
       left = Store.rowHeaderWidth;
       width = cellWidth - (left - positionX);
     }
@@ -107,14 +119,25 @@ export class CustomBase {
    * @param CellRenderersParams
    */
   protected startCellClip(CellRenderersParams: CellRenderersParams) {
-    const { ctx, positionX, positionY, cellWidth, cellHeight } =
-      CellRenderersParams;
+    const {
+      ctx,
+      positionX,
+      positionY,
+      cellWidth,
+      cellHeight,
+      rowIndex,
+      colIndex,
+    } = CellRenderersParams;
+
+    const cellArea = getFrozenAreaThatCellIn(rowIndex, colIndex);
+    //  只有在最左侧的区域才需要处理偏移值
+    const isInTheEdge = ~cellArea.indexOf("left");
 
     let left = positionX;
     let width = cellWidth;
     //  判断是否会盖住 row header
     //  如果盖住的话，处理下 left 的偏移
-    if (positionX < Store.rowHeaderWidth) {
+    if (positionX < Store.rowHeaderWidth && isInTheEdge) {
       left = Store.rowHeaderWidth;
       width = cellWidth - (left - positionX);
     }
