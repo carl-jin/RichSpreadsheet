@@ -110,7 +110,10 @@ function getItemsDomByOption(option: ContentMenuItem) {
     subMenuDiv.className = "context-menu-children";
 
     option.subMenus.map((item) => {
-      subMenuDiv.appendChild(getItemsDomByOption(item));
+      const dom = getItemsDomByOption(item);
+      if (dom) {
+        subMenuDiv.appendChild(dom);
+      }
     });
 
     divItem.appendChild(rightArrow);
