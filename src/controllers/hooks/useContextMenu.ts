@@ -56,7 +56,7 @@ function renderContextMenu(type: ContextMenuType) {
   options.map((item) => {
     const dom = getItemsDomByOption(item);
     if (dom) {
-      div.appendChild(getItemsDomByOption(item));
+      div.appendChild(dom);
     }
   });
 
