@@ -448,6 +448,7 @@ export function hideColumnByIndex(index: number) {
   }
 
   cfg["colhidden"][index] = 0;
+  Store.$emit("ColumnHidden", cfg["colhidden"]);
 
   //config
   Store.config = cfg;
@@ -460,5 +461,25 @@ export function hideColumnByIndex(index: number) {
   $("#luckysheet-cell-selected").hide();
   $("#luckysheet-cols-h-hover").hide();
   $("#luckysheet-cols-menu-btn").hide();
+}
 
+/**
+ * 获取当前隐藏列
+ */
+export function getHiddenColumn() {
+  if (!Store.config?.colhidden) {
+    return [];
+  }
+
+  let hiddenColumn = [];
+  Object.keys(Store.config.colhidden).map((colIndex) => {
+    if (!Store.config.colhidden[colIndex]) {
+      let column = getColumnByColIndex(colIndex);
+      if (column && column.id) {
+        hiddenColumn.push(column.id);
+      }
+    }
+  });
+
+  return hiddenColumn;
 }

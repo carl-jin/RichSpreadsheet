@@ -183,6 +183,7 @@ function selectHightlightShow(isRestore = false) {
 
         Store.luckysheet_select_save_previous = luckysheet_select_save_previous;
 
+    Store.$emit("cellSelected", Store.luckysheet_select_save);
 }
 
 //选区标题栏

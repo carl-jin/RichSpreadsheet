@@ -91,16 +91,17 @@ export class CustomBase {
       colIndex,
     } = CellRenderersParams;
 
-    let left = positionX;
-    let width = cellWidth;
-
     const cellArea = getFrozenAreaThatCellIn(rowIndex, colIndex);
     //  只有在最左侧的区域才需要处理偏移值
-    const isInTheEdge = ~cellArea.indexOf("left");
+    const isInTheLeftEdge = ~cellArea.indexOf("left");
+    const offsetLeft = isInTheLeftEdge ? positionX + Store.rowHeaderWidth : positionX
 
+
+    let left = positionX;
+    let width = cellWidth;
     //  判断是否会盖住 row header
     //  如果盖住的话，处理下 left 的偏移
-    if (positionX < Store.rowHeaderWidth && isInTheEdge) {
+    if (offsetLeft < Store.rowHeaderWidth) {
       left = Store.rowHeaderWidth;
       width = cellWidth - (left - positionX);
     }
@@ -131,13 +132,15 @@ export class CustomBase {
 
     const cellArea = getFrozenAreaThatCellIn(rowIndex, colIndex);
     //  只有在最左侧的区域才需要处理偏移值
-    const isInTheEdge = ~cellArea.indexOf("left");
+    const isInTheLeftEdge = ~cellArea.indexOf("left");
+    const offsetLeft = isInTheLeftEdge ? positionX + Store.rowHeaderWidth : positionX
+
 
     let left = positionX;
     let width = cellWidth;
     //  判断是否会盖住 row header
     //  如果盖住的话，处理下 left 的偏移
-    if (positionX < Store.rowHeaderWidth && isInTheEdge) {
+    if (offsetLeft < Store.rowHeaderWidth) {
       left = Store.rowHeaderWidth;
       width = cellWidth - (left - positionX);
     }
