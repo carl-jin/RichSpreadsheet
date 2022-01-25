@@ -131,14 +131,17 @@ function luckysheetDrawgridRowTitle(scrollHeight, drawHeight, offsetTop) {
       //行标题栏序列号
       luckysheetTableContent.save(); //save scale before draw text
       luckysheetTableContent.scale(Store.zoomRatio, Store.zoomRatio);
-      let textMetrics = getMeasureText(r + 1, luckysheetTableContent);
+      let number = r + 1;
+      let customNumber = Store.rowTitleNumberRender(number);
+      number = !isNaN(customNumber) ? customNumber : number;
+      let textMetrics = getMeasureText(number, luckysheetTableContent);
       //luckysheetTableContent.measureText(r + 1);
 
       let horizonAlignPos = (Store.rowHeaderWidth - textMetrics.width) / 2;
       let verticalAlignPos = start_r + (end_r - start_r) / 2 + offsetTop;
 
       luckysheetTableContent.fillText(
-        r + 1,
+        number,
         horizonAlignPos / Store.zoomRatio,
         verticalAlignPos / Store.zoomRatio
       );
@@ -367,6 +370,7 @@ function luckysheetDrawgridColumnTitle(scrollWidth, drawWidth, offsetLeft) {
         start_c + Store.rowHeaderWidth + offsetLeft - 40
       );
       let verticalAlignPos = Math.round(Store.columnHeaderHeight / 2);
+      luckysheetTableContent.font = luckysheetdefaultFont().replace(/^normal/,'bold');
       luckysheetTableContent.fillText(
         abc,
         horizonAlignPos / Store.zoomRatio + 6,
@@ -395,17 +399,17 @@ function luckysheetDrawgridColumnTitle(scrollWidth, drawWidth, offsetLeft) {
     //   Store.config["colhidden"] == null ||
     //   Store.config["colhidden"][c] == null
     // ) {
-      luckysheetTableContent.beginPath();
-      luckysheetTableContent.moveTo(end_c + offsetLeft - 2 + bodrder05, 0);
-      luckysheetTableContent.lineTo(
-        end_c + offsetLeft - 2 + bodrder05,
-        Store.columnHeaderHeight - 2
-      );
+    luckysheetTableContent.beginPath();
+    luckysheetTableContent.moveTo(end_c + offsetLeft - 2 + bodrder05, 0);
+    luckysheetTableContent.lineTo(
+      end_c + offsetLeft - 2 + bodrder05,
+      Store.columnHeaderHeight - 2
+    );
 
-      luckysheetTableContent.lineWidth = 1;
-      luckysheetTableContent.strokeStyle = luckysheetdefaultstyle.strokeStyle;
-      luckysheetTableContent.closePath();
-      luckysheetTableContent.stroke();
+    luckysheetTableContent.lineWidth = 1;
+    luckysheetTableContent.strokeStyle = luckysheetdefaultstyle.strokeStyle;
+    luckysheetTableContent.closePath();
+    luckysheetTableContent.stroke();
     // }
 
     // if (
@@ -551,12 +555,13 @@ function luckysheetDrawMain(
   luckysheetTableContent.save();
   luckysheetTableContent.scale(Store.devicePixelRatio, Store.devicePixelRatio);
 
- !drawSpecificCell && luckysheetTableContent.clearRect(
-    0,
-    0,
-    Store.luckysheetTableContentHW[0],
-    Store.luckysheetTableContentHW[1]
-  );
+  !drawSpecificCell &&
+    luckysheetTableContent.clearRect(
+      0,
+      0,
+      Store.luckysheetTableContentHW[0],
+      Store.luckysheetTableContentHW[1]
+    );
 
   //表格渲染区域 起止行列下标
   let dataset_row_st, dataset_row_ed, dataset_col_st, dataset_col_ed;
@@ -625,12 +630,13 @@ function luckysheetDrawMain(
 
   //表格canvas 初始化处理
   luckysheetTableContent.fillStyle = "#ffffff";
-  !drawSpecificCell && luckysheetTableContent.fillRect(
-    offsetLeft - 1,
-    offsetTop - 1,
-    fill_col_ed - scrollWidth,
-    fill_row_ed - scrollHeight
-  );
+  !drawSpecificCell &&
+    luckysheetTableContent.fillRect(
+      offsetLeft - 1,
+      offsetTop - 1,
+      fill_col_ed - scrollWidth,
+      fill_row_ed - scrollHeight
+    );
   luckysheetTableContent.font = luckysheetdefaultFont();
   // luckysheetTableContent.textBaseline = "top";
   luckysheetTableContent.fillStyle = luckysheetdefaultstyle.fillStyle;
@@ -643,12 +649,13 @@ function luckysheetDrawMain(
   let bodrder05 = 0.5; //Default 0.5
 
   // 钩子函数
-  !drawSpecificCell && method.createHookFunction(
-    "cellAllRenderBefore",
-    Store.flowdata,
-    sheetFile,
-    luckysheetTableContent
-  );
+  !drawSpecificCell &&
+    method.createHookFunction(
+      "cellAllRenderBefore",
+      Store.flowdata,
+      sheetFile,
+      luckysheetTableContent
+    );
 
   //  计算出更新的数组
   for (let r = dataset_row_st; r <= dataset_row_ed; r++) {
@@ -786,9 +793,12 @@ function luckysheetDrawMain(
       }
 
       //  更新指定的单元格
-      if(drawSpecificCell){
-        if(drawSpecificCell.rowIndex !== r || drawSpecificCell.colIndex !== c){
-          continue
+      if (drawSpecificCell) {
+        if (
+          drawSpecificCell.rowIndex !== r ||
+          drawSpecificCell.colIndex !== c
+        ) {
+          continue;
         }
       }
 
@@ -812,7 +822,7 @@ function luckysheetDrawMain(
         scrollHeight,
         scrollWidth,
         bodrder05,
-        false,
+        false
       );
     }
   }
@@ -1128,7 +1138,7 @@ let cellRender = function (
   scrollHeight,
   scrollWidth,
   bodrder05,
-  isMerge,
+  isMerge
 ) {
   let cell = Store.flowdata[r][c];
   let cellWidth = end_c - start_c - 2;
@@ -1204,10 +1214,12 @@ let cellRender = function (
         column: currentSheet.column[c],
         columns: currentSheet.column,
         cell,
-        value: Store.cellTransformer[type] ? Store.cellTransformer[type].formatValueFromData(
-          cell.v,
-          currentSheet.column[c].cellParams,
-        ) : cell.v,
+        value: Store.cellTransformer[type]
+          ? Store.cellTransformer[type].formatValueFromData(
+              cell.v,
+              currentSheet.column[c].cellParams
+            )
+          : cell.v,
         cellWidth: cellWidth,
         cellHeight: cellHeight,
         spaceX: space_width,

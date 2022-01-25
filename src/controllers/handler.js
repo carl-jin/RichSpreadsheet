@@ -233,9 +233,12 @@ export default function luckysheetHandler() {
     //  mac 和 window 上 mousewheel 触发的频率还不一样, 这里额外做下兼容
     if (Math.abs(speedDetail.spinY) > 1) {
       mouseWheelSpeedTimeCount += 1;
-      setTimeout(() => {
-        mouseWheelSpeedTimeCount -= 1;
-      }, isMac ? 50 : 300);
+      setTimeout(
+        () => {
+          mouseWheelSpeedTimeCount -= 1;
+        },
+        isMac ? 50 : 300
+      );
     }
 
     let scrollNum = 1;
@@ -249,16 +252,22 @@ export default function luckysheetHandler() {
       );
     }
 
+    let isHorizontalScroll = event.deltaX !== 0 || (event.shiftKey && !isMac);
+
     // let square = Math.max(1, Math.ceil(Store.visibledatarow.length / 100));
     // scrollNum = Math.pow(scrollNum, square);
     // scrollNum = Math.max(1,Math.ceil(scrollNum/100))
 
-    scrollNum = Math.max(
-      1,
-      Math.floor(
-        (Math.min(25, scrollNum * 2) / 100) * Store.visibledatarow.length
-      )
-    );
+    if (isHorizontalScroll) {
+      scrollNum = scrollNum * 2;
+    } else {
+      scrollNum = Math.max(
+        1,
+        Math.floor(
+          (Math.min(25, scrollNum * 2) / 100) * Store.visibledatarow.length
+        )
+      );
+    }
 
     if (event.shiftKey && !isMac) {
       event.deltaX = event.deltaY * -1;

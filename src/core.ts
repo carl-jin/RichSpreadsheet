@@ -89,6 +89,7 @@ RichSpread.create = function (setting: RichSpreadsheetParams) {
   Store.ContextMenu = extendsetting.ContextMenu;
   Store.cellContextMenu = extendsetting.cellContextMenu;
   Store.rowContextMenu = extendsetting.rowContextMenu;
+  Store.rowTitleNumberRender = extendsetting.rowTitleNumberRender;
 
   Store.luckysheetfile = extendsetting.data;
   Store.defaultcolumnNum = extendsetting.column;

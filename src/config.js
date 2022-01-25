@@ -28,6 +28,9 @@ export default {
   ContextMenu() {
     return [];
   },
+  rowTitleNumberRender(index){
+    return index
+  },
   pointEditZoom: 1, //编辑器表格编辑时缩放比例
 
   // menu: "undo|redo|freezenrow|freezencolumn|download|share|chart|pivot",

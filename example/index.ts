@@ -28,6 +28,9 @@ function create() {
     GSClipboardOptions: {
       handlers: GsClipboardHandler,
     },
+    rowTitleNumberRender(number){
+      return number
+    },
     ContextMenu(params, type) {
       //  找到最后一个 column
       const lastColumnIndex =
