@@ -232,12 +232,12 @@ export default function luckysheetHandler() {
 
     //  mac 和 window 上 mousewheel 触发的频率还不一样, 这里额外做下兼容
     if (Math.abs(speedDetail.spinY) > 1) {
-      mouseWheelSpeedTimeCount += isMac ? 1 : 2;
+      mouseWheelSpeedTimeCount += 1;
       setTimeout(
         () => {
-          mouseWheelSpeedTimeCount -= isMac ? 1 : 2;
+          mouseWheelSpeedTimeCount -= 1;
         },
-        isMac ? 200 : 600
+        50
       );
     }
 
@@ -252,9 +252,13 @@ export default function luckysheetHandler() {
       );
     }
 
-    if(event.shiftKey && !isMac){
-      event.deltaX = event.deltaY * -1
-      event.detalY = event.deltaX
+    let square = Math.max(1, Math.ceil(Store.visibledatarow.length / 100));
+    scrollNum = Math.pow(scrollNum, square);
+    scrollNum = Math.max(1,Math.ceil(scrollNum/100))
+
+    if (event.shiftKey && !isMac) {
+      event.deltaX = event.deltaY * -1;
+      event.detalY = event.deltaX;
     }
 
     if (event.deltaY != 0 && !event.shiftKey) {
@@ -286,15 +290,14 @@ export default function luckysheetHandler() {
       let col_ed;
 
       // if((isMac && event.deltaX >0 ) || (!isMac && event.deltaX < 0)){
-      if(event.deltaX >0){
-        scrollLeft = scrollLeft + scrollNum * 20 *Store.zoomRatio;
+      if (event.deltaX > 0) {
+        scrollLeft = scrollLeft + scrollNum * 20 * Store.zoomRatio;
 
         // if(col_ed >= visibledatacolumn_c.length){
         //     col_ed = visibledatacolumn_c.length - 1;
         // }
-      }
-      else{
-        scrollLeft = scrollLeft -  scrollNum * 20 *Store.zoomRatio;
+      } else {
+        scrollLeft = scrollLeft - scrollNum * 20 * Store.zoomRatio;
 
         // if(col_ed < 0){
         //     col_ed = 0;

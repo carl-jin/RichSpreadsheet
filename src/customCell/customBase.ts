@@ -132,7 +132,7 @@ export class CustomBase {
 
     const cellArea = getFrozenAreaThatCellIn(rowIndex, colIndex);
     //  只有在最左侧的区域才需要处理偏移值
-    const isInTheLeftEdge = ~cellArea.indexOf("left");
+    const isInTheLeftEdge = ~cellArea.indexOf("left") || cellArea === 'top';
     const offsetLeft = isInTheLeftEdge ? positionX + Store.rowHeaderWidth : positionX
 
 
