@@ -1974,7 +1974,7 @@ const data = {
   rows: [],
 };
 
-for (let i = 0; i < 400; i++) {
+for (let i = 0; i < 1000; i++) {
   data.rows.push({
     id: `a9a72d7c-d4ae-4223-a393-${i}`,
     "92325916-b7aa-4c06-b88b-21c40fc3b5c6": "2021-05-25",

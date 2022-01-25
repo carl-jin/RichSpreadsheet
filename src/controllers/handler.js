@@ -235,7 +235,7 @@ export default function luckysheetHandler() {
       mouseWheelSpeedTimeCount += 1;
       setTimeout(() => {
         mouseWheelSpeedTimeCount -= 1;
-      }, 50);
+      }, isMac ? 50 : 300);
     }
 
     let scrollNum = 1;
@@ -256,7 +256,7 @@ export default function luckysheetHandler() {
     scrollNum = Math.max(
       1,
       Math.floor(
-        (Math.min(20, scrollNum * 2) / 100) * Store.visibledatarow.length
+        (Math.min(25, scrollNum * 2) / 100) * Store.visibledatarow.length
       )
     );
 
