@@ -9,7 +9,8 @@ import {
   getSelectedRowIds,
   showLoading,
   hideLoading,
-  setCellValue, hideColumnByIndex,
+  setCellValue,
+  hideColumnByIndex,
 } from "../src";
 import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
@@ -28,8 +29,17 @@ function create() {
     GSClipboardOptions: {
       handlers: GsClipboardHandler,
     },
-    rowTitleNumberRender(number){
-      return number
+    sensitiveOperationDetect: 10,
+    sensitiveOperationDetectHandler(msg) {
+      console.log(msg);
+      return new Promise((res) => {
+        // setTimeout(()=>{
+          res(true)
+        // },3000)
+      });
+    },
+    rowTitleNumberRender(number) {
+      return number;
     },
     ContextMenu(params, type) {
       //  找到最后一个 column
@@ -161,9 +171,9 @@ function create() {
           },
           {
             name: "隐藏当前列",
-            action:()=>{
-              hideColumnByIndex(1)
-            }
+            action: () => {
+              hideColumnByIndex(1);
+            },
           },
           {
             separator: true,

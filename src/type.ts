@@ -27,5 +27,7 @@ export type RichSpreadsheetParams = Partial<{
   GSClipboardOptions: GsClipboardOptions;
   ContextMenu(params: ContextMenuParams, type: ContextMenuType): ContentMenuItem[];
   rowTitleNumberRender(index:number): string | number;
+  sensitiveOperationDetect: false | number;
+  sensitiveOperationDetectHandler(msg:string): Promise<boolean>;
   [key: string]: any;
 }>;

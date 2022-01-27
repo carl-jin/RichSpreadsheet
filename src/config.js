@@ -13,6 +13,12 @@ export default {
   showinfobar: true, //是否显示顶部名称栏
   showsheetbar: true, //是否显示底部表格名称区域
   showstatisticBar: false, //是否显示底部计数栏
+  sensitiveOperationDetect: false, // 敏感操作检测，修改数据量太多, 如果为数字的话，代表数量限制
+  sensitiveOperationDetectHandler(msg) {
+    return new Promise((res) => {
+      res(true);
+    });
+  },
   pointEdit: false, //是否是编辑器插入表格模式
   pointEditUpdate: null, //编辑器表格更新函数
   cellSpace: [2, 6], //  单元格 padding
@@ -28,8 +34,8 @@ export default {
   ContextMenu() {
     return [];
   },
-  rowTitleNumberRender(index){
-    return index
+  rowTitleNumberRender(index) {
+    return index;
   },
   pointEditZoom: 1, //编辑器表格编辑时缩放比例
 

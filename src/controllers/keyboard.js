@@ -810,9 +810,33 @@ export function keyboardInitial() {
               }
               Store.luckysheet_paste_iscut = false;
             }
-            //  **** paste 数据
-            pasteFromClipboard(shiftKey);
-            luckysheetactiveCell();
+
+            //
+            //  批量操作警告
+            (async () => {
+              let copyData = await Store.GS.getDataFromClipboard();
+              let count = 0;
+
+              copyData.clipboardType.map((row) => {
+                row.map((col) => {
+                  count += 1;
+                });
+              });
+
+              if (
+                Store.sensitiveOperationDetect &&
+                count >= Store.sensitiveOperationDetect
+              ) {
+                let isAllow = await Store.sensitiveOperationDetectHandler(
+                  `此次操作将会影响到 ${count} 个单元格，您确定吗？`
+                );
+                if (!isAllow) return;
+              }
+
+              //  **** paste 数据
+              pasteFromClipboard(shiftKey);
+              luckysheetactiveCell();
+            })();
 
             event.stopPropagation();
             return;

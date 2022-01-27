@@ -4435,65 +4435,34 @@ export default function luckysheetHandler() {
         }
       }
 
-      if (Store.config["merge"] != null) {
-        let hasMc = false;
-
-        for (let r = last["row"][0]; r <= last["row"][1]; r++) {
-          for (let c = last["column"][0]; c <= last["column"][1]; c++) {
-            let cell = Store.flowdata[r][c];
-
-            if (cell != null && cell.mc != null) {
-              hasMc = true;
-              break;
-            }
-          }
-        }
-
-        if (hasMc) {
-          if (isEditMode()) {
-            alert(locale_drag.noMerge);
-          } else {
-            tooltip.info(locale_drag.noMerge, "");
-          }
-
-          return;
-        }
-
-        for (let r = row_s; r <= row_e; r++) {
-          for (let c = col_s; c <= col_e; c++) {
-            let cell = Store.flowdata[r][c];
-
-            if (cell != null && cell.mc != null) {
-              hasMc = true;
-              break;
-            }
-          }
-        }
-
-        if (hasMc) {
-          if (isEditMode()) {
-            alert(locale_drag.noMerge);
-          } else {
-            tooltip.info(locale_drag.noMerge, "");
-          }
-
-          return;
-        }
-      }
-
       last["row"] = [row_s, row_e];
       last["column"] = [col_s, col_e];
 
-      luckysheetDropCell.update();
-      luckysheetDropCell.createIcon();
+      //
+      //  批量操作警告
+      (async () => {
+        let count = row_e - row_s + (col_e - col_s);
+        if (
+          Store.sensitiveOperationDetect &&
+          count >= Store.sensitiveOperationDetect
+        ) {
+          let isAllow = await Store.sensitiveOperationDetectHandler(
+            `此次操作将会影响到 ${count} 个单元格，您确定吗？`
+          );
+          if (!isAllow) return;
+        }
 
-      $("#luckysheet-cell-selected-move").hide();
+        luckysheetDropCell.update();
+        luckysheetDropCell.createIcon();
 
-      $("#luckysheet-sheettable").css("cursor", "default");
-      clearTimeout(Store.countfuncTimeout);
-      Store.countfuncTimeout = setTimeout(function () {
-        countfunc();
-      }, 500);
+        $("#luckysheet-cell-selected-move").hide();
+
+        $("#luckysheet-sheettable").css("cursor", "default");
+        clearTimeout(Store.countfuncTimeout);
+        Store.countfuncTimeout = setTimeout(function () {
+          countfunc();
+        }, 500);
+      })();
     }
   });
 
