@@ -4449,7 +4449,14 @@ export default function luckysheetHandler() {
           let isAllow = await Store.sensitiveOperationDetectHandler(
             `此次操作将会影响到 ${count} 个单元格，您确定吗？`
           );
-          if (!isAllow) return;
+          if (!isAllow) {
+            if (Store.luckysheet_select_save.length > 0) {
+              Store.luckysheet_select_save[0].row = [row_s, row_s];
+              Store.luckysheet_select_save[0].column = [col_s, col_s];
+            }
+            selectHightlightShow();
+            return;
+          }
         }
 
         luckysheetDropCell.update();
@@ -4459,9 +4466,9 @@ export default function luckysheetHandler() {
 
         $("#luckysheet-sheettable").css("cursor", "default");
         clearTimeout(Store.countfuncTimeout);
-        Store.countfuncTimeout = setTimeout(function () {
-          countfunc();
-        }, 500);
+        // Store.countfuncTimeout = setTimeout(function () {
+        //   countfunc();
+        // }, 500);
       })();
     }
   });

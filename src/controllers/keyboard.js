@@ -15,7 +15,7 @@ import selection from "./selection";
 import searchReplace from "./searchReplace";
 import controlHistory from "./controlHistory";
 import imageCtrl from "./imageCtrl";
-import { deleteCellByIndex } from "../global/apiHelper";
+import { deleteCellByIndex, setCellValue } from "../global/apiHelper";
 
 import {
   getByteLen,
@@ -1050,7 +1050,39 @@ export function keyboardInitial() {
           if (imageCtrl.currentImgId != null) {
             imageCtrl.removeImgItem();
           } else {
-            deleteCurrentSelection();
+            //
+            //  批量操作警告
+            let count = 0;
+            if (Store.luckysheet_select_save.length > 0) {
+              for (let s = 0; s < Store.luckysheet_select_save.length; s++) {
+                let r1 = Store.luckysheet_select_save[s].row[0],
+                  r2 = Store.luckysheet_select_save[s].row[1];
+                let c1 = Store.luckysheet_select_save[s].column[0],
+                  c2 = Store.luckysheet_select_save[s].column[1];
+
+                for (let r = r1; r <= r2; r++) {
+                  for (let c = c1; c <= c2; c++) {
+                    count += 1;
+                  }
+                }
+              }
+            }
+
+            (async () => {
+              if (
+                Store.sensitiveOperationDetect &&
+                count >= Store.sensitiveOperationDetect
+              ) {
+                let isAllow = await Store.sensitiveOperationDetectHandler(
+                  `此次操作将会影响到 ${count} 个单元格，您确定吗？`
+                );
+                if (!isAllow) {
+                  return;
+                }
+              }
+
+              deleteCurrentSelection();
+            })();
           }
 
           event.preventDefault();

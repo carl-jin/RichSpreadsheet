@@ -7,6 +7,7 @@ import Store from "../store";
 import {
   getColumnByColIndex,
   getOutputFromColumnTransformerParseValueToDataByValue,
+  isRowEditable,
   updateSpecificCellData,
 } from "./apiHelper";
 import {
@@ -57,6 +58,11 @@ function setcellvalue(r, c, d, v, options) {
       if (!options.force) {
         return;
       }
+    }
+
+    //  判断是否有当前行的编辑权限
+    if (!isRowEditable(r) && !options.force) {
+      return;
     }
 
     //  判断是否是 readonly 字段，如果是跳过更新

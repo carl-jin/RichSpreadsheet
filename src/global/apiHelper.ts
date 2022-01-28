@@ -483,3 +483,31 @@ export function getHiddenColumn() {
 
   return hiddenColumn;
 }
+
+/**
+ * 判断指定行是否可以编辑
+ * @param row_index
+ */
+export function isRowEditable(row_index) {
+  let cellData = getCellData();
+  let target = cellData[row_index] ? cellData[row_index] : {};
+
+  //  如果没有设置 __editable 则都可以编辑
+  return target.__editable === undefined ? true : target.__editable;
+}
+
+/**
+ * 判断当前行是否可以删除
+ * @param row_index
+ */
+export function isRowDeletable(row_index) {
+  let cellData = getCellData();
+  let target = cellData[row_index] ? cellData[row_index] : {};
+
+  //  如果没有设置 __deletable 则都可以编辑
+  return target.__deletable === undefined ? true : target.__deletable;
+}
+
+export function getStore() {
+  return Store;
+}

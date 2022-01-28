@@ -10,7 +10,11 @@ import cleargridelement from "../global/cleargridelement";
 import { isInlineStringCell } from "./inlineString";
 import Store from "../store";
 import { getSheetIndex } from "../methods/get";
-import {removeDataVerificationTooltip, useDataVerificationOnInput} from "./hooks/useDataVerification";
+import {
+  removeDataVerificationTooltip,
+  useDataVerificationOnInput,
+} from "./hooks/useDataVerification";
+import { isRowEditable } from "../global/apiHelper";
 
 //  editor **** editor cell 编辑
 export function luckysheetupdateCell(
@@ -28,6 +32,10 @@ export function luckysheetupdateCell(
   //  readonly 状态下禁止修改
   if (column.readonly === true) {
     Store.$emit("CantEditReadonly");
+    return;
+  }
+
+  if (!isRowEditable(row_index1)) {
     return;
   }
 
@@ -236,7 +244,7 @@ export function luckysheetupdateCell(
     }
 
     //  内容输入时显示验证信息
-    useDataVerificationOnInput(customDomBox,col_index)
+    useDataVerificationOnInput(customDomBox, col_index);
     Editor.afterMounted && Editor?.afterMounted(customDomBox);
   } else {
     $("#luckysheet-rich-text-editor").html(value).show();
