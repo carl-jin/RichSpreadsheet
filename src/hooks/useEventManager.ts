@@ -9,6 +9,7 @@
 //  sheetEmptied         sheet 一条数据都没有时触发
 //  cancelFrozenAutomatically 自动取消冻结（当冻结区域溢出时触发）
 //  cellSelected         当 cell 被 selected 时触发
+//  cellUnEditable       当尝试编辑 unEditable 的 cell 时
 
 export function useEventManager() {
   let evenList = {};

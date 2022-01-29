@@ -487,13 +487,22 @@ export function getHiddenColumn() {
 /**
  * 判断指定行是否可以编辑
  * @param row_index
+ * @param isSkipEvent
  */
-export function isRowEditable(row_index) {
+export function isRowEditable(row_index, isSkipEvent = false) {
   let cellData = getCellData();
   let target = cellData[row_index] ? cellData[row_index] : {};
-
   //  如果没有设置 __editable 则都可以编辑
-  return target.__editable === undefined ? true : target.__editable;
+  let isEditable = target.__editable === undefined ? true : target.__editable;
+
+  if (!isEditable && !isSkipEvent) {
+    window.clearTimeout(window.__RichsheetEditable);
+    window.__RichsheetEditable = window.setTimeout(() => {
+      Store.$emit("cellUnEditable");
+    }, 200);
+  }
+
+  return isEditable;
 }
 
 /**
