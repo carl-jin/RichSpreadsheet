@@ -10,7 +10,7 @@ import {
 import { luckysheetDrawMain } from "../../global/draw";
 import luckysheetFreezen from "../../controllers/freezen";
 
-export function finishEdit(){
+export function finishEdit() {
   if (Store.luckysheetCellUpdate.length > 0) {
     const [r, c] = Store.luckysheetCellUpdate;
     window["stopEditing"] = true;
@@ -19,13 +19,14 @@ export function finishEdit(){
     //  为了避免触发键盘上的其他事件，这里做个事件停止锁
     setTimeout(() => {
       window["stopEditing"] = false;
-    }, 200);
+      $(".luckysheet-grid-window-2").focus();
+    }, 100);
   } else {
     console.log("无法找到当前 row_index 和 col_index", Store);
   }
 }
 
-export function startEdit(CellRenderersParams: CellRenderersParams){
+export function startEdit(CellRenderersParams: CellRenderersParams) {
   const { colIndex: col, rowIndex: row } = CellRenderersParams;
   const currentSheet =
     Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];

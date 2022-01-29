@@ -70,6 +70,9 @@ export class CustomBase {
    */
   protected stopEdit() {
     formula.dontupdate();
+    setTimeout(() => {
+      $(".luckysheet-grid-window-2").focus();
+    }, 100);
   }
 
   //  直接进入编辑状态
@@ -94,8 +97,9 @@ export class CustomBase {
     const cellArea = getFrozenAreaThatCellIn(rowIndex, colIndex);
     //  只有在最左侧的区域才需要处理偏移值
     const isInTheLeftEdge = ~cellArea.indexOf("left");
-    const offsetLeft = isInTheLeftEdge ? positionX + Store.rowHeaderWidth : positionX
-
+    const offsetLeft = isInTheLeftEdge
+      ? positionX + Store.rowHeaderWidth
+      : positionX;
 
     let left = positionX;
     let width = cellWidth;
@@ -132,9 +136,10 @@ export class CustomBase {
 
     const cellArea = getFrozenAreaThatCellIn(rowIndex, colIndex);
     //  只有在最左侧的区域才需要处理偏移值
-    const isInTheLeftEdge = ~cellArea.indexOf("left") || cellArea === 'top';
-    const offsetLeft = isInTheLeftEdge ? positionX + Store.rowHeaderWidth : positionX
-
+    const isInTheLeftEdge = ~cellArea.indexOf("left") || cellArea === "top";
+    const offsetLeft = isInTheLeftEdge
+      ? positionX + Store.rowHeaderWidth
+      : positionX;
 
     let left = positionX;
     let width = cellWidth;
