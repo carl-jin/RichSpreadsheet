@@ -63,7 +63,6 @@ import { useContextMenu } from "./hooks/useContextMenu";
 import luckysheetFreezen from "./freezen";
 import freezen from "./freezen";
 
-
 export function rowColumnOperationInitial() {
   //表格行标题 mouse事件
   $("#luckysheet-rows-h")
@@ -533,18 +532,17 @@ export function rowColumnOperationInitial() {
       if (
         luckysheetFreezen.freezenverticaldata != null &&
         mouse[0] <
-        luckysheetFreezen.freezenverticaldata[0] -
-        luckysheetFreezen.freezenverticaldata[2]
+          luckysheetFreezen.freezenverticaldata[0] -
+            luckysheetFreezen.freezenverticaldata[2]
       ) {
         x = mouse[0] + luckysheetFreezen.freezenverticaldata[2];
       }
-
 
       let row_index = Store.visibledatarow.length - 1,
         row = Store.visibledatarow[row_index],
         row_pre = 0;
 
-      let col_location = colLocation(x,true),
+      let col_location = colLocation(x, true),
         col = col_location[1],
         col_pre = col_location[0],
         col_index = col_location[2];
@@ -716,16 +714,17 @@ export function rowColumnOperationInitial() {
         x = mouse[0] + luckysheetFreezen.freezenverticaldata[2];
       }
 
-      let [new_x] = freezen.getAdaptOffsetLeftInfo(x)
-      x = new_x
+      let [new_x] = freezen.getAdaptOffsetLeftInfo(x);
+      x = new_x;
 
       let col_location = colLocation(x),
         col = col_location[1],
         col_pre = col_location[0],
         col_index = col_location[2];
 
-      let [new_col,isNewColInFrozen,scrollLeft] = freezen.getAdaptOffsetLeftInfo(col)
-      col = new_col + (isNewColInFrozen ? scrollLeft : 0)
+      let [new_col, isNewColInFrozen, scrollLeft] =
+        freezen.getAdaptOffsetLeftInfo(col);
+      col = new_col + (isNewColInFrozen ? scrollLeft : 0);
       // console.log(col,isNewColInFrozen,col_index)
 
       $("#luckysheet-cols-h-hover").css({
@@ -733,7 +732,11 @@ export function rowColumnOperationInitial() {
         width: col - col_pre - 1,
         display: "block",
       });
-      $("#luckysheet-cols-menu-btn").css({ left: col - 19, display: "block" });
+      $("#luckysheet-cols-menu-btn").css({
+        left: col - 19,
+        display: "block",
+        backgroundColor: "#fff",
+      });
 
       $("#luckysheet-cols-change-size").css({ left: col - 5 });
       if (x < col && x >= col - 5) {
@@ -917,10 +920,9 @@ export function rowColumnOperationInitial() {
     Store.luckysheet_cols_menu_status = true;
   });
 
-
   /* 右键后需要执行的事件, 都可以在下面找到参考 */
 
-/*  //向左增加列，向上增加行
+  /*  //向左增加列，向上增加行
   // $("#luckysheet-add-lefttop, #luckysheet-add-lefttop_t").click(function (event) {
   $("#luckysheet-top-left-add-selected").click(function (event) {
     // Click input element, don't comfirm
