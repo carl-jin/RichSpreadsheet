@@ -40,7 +40,9 @@ export async function pasteFromClipboard(shiftKey: boolean = false) {
         const GSCHandlers = Store.GSClipboardOptions.handlers;
         let text = "";
         let html = "";
-        const correspondingHandler = GSCHandlers.find((_item) => _item.type === item.type);
+        const correspondingHandler = GSCHandlers.find(
+          (_item) => _item.type === item.type
+        );
         if (correspondingHandler) {
           text = correspondingHandler.toText(item.value);
           html = correspondingHandler.toHtml(item.value);
@@ -60,6 +62,11 @@ export async function pasteFromClipboard(shiftKey: boolean = false) {
       }
 
       if (d[row] && d[row][col]) {
+        //  粘贴后显示粘贴的影响到的选区
+        if (Store.luckysheet_select_save[0]) {
+          Store.luckysheet_select_save[0].row[1] = row;
+          Store.luckysheet_select_save[0].column[1] = col;
+        }
         setcellvalue(row, col, d, value);
         hasChange = true;
       } else {

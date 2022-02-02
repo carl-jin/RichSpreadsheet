@@ -1246,14 +1246,18 @@ export function keyboardInitial() {
             )
           );
         } else {
-          formula.updatecell(
-            Store.luckysheetCellUpdate[0],
-            Store.luckysheetCellUpdate[1]
-          );
-          luckysheetMoveHighlightCell("right", 1, "rangeOfSelect");
+          //  如果此时 foucs 的是编辑框则什么也不做
+          if ($(event.target).parents(".cell-editor-custom").length > 0) {
+            return;
+          } else {
+            formula.updatecell(
+              Store.luckysheetCellUpdate[0],
+              Store.luckysheetCellUpdate[1]
+            );
+            luckysheetMoveHighlightCell("right", 1, "rangeOfSelect");
+            event.preventDefault();
+          }
         }
-
-        event.preventDefault();
       } else if (kcode == keycode.F4 && parseInt($inputbox.css("top")) > 0) {
         formula.setfreezonFuc(event);
         event.preventDefault();

@@ -15,6 +15,7 @@ import {
   useDataVerificationOnInput,
 } from "./hooks/useDataVerification";
 import { isRowEditable } from "../global/apiHelper";
+import {removeCellExtractDom} from "./hooks/useShowCellExtractDomOnMouseEnter";
 
 //  editor **** editor cell 编辑
 export function luckysheetupdateCell(
@@ -277,6 +278,7 @@ export function luckysheetupdateCell(
   formula.createRangeHightlight();
   formula.rangeResizeTo = $("#luckysheet-rich-text-editor");
   cleargridelement();
+  removeCellExtractDom();
 
   //  设置自定义编辑框 size
   {
