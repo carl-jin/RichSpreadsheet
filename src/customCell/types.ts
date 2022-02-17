@@ -28,6 +28,7 @@ export type CellRenderersParams = {
   ctx: CanvasRenderingContext2D;
   positionX: number;
   positionY: number;
+  [key: string]: any;
 };
 
 export type FormatValueFromData = {
@@ -44,10 +45,10 @@ export type CellRenderersMouseEventParams = CellRenderersParams & {
     mouse_y: number;
   };
   //  相对于表格主体（不包含 column header 和 row header 的 mouse event）
-  relatedMouseEvent:{
+  relatedMouseEvent: {
     mouse_x: number;
     mouse_y: number;
-  }
+  };
 };
 
 export type CellRenderersMouseClickParams = CellRenderersMouseEventParams & {
