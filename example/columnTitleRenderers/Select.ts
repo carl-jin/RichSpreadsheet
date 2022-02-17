@@ -19,7 +19,6 @@ export default class Select extends ColumnTitleRenderers {
   }
 
   mouseenterRender(ColumnTitleRenderParams: ColumnTitleRenderParams) {
-    // todo  冻结后渲染出错
     const { ctx, positionX, positionY, columnHeight } = ColumnTitleRenderParams;
 
     //  清理下单元格
