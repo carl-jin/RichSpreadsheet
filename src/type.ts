@@ -1,9 +1,12 @@
 import { CellRenderers } from "./customCell/cellRenderers";
 import { CellEditors } from "./customCell/cellEditors";
-import { cell } from "./customCell/types";
 import { GsClipboardOptions } from "gs-clipboard";
-import {ContextMenuParams, ContextMenuType} from "./controllers/hooks/useContextMenu";
-import {CellTransformer} from "./customCell/cellTransformer";
+import {
+  ContextMenuParams,
+  ContextMenuType,
+} from "./controllers/hooks/useContextMenu";
+import { CellTransformer } from "./customCell/cellTransformer";
+import { ColumnTitleRenderers } from "./customColumnHeader/ColumnTitleRenderers";
 
 export type ContentMenuItem = Partial<{
   name: string;
@@ -15,19 +18,17 @@ export type ContentMenuItem = Partial<{
 }>;
 
 export type RichSpreadsheetParams = Partial<{
-  cellRenderers: {
-    [key: string]: CellRenderers;
-  };
-  cellEditors: {
-    [key: string]: CellEditors;
-  };
-  cellTransformer:{
-    [key:string]: CellTransformer;
-  }
+  cellRenderers: Record<string, CellRenderers>;
+  cellEditors: Record<string, CellEditors>;
+  cellTransformer: Record<string, CellTransformer>;
+  ColumnTitleRenderers: Record<string, ColumnTitleRenderers>;
   GSClipboardOptions: GsClipboardOptions;
-  ContextMenu(params: ContextMenuParams, type: ContextMenuType): ContentMenuItem[];
-  rowTitleNumberRender(index:number): string | number;
+  ContextMenu(
+    params: ContextMenuParams,
+    type: ContextMenuType
+  ): ContentMenuItem[];
+  rowTitleNumberRender(index: number): string | number;
   sensitiveOperationDetect: false | number;
-  sensitiveOperationDetectHandler(msg:string): Promise<boolean>;
+  sensitiveOperationDetectHandler(msg: string): Promise<boolean>;
   [key: string]: any;
 }>;

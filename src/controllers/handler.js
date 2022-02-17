@@ -49,7 +49,12 @@ import {
   $$,
 } from "../utils/util";
 import { getSheetIndex, getRangetxt } from "../methods/get";
-import { rowLocation, colLocation, mouseposition } from "../global/location";
+import {
+  rowLocation,
+  colLocation,
+  mouseposition,
+  mousepositionOnColumn,
+} from "../global/location";
 import { rowlenByRange } from "../global/getRowlen";
 import { isRealNull, hasPartMC, isEditMode } from "../global/validate";
 import { countfunc } from "../global/count";
@@ -71,7 +76,10 @@ import { getBorderInfoCompute } from "../global/border";
 // import { luckysheetDrawMain } from "../global/draw";
 import locale from "../locale/locale";
 import Store from "../store";
-import { canvasMousemove } from "./hooks/useMouseMove";
+import {
+  canvasMousemoveOnCell,
+  canvasMousemoveOnColumnHeader,
+} from "./hooks/useMouseMove";
 import { canvasMouseClick } from "./hooks/useMouseClick";
 import { removeCellExtractDom } from "./hooks/useShowCellExtractDomOnMouseEnter";
 import {
@@ -90,12 +98,70 @@ import { getWheelSpeed } from "./hooks/helper/getWheelSpeed";
 
 let mouseWheelSpeedTimeCount = 0;
 
+export const getMouseRelateColumn = (event) => {
+  let mouse = mousepositionOnColumn(event.pageX, event.pageY);
+  if (
+    mouse[0] >= Store.cellmainWidth - Store.cellMainSrollBarSize ||
+    mouse[1] >= Store.columnHeaderHeight
+  ) {
+    return false;
+  }
+
+  if (mouse[0] < 0 || mouse[1] < 0) {
+    return false;
+  }
+
+  const $main = $("#luckysheet-cell-main");
+  const scrollLeft = $main.scrollLeft();
+
+  let x = mouse[0] + scrollLeft;
+
+  if (
+    luckysheetFreezen.freezenverticaldata != null &&
+    mouse[0] <
+      luckysheetFreezen.freezenverticaldata[0] -
+        luckysheetFreezen.freezenverticaldata[2]
+  ) {
+    x = mouse[0] + luckysheetFreezen.freezenverticaldata[2];
+  }
+
+  let col_location = colLocation(x),
+    col = col_location[1],
+    col_pre = col_location[0],
+    col_index = col_location[2];
+
+  //  判断这个 col 存不存在， 如果不存在直接返回 false
+  if (!isColExisted(col_index)) {
+    return false;
+  }
+
+  return {
+    col_index,
+    col_pre,
+    col,
+    col_location,
+    mouseEvent: {
+      mouse_x: mouse[0] + luckysheetConfigsetting.rowHeaderWidth,
+      mouse_y: mouse[1] + luckysheetConfigsetting.columnHeaderHeight,
+    },
+    relatedMouseEvent: {
+      mouse_x: mouse[0],
+      mouse_y: mouse[1],
+    },
+  };
+};
+
 export const getMouseRelateCell = (event) => {
   let mouse = mouseposition(event.pageX, event.pageY);
+
   if (
     mouse[0] >= Store.cellmainWidth - Store.cellMainSrollBarSize ||
     mouse[1] >= Store.cellmainHeight - Store.cellMainSrollBarSize
   ) {
+    return false;
+  }
+
+  if (mouse[0] < 0 || mouse[1] < 0) {
     return false;
   }
 
@@ -1460,7 +1526,8 @@ export default function luckysheetHandler() {
     // hyperlinkCtrl.overshow(event); //链接提示显示
     window.cancelAnimationFrame(Store.jfautoscrollTimeout);
     //  表格 cell 鼠标事件集
-    canvasMousemove(event);
+    canvasMousemoveOnCell(event);
+    canvasMousemoveOnColumnHeader(event);
 
     if (!!luckysheetFreezen.horizontalmovestate) {
       let mouse = mouseposition(event.pageX, event.pageY);

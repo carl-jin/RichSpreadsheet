@@ -2,7 +2,14 @@ import Store from "../../../store";
 import { getSheetIndex } from "../../../methods/get";
 import luckysheetConfigsetting from "../../luckysheetConfigsetting";
 import { column } from "../../../customCell/types";
-import { getCellData } from "../../../global/apiHelper";
+import {
+  getCellData,
+  getCtxByRowAndCellIndex,
+} from "../../../global/apiHelper";
+import {
+  detectIsInFrozenByFrozenPosition,
+  getFrozenAreaThatCellIn,
+} from "../../../customCell/helper/tools";
 
 export function deepClone(data) {
   return JSON.parse(JSON.stringify(data));
@@ -96,7 +103,65 @@ export function getRowIndexByRowId(id): any {
 }
 
 /**
- * 统一生成处理 render 事件的参数
+ * 统一生成处理 column title render 事件的参数
+ * @param mouseDetail
+ */
+export function createColumnTitleRendererParamsViaMouseDetail(mouseDetail) {
+  const { col_location, col, col_pre, col_index, mouseEvent } = mouseDetail;
+
+  const currentSheet =
+    Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
+  const column = currentSheet.column[col_index];
+  if (!column) return [false, false];
+  const type = column.type;
+  const Render = Store.ColumnTitleRenderers[type];
+
+  if (type && Render) {
+    const columnWidth = col - col_pre;
+    const columnHeight = Store.columnHeaderHeight;
+    const scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft();
+    const scrollTop = $("#luckysheet-scrollbar-y").scrollTop();
+    let canvas = document.getElementById(
+      "luckysheetTableContent"
+    ) as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d");
+
+    let positionX =
+      col - scrollLeft - columnWidth + luckysheetConfigsetting.rowHeaderWidth;
+    let positionY = 0 - columnHeight + luckysheetConfigsetting.defaultRowHeight;
+
+    //  判断当前渲染的单元格是否在冻结区域内
+    let cellInPosition = getFrozenAreaThatCellIn(1, col_index);
+    if (detectIsInFrozenByFrozenPosition(cellInPosition)) {
+      positionX = positionX + scrollLeft;
+
+      mouseEvent.mouse_x =
+        mouseEvent.mouse_x - luckysheetConfigsetting.rowHeaderWidth;
+      mouseEvent.mouse_y =
+        mouseEvent.mouse_y - luckysheetConfigsetting.defaultRowHeight;
+    }
+
+    return [
+      Render,
+      {
+        mouseEvent,
+        colIndex: col_index,
+        column: column,
+        columns: currentSheet.column,
+        columnWidth: columnWidth,
+        columnHeight: Store.columnHeaderHeight,
+        positionX,
+        positionY,
+        ctx,
+      },
+    ];
+  } else {
+    return [false, false];
+  }
+}
+
+/**
+ * 统一生成处理 cell render 事件的参数
  * @param mouseDetail
  */
 export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
@@ -126,9 +191,25 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
     const cellHeight = row - row_pre;
     const scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft();
     const scrollTop = $("#luckysheet-scrollbar-y").scrollTop();
-    const luckysheet = document.getElementById(
-      "luckysheetTableContent"
-    ) as HTMLCanvasElement;
+    const ctx = getCtxByRowAndCellIndex(row_index, col_index);
+    let positionX =
+      col - scrollLeft - cellWidth + luckysheetConfigsetting.rowHeaderWidth;
+    let positionY =
+      row - scrollTop - cellHeight + luckysheetConfigsetting.defaultRowHeight;
+
+    //  判断当前渲染的单元格是否在冻结区域内
+    let cellInPosition = getFrozenAreaThatCellIn(row_index, col_index);
+    if (detectIsInFrozenByFrozenPosition(cellInPosition)) {
+      positionX =
+        positionX + scrollLeft - luckysheetConfigsetting.rowHeaderWidth + 1;
+      positionY = positionY - luckysheetConfigsetting.defaultRowHeight + 1;
+
+      mouseEvent.mouse_x =
+        mouseEvent.mouse_x - luckysheetConfigsetting.rowHeaderWidth;
+      mouseEvent.mouse_y =
+        mouseEvent.mouse_y - luckysheetConfigsetting.defaultRowHeight;
+    }
+
     return [
       Render,
       {
@@ -148,14 +229,9 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
         cellHeight: cellHeight - 1,
         spaceX: Store.cellSpace[1],
         spaceY: Store.cellSpace[0],
-        ctx: luckysheet.getContext("2d"),
-        positionX:
-          col - scrollLeft - cellWidth + luckysheetConfigsetting.rowHeaderWidth,
-        positionY:
-          row -
-          scrollTop -
-          cellHeight +
-          luckysheetConfigsetting.defaultRowHeight,
+        ctx,
+        positionX,
+        positionY,
       },
     ];
   } else {
@@ -170,8 +246,16 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
  */
 export function devicePixelRatioHacks(params) {
   const rete = Store.devicePixelRatio;
-  const { ctx, positionX, positionY, cellHeight, cellWidth, mouseEvent } =
-    params;
+  const {
+    ctx,
+    positionX,
+    positionY,
+    cellHeight,
+    cellWidth,
+    mouseEvent,
+    columnWidth,
+    columnHeight,
+  } = params;
   const { mouse_x, mouse_y } = mouseEvent;
   params = Object.assign({}, params, {
     cellWidth: cellWidth,
@@ -188,7 +272,15 @@ export function devicePixelRatioHacks(params) {
     ctx.save();
     ctx.scale(Store.devicePixelRatio, Store.devicePixelRatio);
     ctx.beginPath();
-    ctx.rect(positionX, positionY, cellWidth, cellHeight);
+
+    //  这个地方 cell 渲染 和 column title 渲染都用到了
+    //  需要兼容下 cellWidth columnWidth
+    ctx.rect(
+      positionX,
+      positionY,
+      cellWidth ?? columnWidth,
+      cellHeight ?? columnHeight
+    );
     ctx.clip();
   };
 

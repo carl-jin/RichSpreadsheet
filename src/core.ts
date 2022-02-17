@@ -85,6 +85,7 @@ RichSpread.create = function (setting: RichSpreadsheetParams) {
   Store.cellRenderers = extendsetting.cellRenderers;
   Store.cellEditors = extendsetting.cellEditors;
   Store.cellTransformer = extendsetting.cellTransformer;
+  Store.ColumnTitleRenderers = extendsetting.ColumnTitleRenderers;
   Store.GSClipboardOptions = extendsetting.GSClipboardOptions;
   Store.ContextMenu = extendsetting.ContextMenu;
   Store.cellContextMenu = extendsetting.cellContextMenu;

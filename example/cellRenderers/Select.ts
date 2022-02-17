@@ -98,12 +98,40 @@ class Select extends CellRenderers {
   mouseenterRender(
     CellRenderersMouseEventParams: CellRenderersMouseEventParams
   ) {
-    this.render(CellRenderersMouseEventParams);
+    const {
+      ctx,
+      value,
+      positionX,
+      positionY,
+      spaceX,
+      spaceY,
+      cellHeight,
+      cellWidth,
+    } = CellRenderersMouseEventParams;
+
+    //  清理下单元格
+    this.clearCell(CellRenderersMouseEventParams);
+    //  设置裁剪区域
+    this.startCellClip(CellRenderersMouseEventParams);
+
+    ctx.rect(
+      positionX,
+      positionY,
+      cellWidth,
+      cellHeight
+    );
+    ctx.fillStyle = "#f20"
+    ctx.fill()
+
+
+    //  关闭裁剪区域
+    this.closeCellClip(CellRenderersMouseEventParams);
   }
 
   mousemoveRender(
     CellRenderersMouseEventParams: CellRenderersMouseEventParams
   ) {
+
     const { mouseEvent, ctx } = CellRenderersMouseEventParams;
     const { mouse_x, mouse_y } = mouseEvent;
     const { rectPath, pathTriangle } = this.render(
@@ -136,7 +164,6 @@ class Select extends CellRenderers {
       this.startEdit(CellRenderersMouseClickParams);
     }
   }
-
 
   showExtractDomOnMouseEnter(
     CellRenderersParams: CellRenderersParams

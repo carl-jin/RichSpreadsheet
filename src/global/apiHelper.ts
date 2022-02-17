@@ -21,6 +21,15 @@ import { setcellvalue as _setcellvalue } from "./setdata";
 import { sortColumnSeletion as _sortColumnSeletion } from "./sort";
 import { jfrefreshgrid_rhcw } from "../global/refresh";
 import { luckysheetContainerFocus } from "../utils/util";
+import {
+  luckysheetdefaultstyle,
+  luckysheetdefaultFont,
+} from "../controllers/constant";
+import {
+  detectIsInFrozenByFrozenPosition,
+  getFrozenAreaThatCellIn,
+} from "../customCell/helper/tools";
+
 /**
  * 根据 flowData 更新 cellData
  * @param data
@@ -519,4 +528,59 @@ export function isRowDeletable(row_index) {
 
 export function getStore() {
   return Store;
+}
+
+/**
+ * 获取表头默认字体
+ */
+export function getColumnTitleFont() {
+  return luckysheetdefaultFont().replace(/^normal/, "bold");
+}
+
+/**
+ * 获取表头字体样式
+ */
+export function getColumnTitleStyle() {
+  return {
+    font: luckysheetdefaultFont().replace(/^normal/, "bold"),
+    fillStyle: "#333",
+    textBaseline: luckysheetdefaultstyle.textBaseline,
+  };
+}
+
+/**
+ * 设置表头字体样式
+ */
+export function setColumnTitleStyle(ctx: CanvasRenderingContext2D) {
+  const { font, fillStyle, textBaseline } = getColumnTitleStyle();
+
+  ctx.font = font;
+  ctx.fillStyle = fillStyle;
+  ctx.textBaseline = textBaseline;
+}
+
+/**
+ * 根据 rowindex 和 colindex 来获取对应单元格所在的 canvas 区域
+ * 因为表格中有冻结效果时，页面会被拆封成几个部分
+ * @param rowIndex
+ * @param cellIndex
+ */
+export function getCtxByRowAndCellIndex(
+  rowIndex: number,
+  cellIndex: number
+): CanvasRenderingContext2D {
+  let position = getFrozenAreaThatCellIn(rowIndex, cellIndex);
+
+  //  判断单元格是否在冻结区域，如果在冻结区域的话，返回冻结区域的 canvas
+  //  注意：页面取消了冻结列功能，所以这里只有一种情况
+  let canvas: HTMLCanvasElement = null;
+  if (detectIsInFrozenByFrozenPosition(position)) {
+    canvas = document.getElementById("freezen_v") as HTMLCanvasElement;
+  } else {
+    canvas = document.getElementById(
+      "luckysheetTableContent"
+    ) as HTMLCanvasElement;
+  }
+
+  return canvas.getContext("2d");
 }

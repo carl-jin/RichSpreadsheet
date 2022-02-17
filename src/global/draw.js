@@ -25,6 +25,7 @@ import locale from "../locale/locale";
 import sheetmanage from "../controllers/sheetmanage";
 import { isPlainObject } from "lodash-es";
 import { DataVerificationRenderRedTriangleIfDataVerificationFailed } from "../controllers/hooks/useDataVerification";
+import { setColumnTitleStyle } from "./apiHelper";
 
 function luckysheetDrawgridRowTitle(scrollHeight, drawHeight, offsetTop) {
   if (scrollHeight == null) {
@@ -52,9 +53,7 @@ function luckysheetDrawgridRowTitle(scrollHeight, drawHeight, offsetTop) {
     drawHeight
   );
 
-  luckysheetTableContent.font = luckysheetdefaultFont();
-  luckysheetTableContent.textBaseline = luckysheetdefaultstyle.textBaseline; //基准线 垂直居中
-  luckysheetTableContent.fillStyle = luckysheetdefaultstyle.fillStyle;
+  setColumnTitleStyle(luckysheetTableContent);
 
   let dataset_row_st, dataset_row_ed;
   dataset_row_st = luckysheet_searcharray(Store.visibledatarow, scrollHeight);
@@ -327,22 +326,6 @@ function luckysheetDrawgridColumnTitle(scrollWidth, drawWidth, offsetLeft) {
     //  **** 这里修改 columns
     // let abc = chatatABC(c);
     let abc = column[c]?.headerName ?? chatatABC(c);
-    //列标题单元格渲染前触发，return false 则不渲染该单元格
-    if (
-      !method.createHookFunction(
-        "columnTitleCellRenderBefore",
-        abc,
-        {
-          c: c,
-          left: start_c + offsetLeft - 1,
-          width: end_c - start_c,
-          height: Store.columnHeaderHeight - 1,
-        },
-        luckysheetTableContent
-      )
-    ) {
-      continue;
-    }
 
     if (
       Store.config["colhidden"] != null &&
@@ -364,18 +347,39 @@ function luckysheetDrawgridColumnTitle(scrollWidth, drawWidth, offsetLeft) {
 
       let textMetrics = getMeasureText(abc, luckysheetTableContent);
       //luckysheetTableContent.measureText(abc);
+      setColumnTitleStyle(luckysheetTableContent);
 
-      let horizonAlignPos = Math.round(
-        // start_c + (end_c - start_c) / 2 + offsetLeft - textMetrics.width / 2
-        start_c + Store.rowHeaderWidth + offsetLeft - 40
-      );
-      let verticalAlignPos = Math.round(Store.columnHeaderHeight / 2);
-      luckysheetTableContent.font = luckysheetdefaultFont().replace(/^normal/,'bold');
-      luckysheetTableContent.fillText(
-        abc,
-        horizonAlignPos / Store.zoomRatio + 6,
-        verticalAlignPos / Store.zoomRatio + 2
-      );
+      //  表头  **** 自定义渲染表头
+      if (
+        column[c] &&
+        column[c].type &&
+        Store.ColumnTitleRenderers[column[c].type]
+      ) {
+        const columnHeaderRender = Store.ColumnTitleRenderers[column[c].type];
+
+        columnHeaderRender.render({
+          colIndex: c,
+          column: column[c],
+          columns: column,
+          columnWidth: end_c - start_c,
+          columnHeight: Store.columnHeaderHeight,
+          positionX: start_c + offsetLeft - 1,
+          positionY: 0,
+          ctx: luckysheetTableContent,
+        });
+      } else {
+        let horizonAlignPos = Math.round(
+          // start_c + (end_c - start_c) / 2 + offsetLeft - textMetrics.width / 2
+          start_c + Store.rowHeaderWidth + offsetLeft - 40
+        );
+        let verticalAlignPos = Math.round(Store.columnHeaderHeight / 2);
+        luckysheetTableContent.fillText(
+          abc,
+          horizonAlignPos / Store.zoomRatio + 6,
+          verticalAlignPos / Store.zoomRatio + 2
+        );
+      }
+
       luckysheetTableContent.restore(); //restore scale after draw text
     }
 

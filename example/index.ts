@@ -16,6 +16,7 @@ import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
 import cellEditors from "./cellEditors";
 import cellTransformer from "./cellTransfomer";
+import ColumnTitleRenderers from "./columnTitleRenderers";
 import GsClipboardHandler from "./GSClipboard/handler/index";
 import { deepClone } from "../src/controllers/hooks/helper";
 
@@ -26,6 +27,7 @@ function create() {
     cellRenderers,
     cellEditors,
     cellTransformer,
+    ColumnTitleRenderers,
     GSClipboardOptions: {
       handlers: GsClipboardHandler,
     },
@@ -34,7 +36,7 @@ function create() {
       console.log(msg);
       return new Promise((res) => {
         // setTimeout(()=>{
-          res(true)
+        res(true);
         // },3000)
       });
     },
@@ -215,12 +217,12 @@ function create() {
         row: rows.length + 2,
         celldata: rows,
         frozen: {
-          type: "cancel",
-          /*    type: "rangeColumn",
+          // type: "cancel",
+          type: "rangeColumn",
           range: {
             row_focus: 0,
-            column_focus: 2,
-          },*/
+            column_focus: 4,
+          },
         },
         config: {
           columnlen: {
