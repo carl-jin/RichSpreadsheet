@@ -6,7 +6,7 @@ import {
   ContextMenuType,
 } from "./controllers/hooks/useContextMenu";
 import { CellTransformer } from "./customCell/cellTransformer";
-import { ColumnTitleRenderers } from "./customColumnHeader/ColumnTitleRenderers";
+import { ColumnTitleRenderers } from "./customColumnHeader/columnTitleRenderers";
 
 export type ContentMenuItem = Partial<{
   name: string;

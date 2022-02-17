@@ -22,7 +22,7 @@ export type {
 export { CellRenderers } from "./customCell/cellRenderers";
 export { CellEditors } from "./customCell/cellEditors";
 export { CellTransformer } from "./customCell/cellTransformer";
-export { ColumnTitleRenderers } from "./customColumnHeader/ColumnTitleRenderers";
+export { ColumnTitleRenderers } from "./customColumnHeader/columnTitleRenderers";
 export type { Handler as GSClipboardHandler } from "gs-clipboard";
 export * from "./type";
 export * from "./customCell/helper/drawHelper";
