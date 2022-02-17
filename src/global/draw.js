@@ -1203,7 +1203,7 @@ let cellRender = function (
 
     luckysheetTableContent.save();
     luckysheetTableContent.beginPath();
-    luckysheetTableContent.rect(pos_x, pos_y, cellWidth, cellHeight);
+    luckysheetTableContent.rect(pos_x, pos_y - 1, cellWidth, cellHeight + 1);
     luckysheetTableContent.clip();
     luckysheetTableContent.scale(Store.zoomRatio, Store.zoomRatio);
     const currentSheet =

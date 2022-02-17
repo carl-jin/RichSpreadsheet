@@ -152,7 +152,7 @@ export class CustomBase {
 
     ctx.save();
     ctx.beginPath();
-    ctx.rect(left, positionY, width - 1, cellHeight - 1);
+    ctx.rect(left, positionY - 1, width - 1, cellHeight);
     ctx.clip();
   }
 
