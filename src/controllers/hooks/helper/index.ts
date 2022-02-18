@@ -222,7 +222,8 @@ export function createColumnCellRendererParamsViaMouseDetail(mouseDetail) {
         value: Store.cellTransformer[type]
           ? Store.cellTransformer[type].formatValueFromData(
               cell.v,
-              column.cellParams
+              column.cellParams,
+              column
             )
           : cell.v,
         cellWidth: cellWidth - 2,

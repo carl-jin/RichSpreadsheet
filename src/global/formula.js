@@ -1435,7 +1435,8 @@ const luckysheetformula = {
     if (Store.cellTransformer[type]) {
       value = Store.cellTransformer[type].parseValueToData(
         value,
-        column.cellParams
+        column.cellParams,
+        column
       );
     }
 

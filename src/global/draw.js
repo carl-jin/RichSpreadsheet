@@ -1221,7 +1221,8 @@ let cellRender = function (
         value: Store.cellTransformer[type]
           ? Store.cellTransformer[type].formatValueFromData(
               cell.v,
-              currentSheet.column[c].cellParams
+              currentSheet.column[c].cellParams,
+              currentSheet.column[c]
             )
           : cell.v,
         cellWidth: cellWidth,

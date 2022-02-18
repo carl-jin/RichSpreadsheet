@@ -416,7 +416,7 @@ export function getOutputFromColumnTransformerParseValueToDataByValue(
   const transformer = Store.cellTransformer[column.type];
   if (!transformer) return value;
 
-  return transformer.parseValueToData(value, column.cellParams);
+  return transformer.parseValueToData(value, column.cellParams,column);
 }
 
 /**
@@ -434,7 +434,7 @@ export function getOutputFromColumnTransformerFormatValueFromDataByValue(
   const transformer = Store.cellTransformer[column.type];
   if (!transformer) return value;
 
-  return transformer.formatValueFromData(value, column.cellParams);
+  return transformer.formatValueFromData(value, column.cellParams,column);
 }
 
 /**

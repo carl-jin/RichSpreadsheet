@@ -201,7 +201,8 @@ export function luckysheetupdateCell(
   value = Store.cellTransformer[type]
     ? Store.cellTransformer[type].formatValueFromData(
         value,
-        currentSheet.column[col_index].cellParams
+        currentSheet.column[col_index].cellParams,
+        currentSheet.column[col_index]
       )
     : value;
   if (type && Store.cellEditors[type]) {

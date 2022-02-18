@@ -57,7 +57,8 @@ export async function pasteFromClipboard(shiftKey: boolean = false) {
         );
         value = Store.cellTransformer[type].parseValueToData(
           value,
-          column.cellParams
+          column.cellParams,
+          column
         );
       }
 
@@ -127,7 +128,8 @@ export function setCopyToClipboard(
       if (Store.cellTransformer[type]) {
         value = Store.cellTransformer[type].formatValueFromData(
           value,
-          column.cellParams
+          column.cellParams,
+          column
         );
       }
 
