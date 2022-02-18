@@ -53,7 +53,10 @@ export function startEdit(
   event.pageX = columnX + left + Store.rowHeaderWidth - scrollLeft;
   event.pageY = rowY + top + Store.columnHeaderHeight - scrollTop;
 
-  $(".luckysheet-cell-sheettable").trigger(event, [force]);
+  $(".luckysheet-cell-sheettable").trigger(event, [{
+    fake:true,
+    force
+  }]);
 }
 
 export function reFreshCellByCoord(rowIndex: number, colIndex: number) {

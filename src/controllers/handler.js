@@ -1447,7 +1447,10 @@ export default function luckysheetHandler() {
         showrightclickmenu($("#luckysheet-rightclick-menu"), x, y);
       }
     })
-    .dblclick(function (event, force) {
+    .dblclick(function (event, payload) {
+      //  这里 payload 参数，只有在 startEdit 方法才会传入
+      //  src/customCell/helper/baseMethods.ts
+
       if ($(event.target).hasClass("luckysheet-mousedown-cancel")) {
         return;
       }
@@ -1464,7 +1467,9 @@ export default function luckysheetHandler() {
       const mouseDetail = getMouseRelateCell(event);
       if (!mouseDetail) return;
 
-      canvasMouseDbClick(event);
+      if (!payload) {
+        canvasMouseDbClick(event);
+      }
 
       let {
         row_location,
@@ -1527,7 +1532,7 @@ export default function luckysheetHandler() {
           row: getCellDataRowByRowIndex(row_index),
         });
 
-        (isAllowEdit || force === true) &&
+        (isAllowEdit || payload?.force === true) &&
           luckysheetupdateCell(row_index, col_index, Store.flowdata);
 
         /* 设置选区高亮 */
