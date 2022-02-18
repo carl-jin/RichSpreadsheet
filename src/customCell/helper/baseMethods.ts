@@ -26,7 +26,15 @@ export function finishEdit() {
   }
 }
 
-export function startEdit(CellRenderersParams: CellRenderersParams) {
+/**
+ * 进入编辑状态
+ * @param CellRenderersParams
+ * @param force  如果为 true 时会忽略 cellDbClick 事件的返回值
+ */
+export function startEdit(
+  CellRenderersParams: CellRenderersParams,
+  force: boolean = true
+) {
   const { colIndex: col, rowIndex: row } = CellRenderersParams;
   const currentSheet =
     Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
@@ -45,7 +53,7 @@ export function startEdit(CellRenderersParams: CellRenderersParams) {
   event.pageX = columnX + left + Store.rowHeaderWidth - scrollLeft;
   event.pageY = rowY + top + Store.columnHeaderHeight - scrollTop;
 
-  $(".luckysheet-cell-sheettable").trigger(event);
+  $(".luckysheet-cell-sheettable").trigger(event, [force]);
 }
 
 export function reFreshCellByCoord(rowIndex: number, colIndex: number) {

@@ -1,4 +1,4 @@
-//  鼠标点击时重新绘制单元格
+//  鼠标点击,双击时重新绘制单元格
 import Store from "../../store";
 import { getMouseRelateCell } from "../handler";
 import {
@@ -8,7 +8,11 @@ import {
 import { DataVerificationRenderRedTriangleIfDataVerificationFailed } from "./useDataVerification";
 import { useShowCellExtractDomOnMouseEnter } from "./useShowCellExtractDomOnMouseEnter";
 
-const reRenderCell = (mouseDetail, selectSaveDetail) => {
+const reRenderCell = (
+  mouseDetail,
+  selectSaveDetail,
+  type: "clickRender" | "dbClickRender"
+) => {
   const [Render, params] =
     createColumnCellRendererParamsViaMouseDetail(mouseDetail);
 
@@ -22,7 +26,7 @@ const reRenderCell = (mouseDetail, selectSaveDetail) => {
       })
     );
   setDevicePixelRatio();
-  Render["clickRender"] && Render["clickRender"](wrappedParams);
+  Render[type] && Render[type](wrappedParams);
   DataVerificationRenderRedTriangleIfDataVerificationFailed(wrappedParams);
   restoreDevicePixelRatio();
 };
@@ -37,7 +41,17 @@ const canvasMouseClick = (event) => {
   //  处理鼠标移入单元格后
   useShowCellExtractDomOnMouseEnter(mouseDetail, event, true);
 
-  reRenderCell(mouseDetail, Store.luckysheet_select_save[0]);
+  reRenderCell(mouseDetail, Store.luckysheet_select_save[0], "clickRender");
 };
 
-export { canvasMouseClick };
+const canvasMouseDbClick = (event) => {
+  const mouseDetail = getMouseRelateCell(event);
+
+  if (!mouseDetail || !Store.luckysheet_select_save[0]) {
+    return;
+  }
+
+  reRenderCell(mouseDetail, Store.luckysheet_select_save[0], "dbClickRender");
+};
+
+export { canvasMouseClick, canvasMouseDbClick };

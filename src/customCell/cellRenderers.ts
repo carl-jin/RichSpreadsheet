@@ -30,6 +30,11 @@ abstract class CellRenderers extends CustomBase {
     CellRenderersMouseClickParams: CellRenderersMouseClickParams
   ): void;
 
+  //  鼠标双击单元格时的渲染
+  protected dbClickRender?(
+    CellRenderersMouseClickParams: CellRenderersMouseClickParams
+  ): void;
+
   //  鼠标移入单元格时, 显示额外的 dom节点
   protected showExtractDomOnMouseEnter?(
     CellRenderersParams: CellRenderersParams

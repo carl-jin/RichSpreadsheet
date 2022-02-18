@@ -80,7 +80,7 @@ import {
   canvasMousemoveOnCell,
   canvasMousemoveOnColumnHeader,
 } from "./hooks/useMouseMove";
-import { canvasMouseClick } from "./hooks/useMouseClick";
+import { canvasMouseClick, canvasMouseDbClick } from "./hooks/useMouseClick";
 import { removeCellExtractDom } from "./hooks/useShowCellExtractDomOnMouseEnter";
 import {
   removeDataVerificationTooltip,
@@ -1447,7 +1447,7 @@ export default function luckysheetHandler() {
         showrightclickmenu($("#luckysheet-rightclick-menu"), x, y);
       }
     })
-    .dblclick(function (event) {
+    .dblclick(function (event, force) {
       if ($(event.target).hasClass("luckysheet-mousedown-cancel")) {
         return;
       }
@@ -1463,6 +1463,9 @@ export default function luckysheetHandler() {
 
       const mouseDetail = getMouseRelateCell(event);
       if (!mouseDetail) return;
+
+      canvasMouseDbClick(event);
+
       let {
         row_location,
         row,
@@ -1524,7 +1527,8 @@ export default function luckysheetHandler() {
           row: getCellDataRowByRowIndex(row_index),
         });
 
-        isAllowEdit && luckysheetupdateCell(row_index, col_index, Store.flowdata);
+        (isAllowEdit || force === true) &&
+          luckysheetupdateCell(row_index, col_index, Store.flowdata);
 
         /* 设置选区高亮 */
         selectHightlightShow();

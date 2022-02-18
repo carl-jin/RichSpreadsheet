@@ -39,7 +39,10 @@ export function useEventManager() {
     if (evenList[eventName]) {
       for (let i = 0; i < evenList[eventName].length; i++) {
         let cb = evenList[eventName][i];
-        result = cb(...args);
+
+        if (cb(...args) === false) {
+          result = false;
+        }
 
         //  如果一旦有一个返回 false，则直接退出循环
         if (!result) {
