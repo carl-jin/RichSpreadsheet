@@ -91,9 +91,14 @@ import {
   detectIsInFrozenByFrozenPosition,
   getFrozenAreaThatCellIn,
 } from "../customCell/helper/tools";
-import { isColExisted, isRowExisted } from "../global/apiHelper";
+import {
+  getColumnByColIndex,
+  isColExisted,
+  isRowExisted,
+} from "../global/apiHelper";
 import freezen from "./freezen";
 import { getWheelSpeed } from "./hooks/helper/getWheelSpeed";
+import { getCellDataRowByRowIndex } from "./hooks/helper";
 // import { createLuckyChart, hideAllNeedRangeShow } from '../expendPlugins/chart/plugin'
 
 let mouseWheelSpeedTimeCount = 0;
@@ -1513,7 +1518,13 @@ export default function luckysheetHandler() {
           row_index = row_focus;
           col_index = column_focus;
         }
-        luckysheetupdateCell(row_index, col_index, Store.flowdata);
+
+        let isAllowEdit = Store.$emit("cellDbClick", {
+          column: getColumnByColIndex(col_index),
+          row: getCellDataRowByRowIndex(row_index),
+        });
+
+        isAllowEdit && luckysheetupdateCell(row_index, col_index, Store.flowdata);
 
         /* 设置选区高亮 */
         selectHightlightShow();

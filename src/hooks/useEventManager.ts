@@ -10,6 +10,7 @@
 //  cancelFrozenAutomatically 自动取消冻结（当冻结区域溢出时触发）
 //  cellSelected         当 cell 被 selected 时触发
 //  cellUnEditable       当尝试编辑 unEditable 的 cell 时
+//  cellDbClick          当 cell 被双击时，是否要进入编辑状态
 
 export function useEventManager() {
   let evenList = {};
@@ -33,12 +34,21 @@ export function useEventManager() {
     };
   }
 
-  function $emit(eventName: string, ...args) {
+  function $emit(eventName: string, ...args): boolean {
+    let result = true;
     if (evenList[eventName]) {
-      evenList[eventName].map(function (cb) {
-        cb(...args);
-      });
+      for (let i = 0; i < evenList[eventName].length; i++) {
+        let cb = evenList[eventName][i];
+        result = cb(...args);
+
+        //  如果一旦有一个返回 false，则直接退出循环
+        if (!result) {
+          break;
+        }
+      }
     }
+
+    return result;
   }
 
   function destroy() {

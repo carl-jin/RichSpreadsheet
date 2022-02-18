@@ -112,7 +112,7 @@ export class CustomBase {
 
     ctx.beginPath();
     ctx.save();
-    ctx.rect(left, positionY, width - 1, cellHeight - 1);
+    ctx.rect(left + 1, positionY, width - 2, cellHeight - 1);
     ctx.fillStyle = "#fff";
     ctx.fill();
     ctx.restore();
