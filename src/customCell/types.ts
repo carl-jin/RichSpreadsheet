@@ -73,12 +73,12 @@ export type ExtractDomConfig =
     }>
   | HTMLElement
   | false
-  | [HTMLElement, Record<string, string>]
   | [
-      Partial<{
-        [key in PositionStr]: HTMLElement | false;
-      }>,
-      Partial<{
-        [key in PositionStr]: HTMLElement | false;
-      }>
+      (
+        | HTMLElement
+        | Partial<{
+            [key in PositionStr]: HTMLElement | false;
+          }>
+      ),
+      Record<string, string>
     ];
