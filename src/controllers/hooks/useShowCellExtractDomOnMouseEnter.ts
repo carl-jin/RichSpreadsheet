@@ -20,7 +20,8 @@ let timerShow = null;
 function RenderDom(
   position: "left" | "right" | "top" | "bottom" | string,
   DOM: HTMLElement,
-  params
+  params,
+  parentCssObj: Record<string, string>
 ) {
   //  渲染 DOM
   const { rowIndex, colIndex, cellWidth } = params;
@@ -64,6 +65,7 @@ function RenderDom(
     top: 0,
     opacity: 0,
     color: "#000",
+    ...parentCssObj,
   });
 
   $el.appendTo($("#luckysheet"));
@@ -141,58 +143,71 @@ export function useShowCellExtractDomOnMouseEnter(
   immediately: boolean = false
 ) {
   window.clearTimeout(timerShow);
-  timerShow = setTimeout(() => {
-    //  如果不是在表格上的 mousemove 事件,直接关闭
-    if (!event.target || !event.target.closest("#luckysheet-cell-main")) {
-      removeDom(event);
-      return;
-    }
-
-    //  如果找不到 dom
-    if (!mouseDetail) {
-      removeDom(event);
-      return;
-    }
-
-    const [Render, params] =
-      createColumnCellRendererParamsViaMouseDetail(mouseDetail);
-
-    if (!params) {
-      removeDom(event);
-      return;
-    }
-
-    //  判断当前的 rich-spreadsheet-cell-extract-dom 是否存在
-    const $existDom = $(`.${ClassName.NAME}`);
-    if ($existDom.length > 0) {
-      const row = $existDom.data("row");
-      const col = $existDom.data("col");
-
-      //  如果存在的话, 并且已经显示为当前 cell 了就什么不干
-      if (row === params.rowIndex && col === params.colIndex) {
+  timerShow = setTimeout(
+    () => {
+      //  如果不是在表格上的 mousemove 事件,直接关闭
+      if (!event.target || !event.target.closest("#luckysheet-cell-main")) {
+        removeDom(event);
         return;
-      } else {
-        if (isHover(event)) {
-          return;
-        }
-        //  否则删除
-        removeDom(event, true);
       }
-    }
 
-    const DOM = Render.showExtractDomOnMouseEnter
-      ? Render.showExtractDomOnMouseEnter(params)
-      : false;
-    if (DOM === false) return;
+      //  如果找不到 dom
+      if (!mouseDetail) {
+        removeDom(event);
+        return;
+      }
 
-    if (DOM instanceof HTMLElement) {
-      //  如果返回的是 DOM 默认渲染到底部
-      RenderDom("bottom", DOM, params);
-    } else {
-      //  如果返回的是多个 DOM
-      Object.keys(DOM).map((key) => {
-        RenderDom(key, DOM[key], params);
-      });
-    }
-  }, immediately ? 0 : 400);
+      const [Render, params] =
+        createColumnCellRendererParamsViaMouseDetail(mouseDetail);
+
+      if (!params) {
+        removeDom(event);
+        return;
+      }
+
+      //  判断当前的 rich-spreadsheet-cell-extract-dom 是否存在
+      const $existDom = $(`.${ClassName.NAME}`);
+      if ($existDom.length > 0) {
+        const row = $existDom.data("row");
+        const col = $existDom.data("col");
+
+        //  如果存在的话, 则删除之前的
+        if (row === params.rowIndex && col === params.colIndex) {
+          //  这里删除之前的，而不是返回，是因为 showExtractDomOnMouseEnter 方法中
+          //  可能是在同一个单元格，但是要根据用户点击的位置，显示不同的内容
+          $existDom.remove();
+        } else {
+          if (isHover(event)) {
+            return;
+          }
+          //  否则删除
+          removeDom(event, true);
+        }
+      }
+
+      let DOM = Render.showExtractDomOnMouseEnter
+        ? Render.showExtractDomOnMouseEnter(params)
+        : false;
+      if (DOM === false) return;
+
+      //  showExtractDomOnMouseEnter 返回的也可能是个数组
+      //  这样的话，第一个值就代表着 dom 或者 dom[]， 第二个值代表着父级的额外参数
+      let parentCssObj = {};
+      if (Array.isArray(DOM)) {
+        parentCssObj = DOM[1];
+        DOM = DOM[0];
+      }
+
+      if (DOM instanceof HTMLElement) {
+        //  如果返回的是 DOM 默认渲染到底部
+        RenderDom("bottom", DOM, params, parentCssObj);
+      } else {
+        //  如果返回的是多个 DOM
+        Object.keys(DOM).map((key) => {
+          RenderDom(key, DOM[key], params, parentCssObj);
+        });
+      }
+    },
+    immediately ? 0 : 400
+  );
 }
