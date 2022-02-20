@@ -14,6 +14,10 @@ export type cell = {
   v: string;
 };
 
+export type ClearCellOptions = {
+  backgroundColor:string
+}
+
 export type CellRenderersParams = {
   rowIndex: number;
   colIndex: number;

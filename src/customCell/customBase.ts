@@ -8,6 +8,7 @@ import {
   reFreshCellByCoord,
   startEdit,
 } from "./helper/baseMethods";
+import { ClearCellOptions } from "./types";
 
 export class CustomBase {
   private asyncTimer = {};
@@ -83,7 +84,10 @@ export class CustomBase {
   /**
    * 清理单元格内容
    */
-  protected clearCell(CellRenderersParams: CellRenderersParams) {
+  protected clearCell(
+    CellRenderersParams: CellRenderersParams,
+    options: Partial<ClearCellOptions> = {}
+  ) {
     const {
       ctx,
       positionX,
@@ -112,8 +116,9 @@ export class CustomBase {
 
     ctx.beginPath();
     ctx.save();
-    ctx.rect(left + 1, positionY, width - 2, cellHeight - 1);
-    ctx.fillStyle = "#fff";
+    ctx.rect(left, positionY, width, cellHeight -1);
+    //  这里 backgroundColor 传入的可能是个 false
+    ctx.fillStyle = options.backgroundColor ? options.backgroundColor : "#fff";
     ctx.fill();
     ctx.restore();
     ctx.closePath();
