@@ -521,7 +521,10 @@ export default function luckysheetHandler() {
 
       //若点击单元格部分不在视图内
       if (col_pre < $("#luckysheet-cell-main").scrollLeft()) {
-        !isInFrozen && $("#luckysheet-scrollbar-x").scrollLeft(col_pre);
+        //  这里做个限制，如果点击的区域，对应的 column 的 width 已经超过了 container 的宽度，则不进行定位
+        if (col - col_pre < $("#luckysheet-cell-main").outerWidth() - 120) {
+          !isInFrozen && $("#luckysheet-scrollbar-x").scrollLeft(col_pre);
+        }
       }
 
       if (row_pre < $("#luckysheet-cell-main").scrollTop()) {

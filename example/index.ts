@@ -217,16 +217,16 @@ function create() {
         row: rows.length + 2,
         celldata: rows,
         frozen: {
-          // type: "cancel",
-          type: "rangeColumn",
+          type: "cancel",
+          /*   type: "rangeColumn",
           range: {
             row_focus: 0,
             column_focus: 4,
-          },
+          },*/
         },
         config: {
           columnlen: {
-            0: 320,
+            4: 1920,
           },
         },
       },
