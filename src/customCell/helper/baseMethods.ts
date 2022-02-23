@@ -50,7 +50,7 @@ export function startEdit(
 
   //  @ts-ignore
   event.target = $(".luckysheet-cell-sheettable").get(0);
-  event.pageX = columnX + left + Store.rowHeaderWidth - scrollLeft;
+  event.pageX = columnX + left + Store.rowHeaderWidth ;
   event.pageY = rowY + top + Store.columnHeaderHeight - scrollTop;
 
   $(".luckysheet-cell-sheettable").trigger(event, [{

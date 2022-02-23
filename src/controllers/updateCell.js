@@ -15,7 +15,7 @@ import {
   useDataVerificationOnInput,
 } from "./hooks/useDataVerification";
 import { isRowEditable } from "../global/apiHelper";
-import {removeCellExtractDom} from "./hooks/useShowCellExtractDomOnMouseEnter";
+import { removeCellExtractDom } from "./hooks/useShowCellExtractDomOnMouseEnter";
 
 //  editor **** editor cell 编辑
 export function luckysheetupdateCell(
@@ -308,7 +308,9 @@ export function luckysheetupdateCell(
 
   //  检测内容是否溢出
   {
-    setTimeout(() => {
+    //  这里需要取消下 setTimeout, 如果 column 过长时，此时已经 overflow 了，
+    //  但是 ant-popover 组件是立刻计算溢出的，如果这加了 setTimeout，计算位置时变缓慢
+    // setTimeout(() => {
       //  如果 .cell-editor-custom 和 #luckysheet-rich-text-editor 同级则当前为 popup 状态
       const isPopup = $(".cell-editor-custom-popup").length > 0;
       const $container = $("#" + Store.container);
@@ -340,14 +342,15 @@ export function luckysheetupdateCell(
       }
 
       //  判断右侧是否溢出
+      let width = Math.min($target.outerWidth(), 300);
       if (ELeft - BLeft + EWidth > BWidth) {
         $(isPopup ? ".cell-editor-custom-popup" : "#luckysheet-input-box").css({
           left: "auto",
           right: 18 + $(window).outerWidth() - BWidth - BLeft,
-          width: $target.outerWidth(),
+          width: width,
         });
       }
-    }, 200);
+    // }, 200);
   }
 }
 

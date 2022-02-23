@@ -1453,7 +1453,6 @@ export default function luckysheetHandler() {
     .dblclick(function (event, payload) {
       //  这里 payload 参数，只有在 startEdit 方法才会传入
       //  src/customCell/helper/baseMethods.ts
-
       if ($(event.target).hasClass("luckysheet-mousedown-cancel")) {
         return;
       }

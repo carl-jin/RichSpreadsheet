@@ -110,9 +110,14 @@ export const canvasMousemoveOnCell = throttle(100, false, (event) => {
   //  这俩应该放在 mouseout 下面处理， 不然从第二行移动到第一行时不会触发 out
   //  如果鼠标在 column header 或者 row header 跳过
   //  如果单元格被 column header 或者 row header 盖住时 跳过
+  //  这里也可能是个比较长的 column， 此时的 cell_offset_left 已经是小于 0 了
+  //  这里兼容下
+  let isLongColumn =
+    mouseDetail.col - mouseDetail.col_pre <
+    $("#luckysheet-cell-main").outerWidth();
   if (
     isOnColumnHeaderOrRowHeader(mouseDetail) ||
-    isUnderColumnHeaderOrRowHeader(mouseDetail)
+    (isUnderColumnHeaderOrRowHeader(mouseDetail) && isLongColumn)
   )
     return;
 
