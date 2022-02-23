@@ -8,7 +8,7 @@ type HyperlinkData = {
 export class Hyperlink implements GSClipboardHandler {
   public type = "hyperlink";
 
-  public toText(value: HyperlinkData): string {
+  public toText(value: HyperlinkData,payload): string {
     return value.title;
   }
 

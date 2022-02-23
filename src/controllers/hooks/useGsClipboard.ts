@@ -99,6 +99,7 @@ export function setCopyToClipboard(
     y: number;
     value: any;
     type: string;
+    [key: string]: any;
   }[] = [];
 
   //
@@ -138,6 +139,7 @@ export function setCopyToClipboard(
         y: row,
         value,
         type,
+        payload: column,
       });
     }
   }
