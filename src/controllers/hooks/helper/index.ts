@@ -116,47 +116,42 @@ export function createColumnTitleRendererParamsViaMouseDetail(mouseDetail) {
   const type = column.type;
   const Render = Store.ColumnTitleRenderers[type];
 
+  const columnWidth = col - col_pre;
+  const columnHeight = Store.columnHeaderHeight;
+  const scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft();
+  const scrollTop = $("#luckysheet-scrollbar-y").scrollTop();
+  let canvas = document.getElementById(
+    "luckysheetTableContent"
+  ) as HTMLCanvasElement;
+  const ctx = canvas.getContext("2d");
+
+  let positionX =
+    col - scrollLeft - columnWidth + luckysheetConfigsetting.rowHeaderWidth - 1;
+  let positionY = 0 - columnHeight + luckysheetConfigsetting.defaultRowHeight;
+
+  //  判断当前渲染的单元格是否在冻结区域内
+  let cellInPosition = getFrozenAreaThatCellIn(1, col_index);
+
+  if (detectIsInFrozenByFrozenPosition(cellInPosition)) {
+    positionX = positionX + scrollLeft;
+  }
+
+  const params = {
+    mouseEvent,
+    colIndex: col_index,
+    column: column,
+    columns: currentSheet.column,
+    columnWidth: columnWidth,
+    columnHeight: Store.columnHeaderHeight,
+    positionX,
+    positionY,
+    ctx,
+  };
+
   if (type && Render) {
-    const columnWidth = col - col_pre;
-    const columnHeight = Store.columnHeaderHeight;
-    const scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft();
-    const scrollTop = $("#luckysheet-scrollbar-y").scrollTop();
-    let canvas = document.getElementById(
-      "luckysheetTableContent"
-    ) as HTMLCanvasElement;
-    const ctx = canvas.getContext("2d");
-
-    let positionX =
-      col - scrollLeft - columnWidth + luckysheetConfigsetting.rowHeaderWidth;
-    let positionY = 0 - columnHeight + luckysheetConfigsetting.defaultRowHeight;
-
-    //  判断当前渲染的单元格是否在冻结区域内
-    let cellInPosition = getFrozenAreaThatCellIn(1, col_index);
-    if (detectIsInFrozenByFrozenPosition(cellInPosition)) {
-      positionX = positionX + scrollLeft;
-
-      mouseEvent.mouse_x =
-        mouseEvent.mouse_x - luckysheetConfigsetting.rowHeaderWidth;
-      mouseEvent.mouse_y =
-        mouseEvent.mouse_y - luckysheetConfigsetting.defaultRowHeight;
-    }
-
-    return [
-      Render,
-      {
-        mouseEvent,
-        colIndex: col_index,
-        column: column,
-        columns: currentSheet.column,
-        columnWidth: columnWidth,
-        columnHeight: Store.columnHeaderHeight,
-        positionX,
-        positionY,
-        ctx,
-      },
-    ];
+    return [Render, params];
   } else {
-    return [false, false];
+    return [false, params];
   }
 }
 

@@ -24,6 +24,7 @@ export { CellEditors } from "./customCell/cellEditors";
 export { CellTransformer } from "./customCell/cellTransformer";
 export { ColumnTitleRenderers } from "./customColumnHeader/columnTitleRenderers";
 export type { Handler as GSClipboardHandler } from "gs-clipboard";
+export * from "./hooks/useColumnsGroup/index";
 export * from "./type";
 export * from "./customCell/helper/drawHelper";
 export * from "./customColumnHeader/types";

@@ -41,6 +41,7 @@ import menuButton from "./menuButton";
 import method from "../global/method";
 import { useDataVerificationBuildCache } from "./hooks/useDataVerification";
 import { syncWidthCellData } from "../global/apiHelper";
+import { columnsGroupSettingRestore } from "../hooks/useColumnsGroup";
 
 const sheetmanage = {
   generateRandomSheetIndex: function (prefix) {
@@ -930,7 +931,9 @@ const sheetmanage = {
       file["luckysheet_selection_range"] == null
         ? []
         : file["luckysheet_selection_range"];
+
     Store.config = file["config"] == null ? {} : file["config"];
+    columnsGroupSettingRestore();
 
     Store.zoomRatio = file["zoomRatio"] == null ? 1 : file["zoomRatio"];
 

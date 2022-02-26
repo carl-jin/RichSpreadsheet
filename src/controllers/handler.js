@@ -99,6 +99,7 @@ import {
 import freezen from "./freezen";
 import { getWheelSpeed } from "./hooks/helper/getWheelSpeed";
 import { getCellDataRowByRowIndex } from "./hooks/helper";
+import { ColumnGroupHandlerClickHandler } from "../hooks/useColumnsGroup";
 // import { createLuckyChart, hideAllNeedRangeShow } from '../expendPlugins/chart/plugin'
 
 let mouseWheelSpeedTimeCount = 0;
@@ -3615,6 +3616,9 @@ export default function luckysheetHandler() {
     Store.luckysheet_select_status = false;
     window.cancelAnimationFrame(Store.jfautoscrollTimeout);
     Store.luckysheet_scroll_status = false;
+
+    //  处理 column 分组点击事件
+    ColumnGroupHandlerClickHandler(event);
 
     $("#luckysheet-cell-selected")
       .find(".luckysheet-cs-fillhandle")

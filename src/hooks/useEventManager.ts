@@ -11,6 +11,10 @@
 //  cellSelected         当 cell 被 selected 时触发
 //  cellUnEditable       当尝试编辑 unEditable 的 cell 时
 //  cellDbClick          当 cell 被双击时，是否要进入编辑状态
+//  ColumnHidden         column 隐藏时触发事件
+//  ColumnDeleted        column 删除时触发
+//  ColumnsGroupChange   当 column groups （分组）改变时触发
+//  message              信息提示
 
 export function useEventManager() {
   let evenList = {};

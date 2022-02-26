@@ -8,6 +8,7 @@ export type column = {
     pattern: string;
     errorMessage: string;
   }>;
+  [key: string]: any;
 };
 
 export type cell = {
@@ -15,8 +16,8 @@ export type cell = {
 };
 
 export type ClearCellOptions = {
-  backgroundColor:string
-}
+  backgroundColor: string;
+};
 
 export type CellRenderersParams = {
   rowIndex: number;

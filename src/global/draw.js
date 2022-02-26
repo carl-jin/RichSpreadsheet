@@ -26,6 +26,7 @@ import sheetmanage from "../controllers/sheetmanage";
 import { isPlainObject } from "lodash-es";
 import { DataVerificationRenderRedTriangleIfDataVerificationFailed } from "../controllers/hooks/useDataVerification";
 import { setColumnTitleStyle } from "./apiHelper";
+import { RenderGroupLinkLineOnColumnHeader } from "../hooks/useColumnsGroup";
 
 function luckysheetDrawgridRowTitle(scrollHeight, drawHeight, offsetTop) {
   if (scrollHeight == null) {
@@ -379,6 +380,17 @@ function luckysheetDrawgridColumnTitle(scrollWidth, drawWidth, offsetLeft) {
           verticalAlignPos / Store.zoomRatio + 2
         );
       }
+
+      RenderGroupLinkLineOnColumnHeader({
+        colIndex: c,
+        column: column[c],
+        columns: column,
+        columnWidth: end_c - start_c,
+        columnHeight: Store.columnHeaderHeight,
+        positionX: start_c + offsetLeft - 1,
+        positionY: 0,
+        ctx: luckysheetTableContent,
+      });
 
       luckysheetTableContent.restore(); //restore scale after draw text
     }

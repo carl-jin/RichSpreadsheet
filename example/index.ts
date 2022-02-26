@@ -11,6 +11,9 @@ import {
   hideLoading,
   setCellValue,
   hideColumnByIndex,
+  deleteColumnByIndex,
+  setColumnGroup,
+  removeColumnGroup,
 } from "../src";
 import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
@@ -48,8 +51,6 @@ function create() {
       const lastColumnIndex =
         params.selection[params.selection.length - 1].column[1];
       const lastRowIndex = params.selection[params.selection.length - 1].row[1];
-
-      console.log(params);
 
       if (type === "cell") {
         return [
@@ -174,7 +175,10 @@ function create() {
           {
             name: "隐藏当前列",
             action: () => {
-              hideColumnByIndex(1);
+              const lastColumnIndex =
+                params.selection[params.selection.length - 1].column[1];
+
+              deleteColumnByIndex(lastColumnIndex);
             },
           },
           {
@@ -190,6 +194,23 @@ function create() {
                 name: "Z-A",
               },
             ],
+          },
+          {
+            separator: true,
+          },
+          {
+            name: "分组",
+            action() {
+              const [start, end] = params.selection[0].column;
+              setColumnGroup(start, end);
+            },
+          },
+          {
+            name: "取消分组",
+            action() {
+              const [start, end] = params.selection[0].column;
+              removeColumnGroup(start, end);
+            },
           },
         ];
       }
@@ -217,17 +238,29 @@ function create() {
         row: rows.length + 2,
         celldata: rows,
         frozen: {
-          type: "cancel",
-          /*   type: "rangeColumn",
+          // type: "cancel",
+          type: "rangeColumn",
           range: {
             row_focus: 0,
-            column_focus: 4,
-          },*/
+            column_focus: 5,
+          },
         },
         config: {
           columnlen: {
-            4: 1920,
+            2: 540,
           },
+          columnsGroup: [
+            {
+              start: 1,
+              end: 4,
+              hide: false,
+            },
+            // {
+            //   start: 8,
+            //   end: 12,
+            //   hide: true,
+            // },
+          ],
         },
       },
     ],
@@ -236,7 +269,15 @@ function create() {
 
 create();
 
-let unsub = RichSpread.$on("CellValueUpdated", (args) => {
+let unsub = RichSpread.$on("ColumnHidden", (args) => {
+  // console.log(args);
+});
+
+RichSpread.$on("ColumnsGroupChange", (args) => {
+  // console.log(args,'ColumnsGroupChange');
+});
+
+RichSpread.$on("message", (args) => {
   console.log(args);
 });
 

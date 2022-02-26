@@ -2,8 +2,11 @@ import Store from "../store";
 import type { ColumnTitleRenderParams } from "./types";
 import {
   decomposeMatrix2DW3,
+  detectIsInFrozenByFrozenPosition,
   getFrozenAreaThatCellIn,
 } from "../customCell/helper/tools";
+import { emitMessage } from "../global/apiHelper";
+import luckysheetFreezen from "../controllers/freezen";
 
 export class CustomBase {
   /**
@@ -27,6 +30,16 @@ export class CustomBase {
     if (offsetLeft < Store.rowHeaderWidth) {
       left = Store.rowHeaderWidth;
       width = columnWidth - (left - positionX);
+    }
+
+    //  判断 position 是否在 冻结列下面
+    if (luckysheetFreezen.freezenverticaldata) {
+      if (
+        positionX < luckysheetFreezen.freezenverticaldata[4] &&
+        colIndex >= luckysheetFreezen.freezenverticaldata[1]
+      ) {
+        left = luckysheetFreezen.freezenverticaldata[4] + 4;
+      }
     }
 
     ctx.beginPath();
@@ -64,9 +77,19 @@ export class CustomBase {
       width = columnWidth - (left - positionX);
     }
 
+    //  判断 position 是否在 冻结列下面
+    if (luckysheetFreezen.freezenverticaldata) {
+      if (
+        positionX < luckysheetFreezen.freezenverticaldata[4] &&
+        colIndex >= luckysheetFreezen.freezenverticaldata[1]
+      ) {
+        left = luckysheetFreezen.freezenverticaldata[4] + 4;
+      }
+    }
+
     ctx.save();
     ctx.beginPath();
-    ctx.rect(left, positionY, width - 1, columnHeight - 1);
+    ctx.rect(left - 1, positionY, width - 1, columnHeight - 1);
     ctx.clip();
   }
 

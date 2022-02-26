@@ -29,6 +29,11 @@ import {
   detectIsInFrozenByFrozenPosition,
   getFrozenAreaThatCellIn,
 } from "../customCell/helper/tools";
+import {
+  detectColumnInColumnGroup,
+  handleColumnHiddenInColumnGroup,
+} from "../hooks/useColumnsGroup";
+import luckysheetFreezen from "../controllers/freezen";
 
 /**
  * 根据 flowData 更新 cellData
@@ -162,6 +167,14 @@ export function getColumnById(colId) {
 }
 
 /**
+ * 获取 columns
+ */
+export function getColumns() {
+  let currentSheet = getCurrentSheet();
+  return currentSheet.column;
+}
+
+/**
  * 设置 cellData
  * @param data
  */
@@ -235,6 +248,10 @@ export function setFrozen(range: Partial<{ col: number; row: number }>) {
   //  只冻结列
   //  {col:2}
   if (col !== null && !currentFrozenRange.row_focus) {
+    if (detectColumnInColumnGroup(col)) {
+      return;
+    }
+
     // @ts-ignore
     frozenColumnRange({
       column_focus: col,
@@ -416,7 +433,7 @@ export function getOutputFromColumnTransformerParseValueToDataByValue(
   const transformer = Store.cellTransformer[column.type];
   if (!transformer) return value;
 
-  return transformer.parseValueToData(value, column.cellParams,column);
+  return transformer.parseValueToData(value, column.cellParams, column);
 }
 
 /**
@@ -434,7 +451,7 @@ export function getOutputFromColumnTransformerFormatValueFromDataByValue(
   const transformer = Store.cellTransformer[column.type];
   if (!transformer) return value;
 
-  return transformer.formatValueFromData(value, column.cellParams,column);
+  return transformer.formatValueFromData(value, column.cellParams, column);
 }
 
 /**
@@ -445,10 +462,116 @@ export function sortColumnSelection(colIndex, isAsc) {
 }
 
 /**
+ * 删除指定的 index 的 column
+ * @param index
+ * @param stopEvent - 停止事件触发
+ * @param stopHandleColumnGroup - 停止处理分组隐藏方法
+ */
+export function deleteColumnByIndex(
+  index: number,
+  stopEvent: boolean = false,
+  stopHandleColumnGroup: boolean = false
+) {
+  //  删除 column
+  let currentSheet = getCurrentSheet();
+  let column = currentSheet.column[index];
+  currentSheet.column.splice(index, 1);
+
+  //  这里也需要把 flow 里面的数据删除下（cells）
+  for (let row = 0; row < Store.flowdata.length; row++) {
+    Store.flowdata[row].splice(index, 1);
+  }
+
+  $("#luckysheet-cell-selected").hide();
+  $("#luckysheet-cols-h-hover").hide();
+  $("#luckysheet-cols-menu-btn").hide();
+
+  //
+  //  下面需要做配置更新
+
+  let cfg = currentSheet.config;
+  {
+    //  列宽配置变动
+    let columnlen_new = {};
+    if (cfg["columnlen"] == null) {
+      cfg["columnlen"] = {};
+    }
+
+    for (let c in cfg["columnlen"]) {
+      // @ts-ignore
+      if (c < index) {
+        columnlen_new[c] = cfg["columnlen"][c];
+      } else {
+        // @ts-ignore
+        if (c > index) {
+          //  @ts-ignore
+          columnlen_new[c - 1] = cfg["columnlen"][c];
+        }
+      }
+    }
+    cfg["columnlen"] = columnlen_new;
+  }
+
+  {
+    //隐藏列配置变动
+    let colhidden_new = {};
+    if (cfg["colhidden"] == null) {
+      cfg["colhidden"] = {};
+    }
+
+    for (let c in cfg["colhidden"]) {
+      // @ts-ignore
+      if (c < index) {
+        colhidden_new[c] = cfg["colhidden"][c];
+        // @ts-ignore
+      } else if (c > index) {
+        // @ts-ignore
+        colhidden_new[c - 1] = cfg["colhidden"][c];
+      }
+    }
+    cfg["colhidden"] = colhidden_new;
+  }
+
+  {
+    //  冻结变动
+    if (currentSheet.frozen?.type === "rangeColumn") {
+      let newColumnFocus = 0;
+      let oldColumnFocus = currentSheet.frozen.range.column_focus;
+      newColumnFocus =
+        index <= oldColumnFocus ? oldColumnFocus - 1 : oldColumnFocus;
+
+      if (newColumnFocus > 0 && newColumnFocus !== oldColumnFocus) {
+        setFrozen({
+          col: newColumnFocus,
+        });
+      } else {
+        //  取消冻结
+        cancelFrozenHacks("column");
+      }
+    }
+  }
+
+  currentSheet.config = cfg;
+
+  !stopHandleColumnGroup && handleColumnHiddenInColumnGroup(index);
+  !stopEvent && Store.$emit("ColumnDeleted", index);
+
+  //行高、列宽 刷新
+  jfrefreshgrid_rhcw(Store.flowdata.length, Store.flowdata[0].length);
+  regenerateCellDataByFlowData(Store.flowdata);
+}
+
+/**
  * 隐藏指定 index 的 column
  * @param index
+ * @param stopEvent - 停止事件触发
+ * @param stopHandleColumnGroup - 停止处理分组隐藏方法
  */
-export function hideColumnByIndex(index: number) {
+export function hideColumnByIndex(
+  index: number,
+  stopEvent: boolean = false,
+  stopHandleColumnGroup: boolean = false
+) {
   luckysheetContainerFocus();
 
   let cfg = $.extend(true, {}, Store.config);
@@ -457,7 +580,37 @@ export function hideColumnByIndex(index: number) {
   }
 
   cfg["colhidden"][index] = 0;
-  Store.$emit("ColumnHidden", cfg["colhidden"]);
+  !stopEvent && Store.$emit("ColumnHidden", cfg["colhidden"]);
+
+  //config
+  Store.config = cfg;
+  Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)].config =
+    Store.config;
+
+  //行高、列宽 刷新
+  jfrefreshgrid_rhcw(Store.flowdata.length, Store.flowdata[0].length);
+
+  $("#luckysheet-cell-selected").hide();
+  $("#luckysheet-cols-h-hover").hide();
+  $("#luckysheet-cols-menu-btn").hide();
+
+  !stopHandleColumnGroup && handleColumnHiddenInColumnGroup(index);
+}
+
+/**
+ * 显示指定 index 的 column
+ * @param index
+ */
+export function showColumnByIndex(index: number) {
+  luckysheetContainerFocus();
+
+  let cfg = $.extend(true, {}, Store.config);
+  if (cfg["colhidden"] == null) {
+    cfg["colhidden"] = {};
+    return;
+  }
+
+  delete cfg["colhidden"][index];
 
   //config
   Store.config = cfg;
@@ -583,4 +736,19 @@ export function getCtxByRowAndCellIndex(
   }
 
   return canvas.getContext("2d");
+}
+
+/**
+ * 触发 UI 的消息事件
+ * @param msg
+ * @param type
+ */
+export function emitMessage(
+  msg: string,
+  type: "success" | "error" | "warning" | "info" | "loading" = "info"
+) {
+  Store.$emit("message", {
+    msg,
+    type,
+  });
 }

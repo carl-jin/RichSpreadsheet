@@ -20,6 +20,7 @@ import {
 import { useShowCellExtractDomOnMouseEnter } from "./useShowCellExtractDomOnMouseEnter";
 import { DataVerificationRenderRedTriangleIfDataVerificationFailed } from "./useDataVerification";
 import { luckysheetrefreshgrid } from "../../global/refresh";
+import { RenderGroupLinkLineOnColumnHeader } from "../../hooks/useColumnsGroup";
 
 /**
  * 重新渲染一个单元格
@@ -52,19 +53,11 @@ const reRenderColumnTitle = (mouseDetail, eventName) => {
   const [Render, params] =
     createColumnTitleRendererParamsViaMouseDetail(mouseDetail);
 
-  if (!params) return;
+  if (!params || !Render) return;
 
   //  这里需要兼容下不同设备的 devicePixelRatio 的大小， 具体请看 devicePixelRatioHacks 具体实现
   const [wrappedParams, setDevicePixelRatio, restoreDevicePixelRatio] =
     devicePixelRatioHacks(params);
-
-  //  如果处于冻结情况下，限制下 column title 渲染时的 clip 位置
-  if (luckysheetFreezen.freezenverticaldata != null && eventName === 'mouseenterRender') {
-    wrappedParams.positionX = Math.max(
-      wrappedParams.positionX,
-      luckysheetFreezen.freezenverticaldata[4]
-    );
-  }
 
   //  鼠标移开时重新渲染下表头，因为拖拽列宽时候也会触发
   if (eventName === "mouseoutRender") {
@@ -75,6 +68,9 @@ const reRenderColumnTitle = (mouseDetail, eventName) => {
   setDevicePixelRatio();
   Render?.[eventName] && Render?.[eventName](wrappedParams);
   restoreDevicePixelRatio();
+
+  //  重新渲染下 分组关系
+  RenderGroupLinkLineOnColumnHeader(wrappedParams);
 };
 
 //  **** 处理 canvas mousemove 事件, 这里同时也响应了单元格的 hover 事件
