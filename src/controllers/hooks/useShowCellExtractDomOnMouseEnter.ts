@@ -59,7 +59,8 @@ function RenderDom(
     "border-radius": "2px",
     border: "1px solid #ccc",
     //  如果是 position === right 时，会导致显示出的内容盖住 filldrag 的问题
-    "z-index": position === "right" ? 2 : 1000,
+    // "z-index": position === "right" ? 2 : 1000,
+    "z-index": 2,
     "font-size": "14px",
     "user-select": "auto",
     left: 0,
