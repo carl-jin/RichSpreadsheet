@@ -50,13 +50,17 @@ export function startEdit(
 
   //  @ts-ignore
   event.target = $(".luckysheet-cell-sheettable").get(0);
-  event.pageX = columnX + left + Store.rowHeaderWidth ;
+  //  03/05 处理 选择控件在一屏之后 快速编辑失效，是因为下面这个 pageY 没有减去 scrollLeft 导致的
+  //  但是印象中在处理 unfolding 时，因为减去 scrollLeft 会有 bug，但是这次未复现
+  event.pageX = columnX + left + Store.rowHeaderWidth - scrollLeft;
   event.pageY = rowY + top + Store.columnHeaderHeight - scrollTop;
 
-  $(".luckysheet-cell-sheettable").trigger(event, [{
-    fake:true,
-    force
-  }]);
+  $(".luckysheet-cell-sheettable").trigger(event, [
+    {
+      fake: true,
+      force,
+    },
+  ]);
 }
 
 export function reFreshCellByCoord(rowIndex: number, colIndex: number) {

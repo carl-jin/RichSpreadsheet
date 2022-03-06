@@ -61,7 +61,7 @@ function setcellvalue(r, c, d, v, options) {
     }
 
     //  判断是否有当前行的编辑权限
-    if (!isRowEditable(r) && !options.force) {
+    if (!options.force && !isRowEditable(r)) {
       return;
     }
 
