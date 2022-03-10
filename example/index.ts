@@ -238,23 +238,23 @@ function create() {
         row: rows.length + 2,
         celldata: rows,
         frozen: {
-          // type: "cancel",
-          type: "rangeColumn",
-          range: {
-            row_focus: 0,
-            column_focus: 5,
-          },
+          type: "cancel",
+          // type: "rangeColumn",
+          // range: {
+          //   row_focus: 0,
+          //   column_focus: 2,
+          // },
         },
         config: {
           columnlen: {
             2: 540,
           },
           columnsGroup: [
-            {
-              start: 1,
-              end: 4,
-              hide: false,
-            },
+            // {
+            //   start: 1,
+            //   end: 4,
+            //   hide: false,
+            // },
             // {
             //   start: 8,
             //   end: 12,

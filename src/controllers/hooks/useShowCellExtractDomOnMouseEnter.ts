@@ -8,7 +8,11 @@
 //  全局搜索 removeCellExtractDom 方法
 
 import { createColumnCellRendererParamsViaMouseDetail } from "./helper";
-import freezen from "../freezen";
+import {
+  detectIsInFrozenByFrozenPosition,
+  getFrozenAreaThatCellIn,
+} from "../../customCell/helper/tools";
+import luckysheetConfigsetting from "../luckysheetConfigsetting";
 
 enum ClassName {
   NAME = "rich-spreadsheet-cell-extract-dom",
@@ -47,9 +51,13 @@ function RenderDom(
     top = params.positionY;
   }
 
-  let [newLeft, isNewColPreInFrozen, mainScrollLeft] =
-    freezen.getAdaptOffsetLeftInfo(left);
-  left = newLeft + (isNewColPreInFrozen ? mainScrollLeft : 0);
+  let [positionXChangeValue, isInFrozenArea, mainScrollLeft] =
+    getCellAdaptPositionXInfo(colIndex);
+
+  if (isInFrozenArea) {
+    left += luckysheetConfigsetting.rowHeaderWidth;
+    top += luckysheetConfigsetting.columnHeaderHeight;
+  }
 
   $el.css({
     position: "absolute",
@@ -59,8 +67,8 @@ function RenderDom(
     "border-radius": "2px",
     border: "1px solid #ccc",
     //  如果是 position === right 时，会导致显示出的内容盖住 filldrag 的问题
-    // "z-index": position === "right" ? 2 : 1000,
-    "z-index": 2,
+    "z-index": 11,
+    // "z-index": 2,
     "font-size": "14px",
     "user-select": "auto",
     left: 0,
@@ -212,4 +220,25 @@ export function useShowCellExtractDomOnMouseEnter(
     },
     immediately ? 0 : 400
   );
+}
+
+/**
+ * 获取指定 colindex 适配后的 positionX
+ * 比如 col 在冻结区域时，positionX 需要做相应的改变
+ * @return [ positionX 改变的值，是否在冻结区域，当前滚动值 ]
+ */
+function getCellAdaptPositionXInfo(
+  colIndex: number
+): [number, boolean, number] {
+  let positionXChangeValue = 0;
+  const scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft();
+  //  判断当前渲染的单元格是否在冻结区域内
+  let cellInPosition = getFrozenAreaThatCellIn(1, colIndex);
+  let isInFrozenArea = detectIsInFrozenByFrozenPosition(cellInPosition);
+
+  if (isInFrozenArea) {
+    positionXChangeValue += scrollLeft;
+  }
+
+  return [positionXChangeValue, isInFrozenArea, scrollLeft];
 }
