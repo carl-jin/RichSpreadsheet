@@ -2089,13 +2089,13 @@ body:not(.ewa-ipad) .luckysheet-rows-h-cell-sel:hover {
   position: absolute;
   width: 6px;
   height: 6px;
-  bottom: -5px;
+  bottom: -3px;
   cursor: crosshair;
   background-color: #0188fb;
   border: solid 1px #fff;
   z-index: 16;
   pointer-events: auto;
-  right: -5px;
+  right: -3px;
 }
 
 .luckysheet-cs-draghandle {

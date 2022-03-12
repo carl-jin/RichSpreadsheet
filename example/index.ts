@@ -15,9 +15,11 @@ import {
   setColumnGroup,
   removeColumnGroup,
   updateCellsNote,
-  updateCellNote,
-  deleteCellNote,
-  showCellNote,
+  updateCellNoteId,
+  deleteCellNoteById,
+  showCellNoteById,
+  getRowIdByRowIndex,
+  getColumnByColIndex,
 } from "../src";
 import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
@@ -69,13 +71,19 @@ function create() {
           {
             name: "备注",
             action() {
-              updateCellNote(lastRowIndex, lastColumnIndex, "456");
+              showCellNoteById(
+                getRowIdByRowIndex(lastRowIndex),
+                getColumnByColIndex(lastColumnIndex).id
+              );
             },
           },
           {
             name: "删除备注",
             action() {
-              deleteCellNote(lastRowIndex, lastColumnIndex);
+              deleteCellNoteById(
+                getRowIdByRowIndex(lastRowIndex),
+                getColumnByColIndex(lastColumnIndex).id
+              );
             },
           },
         ];
@@ -288,15 +296,15 @@ create();
 setTimeout(() => {
   updateCellsNote([
     {
-      rowIndex: 0,
-      colIndex: 0,
+      rowId: getRowIdByRowIndex(0),
+      colId: getColumnByColIndex(0).id,
       note: "我是备注",
       width: 192,
       height: 40,
     },
     {
-      rowIndex: 0,
-      colIndex: 7,
+      rowId: getRowIdByRowIndex(0),
+      colId: getColumnByColIndex(7).id,
       note: "2我是备注",
       width: 400,
       height: 80,
@@ -335,5 +343,5 @@ document.querySelector("#updateCell").addEventListener("click", () => {
 });
 
 document.querySelector("#showNote").addEventListener("click", () => {
-  showCellNote(0, 0);
+  showCellNoteById(getRowIdByRowIndex(0), getColumnByColIndex(0).id);
 });

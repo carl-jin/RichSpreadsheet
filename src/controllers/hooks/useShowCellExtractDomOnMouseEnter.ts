@@ -9,10 +9,6 @@
 
 import { createColumnCellRendererParamsViaMouseDetail } from "./helper";
 import {
-  detectIsInFrozenByFrozenPosition,
-  getFrozenAreaThatCellIn,
-} from "../../customCell/helper/tools";
-import {
   getCellAdaptPositionXInfo,
   isHover,
 } from "./useCellNote/useShowCellNoteDom";
@@ -48,10 +44,10 @@ function RenderDom(
   //  判断不同位置
   if (position === "bottom") {
     left = params.positionX;
-    top = params.positionY + params.cellHeight;
+    top = params.positionY + params.cellHeight + 1;
   }
   if (position === "right") {
-    left = params.positionX + cellWidth;
+    left = params.positionX + cellWidth + 1;
     top = params.positionY;
   }
 
@@ -70,9 +66,7 @@ function RenderDom(
       "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
     "border-radius": "2px",
     border: "1px solid #ccc",
-    //  如果是 position === right 时，会导致显示出的内容盖住 filldrag 的问题
-    "z-index": 11,
-    // "z-index": 2,
+    "z-index": 1002,
     "font-size": "14px",
     "user-select": "auto",
     left: 0,
@@ -144,6 +138,9 @@ export function useShowCellExtractDomOnMouseEnter(
   immediately: boolean = false
 ) {
   window.clearTimeout(timerShow);
+  if (immediately) {
+    removeDom(event, true);
+  }
   timerShow = setTimeout(
     () => {
       //  如果不是在表格上的 mousemove 事件,直接关闭

@@ -1,6 +1,6 @@
 export type Note = {
-  rowIndex: number;
-  colIndex: number;
+  rowId: string;
+  colId: string;
   width: number;
   height: number;
   note: string;

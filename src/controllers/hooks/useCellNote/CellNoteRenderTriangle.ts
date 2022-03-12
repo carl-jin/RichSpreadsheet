@@ -1,8 +1,10 @@
 import type { CellRenderersParams } from "../../../customCell/types";
-import { detectIsPassDataVerificationByIndex } from "../useDataVerification";
 import Store from "../../../store";
-import { getRowIdByRowIndex } from "../../../global/apiHelper";
-import { isCellHasNote } from "./utils";
+import {
+  getColumnByColIndex,
+  getRowIdByRowIndex,
+} from "../../../global/apiHelper";
+import { isCellHasNoteById } from "./utils";
 
 export function CellNoteRenderTriangle(
   CellRenderersParams: CellRenderersParams
@@ -10,7 +12,9 @@ export function CellNoteRenderTriangle(
   const { rowIndex, colIndex, positionX, positionY, ctx, cellWidth } =
     CellRenderersParams;
 
-  if (isCellHasNote(rowIndex, colIndex)) {
+  const rowId = getRowIdByRowIndex(rowIndex);
+  const columnId = getColumnByColIndex(colIndex).id;
+  if (isCellHasNoteById(rowId, columnId)) {
     const path = new Path2D();
     const w = 6;
     const h = 6;

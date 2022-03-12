@@ -5,12 +5,18 @@ import {
 } from "../../../customCell/helper/tools";
 import luckysheetConfigsetting from "../../luckysheetConfigsetting";
 import {
-  getNote,
-  getNoteSize,
-  isCellHasNote,
-  updateCellNote,
-  updateCellNoteSize,
+  deleteCellNoteById,
+  getNoteById,
+  getNoteSizeById,
+  isCellHasNoteById,
+  updateCellNoteId,
+  updateCellNoteSizeById,
 } from "./utils";
+import {
+  getColumnByColIndex,
+  getRowIdByRowIndex,
+} from "../../../global/apiHelper";
+import Store from "../../../store";
 
 export const className = "rich-spreadsheet-cell-note-dom";
 
@@ -23,6 +29,9 @@ export function useShowCellNoteDomOnMouseEnter(
   immediately: boolean = false
 ) {
   window.clearTimeout(timerShow);
+  if (immediately) {
+    removeDom(event, true);
+  }
   timerShow = setTimeout(
     () => {
       //  如果不是在表格上的 mousemove 事件,直接关闭
@@ -67,7 +76,9 @@ export function useShowCellNoteDomOnMouseEnter(
 
       //   判断是否有 note
       const { rowIndex, colIndex } = params;
-      let isHasNote = isCellHasNote(rowIndex, colIndex);
+      const rowId = getRowIdByRowIndex(rowIndex);
+      const columnId = getColumnByColIndex(colIndex).id;
+      let isHasNote = isCellHasNoteById(rowId, columnId);
       if (isHasNote === false) return;
       RenderDom(params);
     },
@@ -80,23 +91,27 @@ function RenderDom(params) {
   const { rowIndex, colIndex, cellWidth } = params;
 
   let el = document.createElement("section");
+  let rowId = getRowIdByRowIndex(rowIndex);
+  let colId = getColumnByColIndex(colIndex).id;
+
   el.classList.add(className);
-  el.dataset.row = rowIndex;
-  el.dataset.col = colIndex;
+  el.dataset.rowId = rowId;
+  el.dataset.colId = colId;
 
   const $el = $(el);
-  let note = getNote(rowIndex, colIndex);
-  let [width, height] = getNoteSize(rowIndex, colIndex);
+  let note = getNoteById(rowId, colId);
+  let [width, height] = getNoteSizeById(rowId, colId);
   let textarea = document.createElement("textarea");
   textarea.className = "note-wrapper";
   textarea.value = note;
-  textarea.style.width = `${width}px`;
-  textarea.style.height = `${height}px`;
+  //  + 2 是因为 border
+  textarea.style.width = `${width + 2}px`;
+  textarea.style.height = `${height + 2}px`;
 
   //  监听 resize 事件
   textarea.addEventListener("mouseup", () => {
     if (textarea.clientWidth != width || textarea.clientHeight != height) {
-      updateCellNoteSize(rowIndex, colIndex, [
+      updateCellNoteSizeById(rowId, colId, [
         textarea.clientWidth,
         textarea.clientHeight,
       ]);
@@ -107,12 +122,13 @@ function RenderDom(params) {
 
   //  监听 change 事件
   textarea.addEventListener("change", () => {
-    updateCellNote(rowIndex, colIndex, textarea.value);
+    updateCellNoteId(rowId, colId, textarea.value);
   });
 
   $el.append(textarea);
 
-  let left = params.positionX + cellWidth;
+  //  +1 让它离边框 1 像素
+  let left = params.positionX + cellWidth + 1;
   let top = params.positionY;
 
   let [positionXChangeValue, isInFrozenArea, mainScrollLeft] =
@@ -126,7 +142,7 @@ function RenderDom(params) {
   $el.css({
     position: "absolute",
     //  如果是 position === right 时，会导致显示出的内容盖住 filldrag 的问题
-    "z-index": 12,
+    "z-index": 1003,
     // "z-index": 2,
     left: 0,
     top: 0,
@@ -164,6 +180,27 @@ function RenderDom(params) {
   $el.css("opacity", 1);
 }
 
+function _removeDom() {
+  //  判断这个元素是否存在
+  let $el = $(`.${className}`);
+  if ($el.length > 0) {
+    //  判断当前关闭的这个 note 内容是否为空，如果为空的话，代表着删除操作
+    const rowId = $el.data("row-id");
+    const colId = $el.data("col-id");
+    let str = getNoteById(rowId, colId);
+
+    if (str.trim().length === 0) {
+      deleteCellNoteById(rowId, colId);
+      Store.$emit("CellNoteDelete", {
+        rowId,
+        colId,
+      });
+    }
+  }
+
+  $el.remove();
+}
+
 export function removeDom(event, force = false) {
   window.clearTimeout(timerRemove);
   window.clearTimeout(timerShow);
@@ -174,7 +211,7 @@ export function removeDom(event, force = false) {
   }
 
   if (force) {
-    $(`.${className}`).remove();
+    _removeDom();
     return;
   }
 
@@ -183,7 +220,7 @@ export function removeDom(event, force = false) {
       return;
     }
 
-    $(`.${className}`).remove();
+    _removeDom();
   }, 300);
 }
 
