@@ -12,6 +12,10 @@ import {
   detectIsInFrozenByFrozenPosition,
   getFrozenAreaThatCellIn,
 } from "../../customCell/helper/tools";
+import {
+  getCellAdaptPositionXInfo,
+  isHover,
+} from "./useCellNote/useShowCellNoteDom";
 import luckysheetConfigsetting from "../luckysheetConfigsetting";
 
 enum ClassName {
@@ -106,19 +110,6 @@ function RenderDom(
   });
 
   $el.css("opacity", 1);
-}
-
-/**
- * 判断当前的 dom 是否处于 hover 状态
- */
-function isHover(event) {
-  let el = document.elementFromPoint(event.pageX, event.pageY);
-  if (
-    el?.closest(`.${ClassName.NAME}`) ||
-    el?.classList.contains(ClassName.NAME)
-  ) {
-    return true;
-  }
 }
 
 function removeDom(event, force = false) {
@@ -220,25 +211,4 @@ export function useShowCellExtractDomOnMouseEnter(
     },
     immediately ? 0 : 400
   );
-}
-
-/**
- * 获取指定 colindex 适配后的 positionX
- * 比如 col 在冻结区域时，positionX 需要做相应的改变
- * @return [ positionX 改变的值，是否在冻结区域，当前滚动值 ]
- */
-function getCellAdaptPositionXInfo(
-  colIndex: number
-): [number, boolean, number] {
-  let positionXChangeValue = 0;
-  const scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft();
-  //  判断当前渲染的单元格是否在冻结区域内
-  let cellInPosition = getFrozenAreaThatCellIn(1, colIndex);
-  let isInFrozenArea = detectIsInFrozenByFrozenPosition(cellInPosition);
-
-  if (isInFrozenArea) {
-    positionXChangeValue += scrollLeft;
-  }
-
-  return [positionXChangeValue, isInFrozenArea, scrollLeft];
 }

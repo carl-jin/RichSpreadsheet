@@ -7,6 +7,8 @@ import {
 } from "./helper";
 import { DataVerificationRenderRedTriangleIfDataVerificationFailed } from "./useDataVerification";
 import { useShowCellExtractDomOnMouseEnter } from "./useShowCellExtractDomOnMouseEnter";
+import { CellNoteRenderTriangle } from "./useCellNote/CellNoteRenderTriangle";
+import { useShowCellNoteDomOnMouseEnter } from "./useCellNote/useShowCellNoteDom";
 
 const reRenderCell = (
   mouseDetail,
@@ -28,6 +30,7 @@ const reRenderCell = (
   setDevicePixelRatio();
   Render[type] && Render[type](wrappedParams);
   DataVerificationRenderRedTriangleIfDataVerificationFailed(wrappedParams);
+  CellNoteRenderTriangle(wrappedParams);
   restoreDevicePixelRatio();
 };
 
@@ -40,7 +43,7 @@ const canvasMouseClick = (event) => {
 
   //  处理鼠标移入单元格后
   useShowCellExtractDomOnMouseEnter(mouseDetail, event, true);
-
+  useShowCellNoteDomOnMouseEnter(mouseDetail, event, true);
   reRenderCell(mouseDetail, Store.luckysheet_select_save[0], "clickRender");
 };
 

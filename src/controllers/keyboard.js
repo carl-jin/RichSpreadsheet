@@ -361,6 +361,11 @@ export function keyboardInitial() {
         return;
       }
 
+      //
+      //  如果是在 cell note 编辑框上的事件，直接跳过
+      if (event.target && event.target.closest(".rich-spreadsheet-cell-note-dom")) {
+        return;
+      }
       if (
         $("#luckysheet-modal-dialog-mask").is(":visible") ||
         $(event.target).hasClass("luckysheet-mousedown-cancel") ||

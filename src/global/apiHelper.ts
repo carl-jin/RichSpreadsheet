@@ -34,6 +34,7 @@ import {
   handleColumnHiddenInColumnGroup,
 } from "../hooks/useColumnsGroup";
 import luckysheetFreezen from "../controllers/freezen";
+import { reFreshCellByCoord } from "../customCell/helper/baseMethods";
 
 /**
  * 根据 flowData 更新 cellData
@@ -559,6 +560,30 @@ export function deleteColumnByIndex(
   //行高、列宽 刷新
   jfrefreshgrid_rhcw(Store.flowdata.length, Store.flowdata[0].length);
   regenerateCellDataByFlowData(Store.flowdata);
+}
+
+export function refreshCellById(rowId: string, colId: string) {
+  let rowIndex = getRowIndexByRowId(rowId);
+  let colIndex = getColumnIndexByColumnId(colId);
+  if (~rowIndex && ~colIndex) {
+    reFreshCellByCoord(rowIndex, colIndex);
+  }
+}
+
+/**
+ * 刷新指定单元格
+ * @param rowIndex
+ * @param colIndex
+ */
+export function refreshCellByIndex(rowIndex: number, colIndex: number) {
+  reFreshCellByCoord(rowIndex, colIndex);
+}
+
+/**
+ * 刷新表格
+ */
+export function refresh() {
+  jfrefreshgrid_rhcw(Store.flowdata.length, Store.flowdata[0].length);
 }
 
 /**

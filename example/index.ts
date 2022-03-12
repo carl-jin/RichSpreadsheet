@@ -14,6 +14,10 @@ import {
   deleteColumnByIndex,
   setColumnGroup,
   removeColumnGroup,
+  updateCellsNote,
+  updateCellNote,
+  deleteCellNote,
+  showCellNote,
 } from "../src";
 import { cols, rows } from "./data";
 import cellRenderers from "./cellRenderers/index";
@@ -61,6 +65,18 @@ function create() {
           {
             name: "编辑",
             action() {},
+          },
+          {
+            name: "备注",
+            action() {
+              updateCellNote(lastRowIndex, lastColumnIndex, "456");
+            },
+          },
+          {
+            name: "删除备注",
+            action() {
+              deleteCellNote(lastRowIndex, lastColumnIndex);
+            },
           },
         ];
       }
@@ -269,6 +285,25 @@ function create() {
 
 create();
 
+setTimeout(() => {
+  updateCellsNote([
+    {
+      rowIndex: 0,
+      colIndex: 0,
+      note: "我是备注",
+      width: 192,
+      height: 40,
+    },
+    {
+      rowIndex: 0,
+      colIndex: 7,
+      note: "2我是备注",
+      width: 400,
+      height: 80,
+    },
+  ]);
+}, 1000);
+
 let unsub = RichSpread.$on("ColumnHidden", (args) => {
   // console.log(args);
 });
@@ -297,4 +332,8 @@ document.querySelector("#updateCell").addEventListener("click", () => {
     force: true,
     reRenderCell: true,
   });
+});
+
+document.querySelector("#showNote").addEventListener("click", () => {
+  showCellNote(0, 0);
 });

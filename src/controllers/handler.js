@@ -100,6 +100,7 @@ import freezen from "./freezen";
 import { getWheelSpeed } from "./hooks/helper/getWheelSpeed";
 import { getCellDataRowByRowIndex } from "./hooks/helper";
 import { ColumnGroupHandlerClickHandler } from "../hooks/useColumnsGroup";
+import { removeCellNote } from "./hooks/useCellNote";
 // import { createLuckyChart, hideAllNeedRangeShow } from '../expendPlugins/chart/plugin'
 
 let mouseWheelSpeedTimeCount = 0;
@@ -248,6 +249,8 @@ export default function luckysheetHandler() {
     removeCellExtractDom();
     //  删除数据验证 dom
     removeDataVerificationTooltip();
+    //  删除 note dom
+    removeCellNote();
 
     let scrollLeft = $("#luckysheet-scrollbar-x").scrollLeft(),
       scrollTop = $("#luckysheet-scrollbar-y").scrollTop();

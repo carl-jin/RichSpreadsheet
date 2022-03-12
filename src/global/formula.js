@@ -70,6 +70,7 @@ import {
 } from "../controllers/hooks/useDataVerification";
 import { getColumnByColIndex } from "./apiHelper";
 import { getCellDataRowByRowIndex } from "../controllers/hooks/helper";
+import {removeCellNote} from "../controllers/hooks/useCellNote";
 
 const luckysheetformula = {
   error: {
@@ -1461,6 +1462,8 @@ const luckysheetformula = {
   },
   cancelNormalSelected: function () {
     removeDataVerificationTooltip();
+    //  删除 note dom
+    removeCellNote()
     const c = Store.luckysheetCellUpdate[1];
     const currentSheet =
       Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];

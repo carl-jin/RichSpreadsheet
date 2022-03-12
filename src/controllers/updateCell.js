@@ -16,6 +16,7 @@ import {
 } from "./hooks/useDataVerification";
 import { isRowEditable } from "../global/apiHelper";
 import { removeCellExtractDom } from "./hooks/useShowCellExtractDomOnMouseEnter";
+import {removeCellNote} from "./hooks/useCellNote";
 
 //  editor **** editor cell 编辑
 export function luckysheetupdateCell(
@@ -29,6 +30,8 @@ export function luckysheetupdateCell(
     Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
   const column = currentSheet.column[col_index1];
   removeDataVerificationTooltip();
+  //  删除 note dom
+  removeCellNote()
 
   //  readonly 状态下禁止修改
   if (column.readonly === true) {

@@ -21,6 +21,8 @@ import { useShowCellExtractDomOnMouseEnter } from "./useShowCellExtractDomOnMous
 import { DataVerificationRenderRedTriangleIfDataVerificationFailed } from "./useDataVerification";
 import { luckysheetrefreshgrid } from "../../global/refresh";
 import { RenderGroupLinkLineOnColumnHeader } from "../../hooks/useColumnsGroup";
+import { CellNoteRenderTriangle } from "./useCellNote/CellNoteRenderTriangle";
+import { useShowCellNoteDomOnMouseEnter } from "./useCellNote/useShowCellNoteDom";
 
 /**
  * 重新渲染一个单元格
@@ -40,6 +42,7 @@ const reRenderCell = (mouseDetail, eventName) => {
   setDevicePixelRatio();
   Render?.[eventName] && Render?.[eventName](wrappedParams);
   DataVerificationRenderRedTriangleIfDataVerificationFailed(wrappedParams);
+  CellNoteRenderTriangle(wrappedParams);
   restoreDevicePixelRatio();
 };
 
@@ -85,6 +88,7 @@ export const canvasMousemoveOnCell = throttle(100, false, (event) => {
 
   //  处理鼠标移入单元格后
   useShowCellExtractDomOnMouseEnter(mouseDetail, event);
+  useShowCellNoteDomOnMouseEnter(mouseDetail, event);
 
   if (!mouseDetail) {
     //  如果之前记录的有 cell 信息, 这里触发下 mouseout 事件

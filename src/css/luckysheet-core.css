@@ -2070,7 +2070,7 @@ body:not(.ewa-ipad) .luckysheet-rows-h-cell-sel:hover {
   z-index: 15;
   border: 1px solid #0188fb;
   margin: -1px 0 0 -1px;
-  background: rgba(1, 136, 251, .1);
+  background: rgba(1, 136, 251, 0.1);
   display: none;
   /*transition: all 0.1s;*/
 }
@@ -3083,7 +3083,7 @@ fieldset[disabled] .btn-danger.focus {
 .luckysheet-row-count-show div {
   writing-mode: vertical-rl;
 }
-.luckysheet-row-count-show div:not(:last-of-type){
+.luckysheet-row-count-show div:not(:last-of-type) {
   margin-left: -3px;
 }
 
@@ -4752,7 +4752,7 @@ fieldset[disabled] .btn-danger.focus {
 .luckysheet-freezebar-handle,
 .luckysheet-freezebar-drop {
   position: absolute;
-  z-index: 999;
+  z-index: 9;
 }
 
 .luckysheet-freezebar-vertical-handle {
@@ -4897,7 +4897,9 @@ fieldset[disabled] .btn-danger.focus {
   background: #5d88db;
   height: 4px;
 }
-
+#luckysheet {
+  overflow: hidden;
+}
 /*函数样式*/
 #luckysheet-functionbox-container {
   height: 100%;

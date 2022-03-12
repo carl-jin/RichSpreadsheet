@@ -62,6 +62,7 @@ import { removeDataVerificationTooltip } from "./hooks/useDataVerification";
 import { useContextMenu } from "./hooks/useContextMenu";
 import luckysheetFreezen from "./freezen";
 import freezen from "./freezen";
+import {removeCellNote} from "./hooks/useCellNote";
 
 export function rowColumnOperationInitial() {
   //表格行标题 mouse事件
@@ -77,6 +78,8 @@ export function rowColumnOperationInitial() {
       removeCellExtractDom();
       //  删除数据验证 dom
       removeDataVerificationTooltip();
+      //  删除 note dom
+      removeCellNote()
       //图片 active/cropping
       if (
         $("#luckysheet-modal-dialog-activeImage").is(":visible") ||
@@ -524,6 +527,8 @@ export function rowColumnOperationInitial() {
       removeCellExtractDom();
       //  删除数据验证 dom
       removeDataVerificationTooltip();
+      //  删除 note dom
+      removeCellNote()
 
       let mouse = mouseposition(event.pageX, event.pageY);
       let x = mouse[0] + $(this).scrollLeft();
@@ -796,6 +801,8 @@ export function rowColumnOperationInitial() {
     removeCellExtractDom();
     //  删除数据验证 dom
     removeDataVerificationTooltip();
+    //  删除 note dom
+    removeCellNote()
     //图片 active/cropping
     if (
       $("#luckysheet-modal-dialog-activeImage").is(":visible") ||
@@ -853,6 +860,8 @@ export function rowColumnOperationInitial() {
       removeCellExtractDom();
       //  删除数据验证 dom
       removeDataVerificationTooltip();
+      //  删除 note dom
+      removeCellNote()
       //图片 active/cropping
       if (
         $("#luckysheet-modal-dialog-activeImage").is(":visible") ||

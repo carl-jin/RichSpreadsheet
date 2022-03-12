@@ -30,5 +30,6 @@ export * from "./customCell/helper/drawHelper";
 export * from "./customColumnHeader/types";
 export * from "./global/apiCellSync";
 export * from "./global/apiHelper";
+export * from "./controllers/hooks/useCellNote/index";
 import { RichSpread } from "./core";
 export { RichSpread };

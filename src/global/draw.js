@@ -27,6 +27,7 @@ import { isPlainObject } from "lodash-es";
 import { DataVerificationRenderRedTriangleIfDataVerificationFailed } from "../controllers/hooks/useDataVerification";
 import { setColumnTitleStyle } from "./apiHelper";
 import { RenderGroupLinkLineOnColumnHeader } from "../hooks/useColumnsGroup";
+import {CellNoteRenderTriangle} from "../controllers/hooks/useCellNote/CellNoteRenderTriangle";
 
 function luckysheetDrawgridRowTitle(scrollHeight, drawHeight, offsetTop) {
   if (scrollHeight == null) {
@@ -1247,6 +1248,7 @@ let cellRender = function (
       };
       Render.render(params);
       DataVerificationRenderRedTriangleIfDataVerificationFailed(params);
+      CellNoteRenderTriangle(params)
       luckysheetTableContent.closePath();
       luckysheetTableContent.restore();
       luckysheetTableContent.save();

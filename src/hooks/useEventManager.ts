@@ -15,6 +15,7 @@
 //  ColumnDeleted        column 删除时触发
 //  ColumnsGroupChange   当 column groups （分组）改变时触发
 //  message              信息提示
+//  CellNoteUpdate       cell note 更新了
 
 export function useEventManager() {
   let evenList = {};

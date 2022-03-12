@@ -39,8 +39,9 @@ export function startEdit(
   const currentSheet =
     Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)];
   const { visibledatacolumn, visibledatarow } = currentSheet;
-  const columnX = visibledatacolumn[Math.max(0, col - 1)] + 20;
-  const rowY = visibledatarow[Math.max(0, row - 1)] + 20;
+  const columnX =
+    (col === 0 ? 0 : visibledatacolumn[Math.max(0, col - 1)]) + 20;
+  const rowY = (row === 0 ? 0 : visibledatarow[Math.max(0, row - 1)]) + 20;
   const $main = $("#luckysheet-cell-main");
   const scrollLeft = $main.scrollLeft();
   const scrollTop = $main.scrollTop();

@@ -192,8 +192,8 @@ export function DataVerificationRenderRedTriangleIfDataVerificationFailed(
 
   if (!detectIsPassDataVerificationByIndex(rowIndex, colIndex)) {
     const path = new Path2D();
-    const w = 4;
-    const h = 4;
+    const w = 6;
+    const h = 6;
 
     if (positionX + w >= Store.rowHeaderWidth) {
       path.moveTo(positionX, positionY);
