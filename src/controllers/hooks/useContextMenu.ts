@@ -129,6 +129,11 @@ function getItemsDomByOption(option: ContentMenuItem) {
     });
   }
 
+  //  如果是 hide 状态
+  if (option.hide) {
+    divItem = null
+  }
+
   return divItem;
 }
 

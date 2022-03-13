@@ -15,6 +15,7 @@ export type ContentMenuItem = Partial<{
   subMenus?: ContentMenuItem[];
   action(): void;
   separator: boolean;
+  hide: boolean;
 }>;
 
 export type RichSpreadsheetParams = Partial<{

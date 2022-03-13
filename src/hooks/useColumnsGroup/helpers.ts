@@ -240,6 +240,64 @@ export function removeColumnGroup(
 }
 
 /**
+ * 检查是否允许设置分组
+ * @param start
+ * @param end
+ * @param triggerMsg
+ */
+export function detectIsAllowSetColumnGroup(
+  start: number,
+  end: number,
+  triggerMsg: boolean = true
+): boolean {
+  //  分组的 columns 不能以第一个 column (index === 0) 开始，不然 handler 没地方放
+  if (start === 0) {
+    triggerMsg && emitMessage("无法在包含第一列的情况下执行分组", "error");
+    return false;
+  }
+
+  //  分组的 columns 不能是冻结右侧的第一个值，同样的 handler 没地方放
+  if (luckysheetFreezen.freezenverticaldata) {
+    if (luckysheetFreezen.freezenverticaldata[1] === start) {
+      triggerMsg &&
+        emitMessage("无法在包含冻结后的第一列的情况下执行分组", "error");
+      return false;
+    }
+  }
+
+  //  不允许在冻结区域内分组
+  if (luckysheetFreezen.freezenverticaldata) {
+    if (
+      start < luckysheetFreezen.freezenverticaldata[1] &&
+      luckysheetFreezen.freezenverticaldata[1] <= end
+    ) {
+      triggerMsg && emitMessage("无法在跨冻结区域分组", "error");
+      return false;
+    }
+  }
+
+  //  不允许在交叉范围内分组
+  let columnsGroup: ColumnsGroup = Store?.config?.columnsGroup;
+  if (columnsGroup && columnsGroup.length > 0) {
+    for (let i = 0; i < columnsGroup.length; i++) {
+      let config = columnsGroup[i];
+      let isIntersect = ArrayIntersection(
+        //  这里 +1 是因为 handler 也计算在分组范围内
+        [config.start, config.end + 1],
+        [start, end]
+      );
+      if (isIntersect) {
+        triggerMsg &&
+          emitMessage("无法已存在的分组的列中，再次执行分组操作", "error");
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+/**
  * 设置分组
  * @param start
  * @param end
@@ -257,46 +315,8 @@ export function setColumnGroup(
     return;
   }
 
-  //  分组的 columns 不能以第一个 column (index === 0) 开始，不然 handler 没地方放
-  if (start === 0) {
-    emitMessage("无法在包含第一列的情况下执行分组", "error");
+  if (!detectIsAllowSetColumnGroup(start, end)) {
     return;
-  }
-
-  //  分组的 columns 不能是冻结右侧的第一个值，同样的 handler 没地方放
-  if (luckysheetFreezen.freezenverticaldata) {
-    if (luckysheetFreezen.freezenverticaldata[1] === start) {
-      emitMessage("无法在包含冻结后的第一列的情况下执行分组", "error");
-      return;
-    }
-  }
-
-  //  不允许在冻结区域内分组
-  if (luckysheetFreezen.freezenverticaldata) {
-    if (
-      start < luckysheetFreezen.freezenverticaldata[1] &&
-      luckysheetFreezen.freezenverticaldata[1] <= end
-    ) {
-      emitMessage("无法在跨冻结区域分组", "error");
-      return;
-    }
-  }
-
-  //  不允许在交叉范围内分组
-  let columnsGroup: ColumnsGroup = Store?.config?.columnsGroup;
-  if (columnsGroup && columnsGroup.length > 0) {
-    for (let i = 0; i < columnsGroup.length; i++) {
-      let config = columnsGroup[i];
-      let isIntersect = ArrayIntersection(
-        //  这里 +1 是因为 handler 也计算在分组范围内
-        [config.start, config.end + 1],
-        [start, end]
-      );
-      if (isIntersect) {
-        emitMessage("无法已存在的分组的列中，再次执行分组操作", "error");
-        return;
-      }
-    }
   }
 
   //  塞入分组配置
