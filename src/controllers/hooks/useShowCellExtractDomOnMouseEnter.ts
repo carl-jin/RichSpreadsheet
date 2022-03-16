@@ -144,7 +144,7 @@ export function useShowCellExtractDomOnMouseEnter(
   timerShow = setTimeout(
     () => {
       //  如果不是在表格上的 mousemove 事件,直接关闭
-      if (!event.target || !event.target.closest("#luckysheet-cell-main")) {
+      if (!event.target || !event.target.closest("#luckysheet")) {
         removeDom(event);
         return;
       }
@@ -175,7 +175,7 @@ export function useShowCellExtractDomOnMouseEnter(
           //  可能是在同一个单元格，但是要根据用户点击的位置，显示不同的内容
           $existDom.remove();
         } else {
-          if (isHover(event)) {
+          if (isHover(event, ClassName.NAME)) {
             return;
           }
           //  否则删除

@@ -3,6 +3,7 @@ import {
   insertRowOrColumnCellSync,
   insertRowBottomOrColumnRightCellSync,
   deleteRowOrColumnCellSync,
+  deleteRowsByIds,
   getCurrentSheet,
   setFrozen,
   cancelFrozenHacks,
@@ -151,7 +152,11 @@ function create() {
             action() {
               const [startIndex, endIndex] =
                 params.selection[params.selection.length - 1].row;
-              deleteRowOrColumnCellSync("row", startIndex, endIndex);
+
+              for (let i = startIndex; i <= endIndex; i++) {
+                console.log(i)
+                deleteRowOrColumnCellSync("row", i, i);
+              }
               console.log("删除当前行");
             },
           },

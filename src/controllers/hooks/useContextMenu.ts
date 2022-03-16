@@ -123,15 +123,17 @@ function getItemsDomByOption(option: ContentMenuItem) {
   //  判断是否有事件
   if (option.action && !option.subMenus && !option.disabled) {
     divItem.addEventListener("click", () => {
-      luckysheetContainerFocus();
       option.action();
       $("#luckysheet-rightclick-menu").hide();
+      $("#luckysheet-cols-menu-btn").hide();
+      luckysheetContainerFocus();
+      Store.luckysheet_cols_menu_status = false;
     });
   }
 
   //  如果是 hide 状态
   if (option.hide) {
-    divItem = null
+    divItem = null;
   }
 
   return divItem;

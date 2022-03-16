@@ -107,7 +107,7 @@ function RenderDom(params) {
 
   //  判断当前行是否有编辑权限
   if (!isEditable) {
-    textarea.disabled = true;
+    textarea.setAttribute("readonly", "1");
   }
 
   //  不知道为什么鼠标在 textarea 按下 tab 会导致 window.scrollLeft 的改变
@@ -274,9 +274,9 @@ export function removeCellNoteDom(event = null) {
 /**
  * 判断当前的 dom 是否处于 hover 状态
  */
-export function isHover(event) {
+export function isHover(event, classNameStr = className) {
   let el = document.elementFromPoint(event.pageX, event.pageY);
-  if (el?.closest(`.${className}`) || el?.classList.contains(className)) {
+  if (el?.closest(`.${classNameStr}`) || el?.classList.contains(classNameStr)) {
     return true;
   }
 }

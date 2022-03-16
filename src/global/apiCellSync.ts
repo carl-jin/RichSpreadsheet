@@ -3,7 +3,15 @@ import {
   insertRowBottomOrColumnRight,
   deleteRowOrColumn,
 } from "./api";
-import { getCellData, getCurrentSheet, setCellData } from "./apiHelper";
+import {
+  getCellData,
+  getCurrentSheet,
+  getStore,
+  refresh,
+  reRender,
+  setCellData,
+} from "./apiHelper";
+import { jfrefreshgrid_adRC } from "./refresh";
 
 /**
  * 向上方插入一行/多行

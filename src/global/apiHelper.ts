@@ -19,7 +19,7 @@ import {
 } from "../controllers/hooks/useGsClipboard";
 import { setcellvalue as _setcellvalue } from "./setdata";
 import { sortColumnSeletion as _sortColumnSeletion } from "./sort";
-import { jfrefreshgrid_rhcw } from "../global/refresh";
+import { jfrefreshgrid_rhcw, luckysheetrefreshgrid } from "../global/refresh";
 import { luckysheetContainerFocus } from "../utils/util";
 import {
   luckysheetdefaultstyle,
@@ -580,10 +580,17 @@ export function refreshCellByIndex(rowIndex: number, colIndex: number) {
 }
 
 /**
- * 刷新表格
+ * 刷新表格， 刷新表格会更新内部数据
  */
 export function refresh() {
   jfrefreshgrid_rhcw(Store.flowdata.length, Store.flowdata[0].length);
+}
+
+/**
+ * 重新渲染表格, 渲染表格不会内部数据
+ */
+export function reRender() {
+  luckysheetrefreshgrid();
 }
 
 /**
