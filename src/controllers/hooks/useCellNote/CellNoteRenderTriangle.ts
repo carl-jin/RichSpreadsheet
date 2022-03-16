@@ -16,17 +16,20 @@ export function CellNoteRenderTriangle(
   const columnId = getColumnByColIndex(colIndex).id;
   if (isCellHasNoteById(rowId, columnId)) {
     const path = new Path2D();
-    const w = 6;
-    const h = 6;
+    const w = 8;
+    const h = 8;
     const padding = 1;
 
     if (positionX + cellWidth >= Store.rowHeaderWidth) {
       path.moveTo(positionX + cellWidth - w - padding, positionY);
       path.lineTo(positionX + cellWidth - padding, positionY);
       path.lineTo(positionX + cellWidth - padding, positionY + h);
+      path.closePath()
 
+      ctx.strokeStyle = '#fff';
       ctx.fillStyle = "#000";
       ctx.fill(path);
+      ctx.stroke(path)
     }
   }
 }

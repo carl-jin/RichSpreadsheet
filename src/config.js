@@ -30,6 +30,8 @@ export default {
     unknownHtmlParser: [],
     tableParsers: [],
   }, // 单元格 对应的 column 编辑框 渲染逻辑
+  maxNoteLength:2000,
+  maxNoteLengthOffset:0,
   ContextMenu() {
     return [];
   },

@@ -93,6 +93,8 @@ RichSpread.create = function (setting: RichSpreadsheetParams) {
   Store.rowTitleNumberRender = extendsetting.rowTitleNumberRender;
   Store.sensitiveOperationDetectHandler = extendsetting.sensitiveOperationDetectHandler;
   Store.sensitiveOperationDetect = extendsetting.sensitiveOperationDetect;
+  Store.maxNoteLength = extendsetting.maxNoteLength;
+  Store.maxNoteLengthOffset = extendsetting.maxNoteLengthOffset;
 
   Store.luckysheetfile = extendsetting.data;
   Store.defaultcolumnNum = extendsetting.column;

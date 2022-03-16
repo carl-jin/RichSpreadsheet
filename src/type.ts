@@ -31,5 +31,10 @@ export type RichSpreadsheetParams = Partial<{
   rowTitleNumberRender(index: number): string | number;
   sensitiveOperationDetect: false | number;
   sensitiveOperationDetectHandler(msg: string): Promise<boolean>;
+  //  备注信息的最大程度
+  maxNoteLength: number;
+  //  备注信息最大长度的偏移值，比如 maxNoteLengthOffset 为 -20 时，
+  //  note 的 length 超过 1980 时就会开始提示溢出
+  maxNoteLengthOffset: number;
   [key: string]: any;
 }>;

@@ -184,7 +184,10 @@ export function getNoteById(rowId: string, colId: string): string {
  * @param rowId
  * @param colId
  */
-export function getNoteSizeById(rowId: string, colId: string): [number, number] {
+export function getNoteSizeById(
+  rowId: string,
+  colId: string
+): [number, number] {
   let target = getNoteConfigById(rowId, colId);
 
   if (!target) return [defaultNoteWidth, defaultNoteHeight];
@@ -219,7 +222,7 @@ function triggerCellMousedown(rowId, colId) {
   event.pageY = rowY + top + Store.columnHeaderHeight - scrollTop;
 
   //  处理单元格点击渲染
-  canvasMouseClick(event);
+  canvasMouseClick(event, true);
   const mouseDetail = getMouseRelateCell(event);
   let {
     row_location,

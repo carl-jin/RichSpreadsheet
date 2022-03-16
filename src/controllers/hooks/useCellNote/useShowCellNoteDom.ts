@@ -15,6 +15,7 @@ import {
 import {
   getColumnByColIndex,
   getRowIdByRowIndex,
+  isRowEditable,
 } from "../../../global/apiHelper";
 import Store from "../../../store";
 
@@ -29,9 +30,6 @@ export function useShowCellNoteDomOnMouseEnter(
   immediately: boolean = false
 ) {
   window.clearTimeout(timerShow);
-  if (immediately) {
-    removeDom(event, true);
-  }
   timerShow = setTimeout(
     () => {
       //  如果不是在表格上的 mousemove 事件,直接关闭
@@ -56,15 +54,16 @@ export function useShowCellNoteDomOnMouseEnter(
 
       //  判断当前的 rich-spreadsheet-cell-note-dom 是否存在
       const $existDom = $(`.${className}`);
+      const { rowIndex, colIndex } = params;
+      const rowId = getRowIdByRowIndex(rowIndex);
+      const columnId = getColumnByColIndex(colIndex).id;
       if ($existDom.length > 0) {
-        const row = $existDom.data("row");
-        const col = $existDom.data("col");
+        const row = $existDom.data("row-id");
+        const col = $existDom.data("col-id");
 
-        //  如果存在的话, 则删除之前的
-        if (row === params.rowIndex && col === params.colIndex) {
-          //  这里删除之前的，而不是返回，是因为 showExtractDomOnMouseEnter 方法中
-          //  可能是在同一个单元格，但是要根据用户点击的位置，显示不同的内容
-          $existDom.remove();
+        //  如果存在的话, 返回
+        if (row === rowId && col === colIndex) {
+          return;
         } else {
           if (isHover(event)) {
             return;
@@ -75,9 +74,6 @@ export function useShowCellNoteDomOnMouseEnter(
       }
 
       //   判断是否有 note
-      const { rowIndex, colIndex } = params;
-      const rowId = getRowIdByRowIndex(rowIndex);
-      const columnId = getColumnByColIndex(colIndex).id;
       let isHasNote = isCellHasNoteById(rowId, columnId);
       if (isHasNote === false) return;
       RenderDom(params);
@@ -93,6 +89,7 @@ function RenderDom(params) {
   let el = document.createElement("section");
   let rowId = getRowIdByRowIndex(rowIndex);
   let colId = getColumnByColIndex(colIndex).id;
+  const isEditable = isRowEditable(rowIndex, true);
 
   el.classList.add(className);
   el.dataset.rowId = rowId;
@@ -108,22 +105,48 @@ function RenderDom(params) {
   textarea.style.width = `${width + 2}px`;
   textarea.style.height = `${height + 2}px`;
 
-  //  监听 resize 事件
-  textarea.addEventListener("mouseup", () => {
-    if (textarea.clientWidth != width || textarea.clientHeight != height) {
-      updateCellNoteSizeById(rowId, colId, [
-        textarea.clientWidth,
-        textarea.clientHeight,
-      ]);
+  //  判断当前行是否有编辑权限
+  if (!isEditable) {
+    textarea.disabled = true;
+  }
+
+  //  不知道为什么鼠标在 textarea 按下 tab 会导致 window.scrollLeft 的改变
+  textarea.addEventListener("keydown", (ev) => {
+    if (ev.key === "Tab") {
+      ev.preventDefault();
+      return false;
     }
-    width = textarea.clientWidth;
-    height = textarea.clientHeight;
   });
 
+  //  监听 resize 事件
+  isEditable &&
+    textarea.addEventListener("mouseup", () => {
+      if (textarea.clientWidth != width || textarea.clientHeight != height) {
+        updateCellNoteSizeById(rowId, colId, [
+          textarea.clientWidth,
+          textarea.clientHeight,
+        ]);
+      }
+      width = textarea.clientWidth;
+      height = textarea.clientHeight;
+    });
+
   //  监听 change 事件
-  textarea.addEventListener("change", () => {
-    updateCellNoteId(rowId, colId, textarea.value);
-  });
+  isEditable &&
+    textarea.addEventListener("change", () => {
+      updateCellNoteId(rowId, colId, textarea.value);
+    });
+
+  isEditable &&
+    textarea.addEventListener("input", () => {
+      Store.$emit("CellNoteInput", {
+        textarea,
+        rowId,
+        colId,
+        parent: el,
+      });
+      detectOverflow();
+    });
 
   $el.append(textarea);
 
@@ -152,6 +175,10 @@ function RenderDom(params) {
 
   $el.appendTo($("#luckysheet"));
 
+  // prettier-ignore
+  $el.append(`<div class="overflow-alert">最多允许保存 ${ Store.maxNoteLength } 个字</div>`)
+  detectOverflow();
+
   //  边缘检测, 这里要放在 $el 插入 dom 后才能获取到实际的 size
   const { width: elWidth, height: elHeight } = $el
     .get(0)
@@ -178,6 +205,18 @@ function RenderDom(params) {
   });
 
   $el.css("opacity", 1);
+
+  //  检测文本是否超过 maxNoteLength
+  function detectOverflow() {
+    const maxLength = Store.maxNoteLength + Store.maxNoteLengthOffset;
+    const currentLength = textarea.value.length;
+
+    if (currentLength > maxLength) {
+      $el.addClass("maxlength-overflow");
+    } else {
+      $el.removeClass("maxlength-overflow");
+    }
+  }
 }
 
 function _removeDom() {

@@ -34,7 +34,7 @@ const reRenderCell = (
   restoreDevicePixelRatio();
 };
 
-const canvasMouseClick = (event) => {
+const canvasMouseClick = (event, skipReRenderCell: boolean = false) => {
   const mouseDetail = getMouseRelateCell(event);
 
   if (!mouseDetail || !Store.luckysheet_select_save[0]) {
@@ -44,7 +44,8 @@ const canvasMouseClick = (event) => {
   //  处理鼠标移入单元格后
   useShowCellExtractDomOnMouseEnter(mouseDetail, event, true);
   useShowCellNoteDomOnMouseEnter(mouseDetail, event, true);
-  reRenderCell(mouseDetail, Store.luckysheet_select_save[0], "clickRender");
+  !skipReRenderCell &&
+    reRenderCell(mouseDetail, Store.luckysheet_select_save[0], "clickRender");
 };
 
 const canvasMouseDbClick = (event) => {

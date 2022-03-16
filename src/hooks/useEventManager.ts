@@ -17,6 +17,7 @@
 //  message              信息提示
 //  CellNoteUpdate       cell note 更新了
 //  CellNoteDelete       cell note 删除了
+//  CellNoteInput        cell note textarea input 事件，借此可以完成限制输入输入字符等操作
 
 export function useEventManager() {
   let evenList = {};

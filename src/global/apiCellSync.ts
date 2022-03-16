@@ -3,7 +3,7 @@ import {
   insertRowBottomOrColumnRight,
   deleteRowOrColumn,
 } from "./api";
-import {getCellData, getCurrentSheet, setCellData} from "./apiHelper";
+import { getCellData, getCurrentSheet, setCellData } from "./apiHelper";
 
 /**
  * 向上方插入一行/多行
@@ -32,11 +32,13 @@ export function insertRowOrColumnCellSync(
  * @param type
  * @param start
  * @param rows
+ * @param silent
  */
 export function insertRowBottomOrColumnRightCellSync(
   type: "row" | "column",
   start: number,
-  rows: any[]
+  rows: any[],
+  silent = false
 ) {
   //  更新下 cellData
   const cellData = getCellData();
@@ -46,6 +48,7 @@ export function insertRowBottomOrColumnRightCellSync(
   // @ts-ignore
   insertRowBottomOrColumnRight(type, start, {
     number: rows.length,
+    silent,
   });
 }
 
@@ -62,10 +65,9 @@ export function deleteRowOrColumnCellSync(
 ) {
   //  更新下 cellData
   const cellData = getCellData();
-  const linesCount = endIndex - startIndex + 1
+  const linesCount = endIndex - startIndex + 1;
   cellData.splice(startIndex, linesCount);
   setCellData(cellData);
 
   deleteRowOrColumn(type, startIndex, endIndex);
 }
-
