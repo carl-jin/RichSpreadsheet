@@ -28,13 +28,14 @@ function RenderDom(
   parentCssObj: Record<string, string>
 ) {
   //  渲染 DOM
-  const { rowIndex, colIndex, cellWidth } = params;
+  const { rowIndex, colIndex, cellWidth, positionX } = params;
 
   let el = document.createElement("section");
   el.setAttribute("tabindex", "-1");
   el.classList.add(ClassName.NAME);
   el.dataset.row = rowIndex;
   el.dataset.col = colIndex;
+  el.dataset.positionX = params.positionX;
 
   const $el = $(el);
   $el.append(DOM);
@@ -105,7 +106,7 @@ function RenderDom(
   });
 
   $el.css("opacity", 1);
-  el.focus()
+  el.focus();
 }
 
 function removeDom(event, force = false) {
@@ -170,12 +171,18 @@ export function useShowCellExtractDomOnMouseEnter(
       if ($existDom.length > 0) {
         const row = $existDom.data("row");
         const col = $existDom.data("col");
+        const positionX = $existDom.data("position-x");
 
         //  如果存在的话, 则删除之前的
         if (row === params.rowIndex && col === params.colIndex) {
           //  这里删除之前的，而不是返回，是因为 showExtractDomOnMouseEnter 方法中
           //  可能是在同一个单元格，但是要根据用户点击的位置，显示不同的内容
-          $existDom.remove();
+          if (positionX !== params.positionX) {
+            $existDom.remove();
+          } else {
+            //  如果 positionX 相等，代表着内容位置并未改变，则可以退出
+            return;
+          }
         } else {
           if (isHover(event, ClassName.NAME)) {
             return;
