@@ -245,7 +245,11 @@ export function removeDom(event, force = false) {
   window.clearTimeout(timerShow);
 
   //  如果当前正在编辑状态，取消隐藏
-  if (document.activeElement.className === "note-wrapper") {
+  if (
+    ["note-wrapper", "rich-spreadsheet-cell-extract-dom"].includes(
+      document.activeElement.className
+    )
+  ) {
     return;
   }
 

@@ -31,6 +31,7 @@ function RenderDom(
   const { rowIndex, colIndex, cellWidth } = params;
 
   let el = document.createElement("section");
+  el.setAttribute("tabindex", "-1");
   el.classList.add(ClassName.NAME);
   el.dataset.row = rowIndex;
   el.dataset.col = colIndex;
@@ -104,6 +105,7 @@ function RenderDom(
   });
 
   $el.css("opacity", 1);
+  el.focus()
 }
 
 function removeDom(event, force = false) {
