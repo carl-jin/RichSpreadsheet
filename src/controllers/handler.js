@@ -161,6 +161,14 @@ export const getMouseRelateColumn = (event) => {
 export const getMouseRelateCell = (event) => {
   let mouse = mouseposition(event.pageX, event.pageY);
 
+  if (mouse[0] >= Store.visibledatacolumn[Store.visibledatacolumn.length - 1]) {
+    return false;
+  }
+
+  if (mouse[1] >= Store.visibledatarow[Store.visibledatarow.length - 1]) {
+    return false;
+  }
+
   if (
     mouse[0] >= Store.cellmainWidth - Store.cellMainSrollBarSize ||
     mouse[1] >= Store.cellmainHeight - Store.cellMainSrollBarSize
